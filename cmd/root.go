@@ -98,6 +98,7 @@ func init() {
 // addServerFlags adds server related flags to the given FlagSet. These flags are available
 // in both the root command, config set and config init commands.
 func addServerFlags(flags *pflag.FlagSet) {
+	flags.Bool("enableWebDAV", false, "enable WebDAV at /dav/")
 	flags.StringP("address", "a", "127.0.0.1", "address to listen on")
 	flags.StringP("log", "l", "stdout", "log output")
 	flags.StringP("port", "p", "8080", "port to listen on")
@@ -360,6 +361,10 @@ func getServerSettings(v *viper.Viper, st *storage.Storage) (*settings.Server, e
 		server.EnableExec = !v.GetBool("disableExec")
 	}
 
+	if v.IsSet("enableWebDAV") {
+		server.EnableWebDAV = v.GetBool("enableWebDAV")
+	}
+
 	if v.IsSet("followExternalSymlinks") {
 		server.FollowExternalSymlinks = v.GetBool("followExternalSymlinks")
 	}
@@ -490,6 +495,7 @@ func quickSetup(v *viper.Viper, s *storage.Storage) error {
 		TypeDetectionByHeader:  !v.GetBool("disableTypeDetectionByHeader"),
 		ImageResolutionCal:     !v.GetBool("disableImageResolutionCalc"),
 		FollowExternalSymlinks: v.GetBool("followExternalSymlinks"),
+		EnableWebDAV:           v.GetBool("enableWebDAV"),
 	}
 
 	err = s.Settings.SaveServer(ser)

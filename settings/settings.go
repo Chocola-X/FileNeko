@@ -47,6 +47,7 @@ func (s *Settings) GetRules() []rules.Rule {
 
 // Server specific settings.
 type Server struct {
+	EnableWebDAV           bool   `json:"enableWebDAV"`
 	Root                   string `json:"root"`
 	BaseURL                string `json:"baseURL"`
 	Socket                 string `json:"socket"`

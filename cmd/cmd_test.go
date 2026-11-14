@@ -59,3 +59,25 @@ func TestGetSettingsFollowExternalSymlinks(t *testing.T) {
 		t.Error("expected FollowExternalSymlinks to be persisted as true")
 	}
 }
+
+func TestGetSettingsWebDAV(t *testing.T) {
+	for _, enabled := range []bool{true, false} {
+		flags := pflag.NewFlagSet("test", pflag.ContinueOnError)
+		addConfigFlags(flags)
+		value := "false"
+		if enabled {
+			value = "true"
+		}
+		if err := flags.Parse([]string{"--enableWebDAV=" + value}); err != nil {
+			t.Fatal(err)
+		}
+		set := &settings.Settings{AuthMethod: auth.MethodJSONAuth}
+		server := &settings.Server{EnableWebDAV: !enabled}
+		if _, err := getSettings(flags, set, server, &auth.JSONAuth{}, false); err != nil {
+			t.Fatal(err)
+		}
+		if server.EnableWebDAV != enabled {
+			t.Fatalf("WebDAV = %v, want %v", server.EnableWebDAV, enabled)
+		}
+	}
+}

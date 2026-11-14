@@ -45,6 +45,11 @@ func NewHandler(
 	r.HandleFunc("/health", healthHandler)
 	r.PathPrefix("/static").Handler(static)
 	r.NotFoundHandler = index
+	if server.EnableWebDAV {
+		dav := monkey(newWebDAVHandler(fileCache), "")
+		r.Handle("/dav", dav)
+		r.PathPrefix("/dav/").Handler(dav)
+	}
 
 	api := r.PathPrefix("/api").Subrouter()
 
