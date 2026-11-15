@@ -490,8 +490,8 @@ nav,
 }
 
 /* User Account Badge at Top of Sidebar */
-nav > .action:first-of-type,
-#sidebar > .action:first-of-type {
+nav .sidebar-content > .action:first-of-type,
+#sidebar .sidebar-content > .action:first-of-type {
   width: 100% !important;
   display: flex !important;
   align-items: center !important;
@@ -507,14 +507,14 @@ nav > .action:first-of-type,
   box-sizing: border-box !important;
 }
 
-nav > .action:first-of-type i,
-#sidebar > .action:first-of-type i {
+nav .sidebar-content > .action:first-of-type i,
+#sidebar .sidebar-content > .action:first-of-type i {
   color: var(--accent-dark) !important;
   font-size: 1.5rem !important;
 }
 
-nav > .action:first-of-type span,
-#sidebar > .action:first-of-type span {
+nav .sidebar-content > .action:first-of-type span,
+#sidebar .sidebar-content > .action:first-of-type span {
   font-weight: 900 !important;
   color: var(--accent-dark) !important;
 }
@@ -599,8 +599,8 @@ nav .action.router-link-active span,
 }
 
 /* Sidebar Separators */
-nav > div:not(.sidebar-badge-banner):not(.quota-card),
-#sidebar > div:not(.sidebar-badge-banner):not(.quota-card) {
+nav .sidebar-content > div:not(.sidebar-badge-banner):not(.quota-card),
+#sidebar .sidebar-content > div:not(.sidebar-badge-banner):not(.quota-card) {
   border-top: 2px dashed var(--cobalt-light) !important;
   margin: 10px 0 !important;
   padding-top: 10px !important;
@@ -1844,6 +1844,8 @@ select:focus {
 
 /* Adapt the reference's floating stationery panels to the working file browser. */
 #sidebar {
+  display: flex;
+  flex-direction: column;
   top: calc(4em + 20px) !important;
   left: max(18px, calc((100vw - 1640px) / 2 + 18px));
   width: 256px !important;
@@ -1853,6 +1855,7 @@ select:focus {
   border-radius: 20px;
   box-shadow: 6px 6px 0 var(--cobalt-dark) !important;
   padding: 16px 14px !important;
+  overflow: hidden !important;
 }
 #sidebar::before {
   content: "";
@@ -1863,7 +1866,17 @@ select:focus {
   opacity: 0.55;
   pointer-events: none;
 }
-#sidebar > * {
+#sidebar .sidebar-content {
+  flex: 0 1 auto;
+  min-height: 0;
+  border: 0;
+  padding: 0 6px 6px 2px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+#sidebar .sidebar-content > * {
   position: relative;
 }
 #sidebar .sidebar-badge-banner {
@@ -2007,11 +2020,17 @@ header .action:focus-visible {
   #sidebar {
     left: -290px;
     width: 256px !important;
-    top: calc(4em + 12px) !important;
-    max-height: calc(100dvh - 4em - 24px);
+    max-width: calc(
+      100vw - 30px - env(safe-area-inset-left) - env(safe-area-inset-right)
+    );
+    top: max(12px, env(safe-area-inset-top)) !important;
+    max-height: calc(
+      100dvh - max(12px, env(safe-area-inset-top)) -
+        max(18px, env(safe-area-inset-bottom))
+    );
   }
   #sidebar.active {
-    left: 12px;
+    left: max(12px, env(safe-area-inset-left));
   }
   main {
     margin: 0 14px !important;
