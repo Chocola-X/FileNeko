@@ -26,7 +26,7 @@ import (
 // Locks are shared across requests and users: two accounts can share a scope.
 // Use physical paths for lock keys so different scopes cannot alias a lock.
 func newWebDAVHandler(cache FileCache) handleFunc {
-	locks := webdav.NewMemLS()
+	locks := newDAVLockRegistry()
 	serve := func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
 		prefix := d.server.BaseURL + "/dav"
 		r = r.Clone(r.Context())
@@ -98,7 +98,7 @@ func newWebDAVHandler(cache FileCache) handleFunc {
 		default:
 			return http.StatusMethodNotAllowed, nil
 		}
-		h := webdav.Handler{Prefix: prefix, FileSystem: &davFS{d: d, cache: cache}, LockSystem: davLocks{LockSystem: locks, d: d}}
+		h := webdav.Handler{Prefix: prefix, FileSystem: &davFS{d: d, cache: cache}, LockSystem: davLocks{locks: locks, d: d}}
 		h.ServeHTTP(w, r)
 		return 0, nil
 	}
@@ -295,8 +295,8 @@ func (f *davFile) Readdir(n int) ([]os.FileInfo, error) {
 // LockDetails roots are stored as physical paths so locks work across accounts
 // with overlapping scopes. Refresh converts them back for DAV response hrefs.
 type davLocks struct {
-	webdav.LockSystem
-	d *data
+	locks *davLockRegistry
+	d     *data
 }
 
 func (l davLocks) Confirm(now time.Time, name0, name1 string, conditions ...webdav.Condition) (func(), error) {
@@ -313,16 +313,17 @@ func (l davLocks) Confirm(now time.Time, name0, name1 string, conditions ...webd
 			return nil, err
 		}
 	}
-	return l.LockSystem.Confirm(now, name0, name1, conditions...)
+	return l.locks.Confirm(now, name0, name1, conditions...)
 }
 
 func (l davLocks) Create(now time.Time, details webdav.LockDetails) (string, error) {
+	virtual := slashClean(details.Root)
 	var err error
 	details.Root, err = l.physicalPath(details.Root)
 	if err != nil {
 		return "", err
 	}
-	return l.LockSystem.Create(now, details)
+	return l.locks.Create(now, details, l.d.user.ID, virtual)
 }
 
 func (l davLocks) physicalPath(name string) (string, error) {
@@ -339,13 +340,38 @@ func (l davLocks) physicalPath(name string) (string, error) {
 }
 
 func (l davLocks) Refresh(now time.Time, token string, duration time.Duration) (webdav.LockDetails, error) {
-	details, err := l.LockSystem.Refresh(now, token, duration)
-	if err == nil {
-		root, e := l.physicalPath("/")
-		if e != nil || (details.Root != root && !strings.HasPrefix(details.Root, strings.TrimSuffix(root, "/")+"/")) {
-			return webdav.LockDetails{}, os.ErrPermission
+	return l.locks.Refresh(now, token, duration, l.virtualEntry)
+}
+
+func (l davLocks) virtualEntry(entry davLockEntry) (string, error) {
+	// Retain a creator's authorized alias, including when the administrator
+	// explicitly permits external symlinks. Do not trust it after retargeting.
+	if entry.owner == l.d.user.ID && l.d.Check(entry.virtual) {
+		physical, err := l.physicalPath(entry.virtual)
+		if err == nil && physical == entry.root {
+			return entry.virtual, nil
 		}
-		details.Root = slashClean(strings.TrimPrefix(details.Root, root))
 	}
-	return details, err
+	return l.virtualLockPath(entry.root)
+}
+
+func (l davLocks) virtualLockPath(physical string) (string, error) {
+	root, err := l.physicalPath("/")
+	if err != nil || (physical != root && !strings.HasPrefix(physical, strings.TrimSuffix(root, "/")+"/")) {
+		return "", webdav.ErrForbidden
+	}
+	name := slashClean(strings.TrimPrefix(physical, root))
+	if !l.d.Check(name) {
+		return "", webdav.ErrForbidden
+	}
+	return name, nil
+}
+
+func (l davLocks) allowsLockRoot(entry davLockEntry) bool {
+	_, err := l.virtualEntry(entry)
+	return err == nil
+}
+
+func (l davLocks) Unlock(now time.Time, token string) error {
+	return l.locks.Unlock(now, token, l.allowsLockRoot)
 }
