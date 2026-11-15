@@ -1,4 +1,19 @@
 :root {
+  /* Bundled faces first; system CJK and generic families cover missing glyphs. */
+  --font-ui:
+    "Fredoka", "CuteRound", "M PLUS Rounded 1c", "Roboto", ui-rounded,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Noto Sans CJK TC", "Hiragino Maru Gothic ProN", "Yu Gothic", Meiryo,
+    "Malgun Gothic", system-ui, sans-serif;
+  --font-heading: var(--font-ui);
+  --font-mono:
+    "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas,
+    "Liberation Mono", Menlo, "Noto Sans Mono CJK SC", "Microsoft YaHei",
+    monospace;
+  --font-signature:
+    "FileSignature", "Segoe Print", "Bradley Hand", "Comic Sans MS",
+    var(--font-ui), cursive;
+
   /* ============================================================================
      Filebrowser Anime Pop-Cute Hard-Shadow Theme Tokens (refer/refer2.html)
      ============================================================================ */

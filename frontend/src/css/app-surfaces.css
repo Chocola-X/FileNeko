@@ -578,7 +578,7 @@ button.button:disabled,
   margin: 0 16px 16px;
   border: 2px solid var(--cobalt-dark);
   border-radius: 12px;
-  font-family: monospace !important;
+  font-family: var(--font-mono) !important;
   font-weight: 400;
 }
 #editor-container .ace_gutter {

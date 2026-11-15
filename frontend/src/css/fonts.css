@@ -1,5 +1,38 @@
 @import "material-icons/iconfont/filled.css";
 
+/* Self-hosted rounded Latin, Japanese fallback and code faces. */
+@font-face {
+  font-family: "Fredoka";
+  src: url(../assets/fonts/fredoka.woff2) format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "M PLUS Rounded 1c";
+  src: url(../assets/fonts/mplus-rounded-regular.woff2) format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "M PLUS Rounded 1c";
+  src: url(../assets/fonts/mplus-rounded-bold.woff2) format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url(../assets/fonts/jetbrains-mono.woff2) format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Local signature face keeps Latin extensions consistent across interface locales. */
 @font-face {
   font-family: "FileSignature";
@@ -12,7 +45,7 @@
 @font-face {
   font-family: "CuteRound";
   src: url(../assets/fonts/cute-round.woff2) format("woff2");
-  font-weight: 100 900;
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -20,6 +53,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 400;
   src:
     local("Roboto"),
@@ -31,6 +65,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 400;
   src:
     local("Roboto"),
@@ -42,6 +77,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 400;
   src:
     local("Roboto"),
@@ -53,6 +89,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 400;
   src:
     local("Roboto"),
@@ -64,6 +101,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 400;
   src:
     local("Roboto"),
@@ -75,6 +113,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 400;
   src:
     local("Roboto"),
@@ -87,6 +126,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 400;
   src:
     local("Roboto"),
@@ -100,6 +140,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 500;
   src:
     local("Roboto Medium"),
@@ -111,6 +152,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 500;
   src:
     local("Roboto Medium"),
@@ -122,6 +164,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 500;
   src:
     local("Roboto Medium"),
@@ -133,6 +176,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 500;
   src:
     local("Roboto Medium"),
@@ -144,6 +188,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 500;
   src:
     local("Roboto Medium"),
@@ -155,6 +200,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 500;
   src:
     local("Roboto Medium"),
@@ -167,6 +213,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 500;
   src:
     local("Roboto Medium"),
@@ -180,6 +227,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 700;
   src:
     local("Roboto Bold"),
@@ -191,6 +239,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 700;
   src:
     local("Roboto Bold"),
@@ -202,6 +251,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 700;
   src:
     local("Roboto Bold"),
@@ -213,6 +263,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 700;
   src:
     local("Roboto Bold"),
@@ -224,6 +275,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 700;
   src:
     local("Roboto Bold"),
@@ -235,6 +287,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 700;
   src:
     local("Roboto Bold"),
@@ -247,6 +300,7 @@
 @font-face {
   font-family: "Roboto";
   font-style: normal;
+  font-display: swap;
   font-weight: 700;
   src:
     local("Roboto Bold"),
