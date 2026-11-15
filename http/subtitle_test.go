@@ -60,3 +60,27 @@ func TestSubtitleFileHandlerConvertsSRTBreakTags(t *testing.T) {
 		t.Fatalf("WebVTT output = %q, want converted SRT <br> tags as line breaks", body)
 	}
 }
+
+// GHSA-448h-jr2h-3vhp: all conversion formats are bounded, even if the
+// FileInfo snapshot predates the file's growth.
+func TestSubtitleConversionRejectsOversizedFiles(t *testing.T) {
+	for _, ext := range []string{".srt", ".ass", ".ssa", ".SRT"} {
+		t.Run(ext, func(t *testing.T) {
+			fs := afero.NewMemMapFs()
+			name := "large" + ext
+			f, err := fs.Create(name)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := f.Truncate(maxSubtitleSize + 1); err != nil {
+				t.Fatal(err)
+			}
+			f.Close()
+			file := &files.FileInfo{Fs: fs, Path: name, Name: name}
+			status, err := subtitleFileHandler(httptest.NewRecorder(), httptest.NewRequest("GET", "/", nil), file)
+			if err != nil || status != http.StatusRequestEntityTooLarge {
+				t.Fatalf("status=%d err=%v; want 413", status, err)
+			}
+		})
+	}
+}

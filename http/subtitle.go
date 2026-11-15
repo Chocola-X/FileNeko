@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"net/http"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -13,6 +14,8 @@ import (
 )
 
 var srtLineBreakTag = regexp.MustCompile(`(?i)<br(?:\s+[^>]*)?\s*/?>`)
+
+const maxSubtitleSize = 10 << 20 // Bound conversion memory, including SSA/ASS parsing.
 
 var subtitleHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
 	if !d.user.Perm.Download {
@@ -40,7 +43,16 @@ var subtitleHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *d
 
 func subtitleFileHandler(w http.ResponseWriter, r *http.Request, file *files.FileInfo) (int, error) {
 	// if its not a subtitle file, reject
-	if !files.IsSupportedSubtitle(file.Name) {
+	ext := strings.ToLower(filepath.Ext(file.Name))
+	if ext != ".srt" && ext != ".ass" && ext != ".ssa" && ext != ".vtt" {
+		return http.StatusBadRequest, nil
+	}
+
+	info, err := file.Fs.Stat(file.Path)
+	if err != nil {
+		return errToStatus(err), err
+	}
+	if !info.Mode().IsRegular() {
 		return http.StatusBadRequest, nil
 	}
 
@@ -49,17 +61,35 @@ func subtitleFileHandler(w http.ResponseWriter, r *http.Request, file *files.Fil
 		return http.StatusInternalServerError, err
 	}
 	defer fd.Close()
+	info, err = fd.Stat()
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	if !info.Mode().IsRegular() {
+		return http.StatusBadRequest, nil
+	}
+
+	var content []byte
+	if ext != ".vtt" {
+		if info.Size() > maxSubtitleSize {
+			return http.StatusRequestEntityTooLarge, nil
+		}
+		// Stat alone does not protect against a file growing during the read.
+		content, err = io.ReadAll(io.LimitReader(fd, maxSubtitleSize+1))
+		if err != nil {
+			return http.StatusInternalServerError, err
+		}
+		if len(content) > maxSubtitleSize {
+			return http.StatusRequestEntityTooLarge, nil
+		}
+	}
 
 	// load subtitle for conversion to vtt
 	var sub *astisub.Subtitles
-	if strings.HasSuffix(file.Name, ".srt") {
-		content, readErr := io.ReadAll(fd)
-		if readErr != nil {
-			return http.StatusInternalServerError, readErr
-		}
+	if ext == ".srt" {
 		sub, err = astisub.ReadFromSRT(bytes.NewReader(normalizeSRTLineBreaks(content)))
-	} else if strings.HasSuffix(file.Name, ".ass") || strings.HasSuffix(file.Name, ".ssa") {
-		sub, err = astisub.ReadFromSSA(fd)
+	} else if ext == ".ass" || ext == ".ssa" {
+		sub, err = astisub.ReadFromSSA(bytes.NewReader(content))
 	}
 	if err != nil {
 		return http.StatusInternalServerError, err
