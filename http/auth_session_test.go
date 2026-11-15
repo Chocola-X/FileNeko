@@ -68,3 +68,27 @@ func TestLoginSetsProtectedCookie(t *testing.T) {
 		t.Fatalf("unsafe session cookie: %+v", cookies)
 	}
 }
+
+func TestRenewConsumesOldToken(t *testing.T) {
+	key := []byte("key")
+	perm := users.Permissions{}
+	st := scopedUserStorage(t, t.TempDir(), perm, key)
+	old := signToken(t, perm, key, st)
+	renew := func(token string) *httptest.ResponseRecorder {
+		req := httptest.NewRequest("POST", "/renew", nil)
+		req.Header.Set("X-Auth", token)
+		rec := httptest.NewRecorder()
+		handle(renewHandler(DefaultTokenExpirationTime), "", st, &settings.Server{}).ServeHTTP(rec, req)
+		return rec
+	}
+	first := renew(old)
+	if first.Code != 200 {
+		t.Fatalf("renew: %d %s", first.Code, first.Body)
+	}
+	if next := renew(old); next.Code != 401 {
+		t.Fatalf("token redeemed twice: %d", next.Code)
+	}
+	if next := renew(first.Body.String()); next.Code != 200 {
+		t.Fatalf("successor rejected: %d", next.Code)
+	}
+}

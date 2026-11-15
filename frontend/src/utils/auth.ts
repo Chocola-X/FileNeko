@@ -73,7 +73,29 @@ export async function login(
   }
 }
 
-export async function renew(jwt: string) {
+let renewal: Promise<void> | null = null;
+
+export function renew(jwt: string): Promise<void> {
+  if (!renewal) {
+    const refresh = async () => {
+      const latest = localStorage.getItem("jwt");
+      if (latest && latest !== jwt) {
+        parseToken(latest);
+        return;
+      }
+      await renewSession(jwt);
+    };
+    const request = navigator.locks
+      ? navigator.locks.request("filebrowser-session-renew", refresh)
+      : refresh();
+    renewal = request.finally(() => {
+      renewal = null;
+    });
+  }
+  return renewal;
+}
+
+async function renewSession(jwt: string) {
   const res = await fetch(`${baseURL}/api/renew`, {
     method: "POST",
     headers: {
@@ -114,6 +136,13 @@ export async function signup(username: string, password: string) {
 }
 
 export async function logout(reason?: string) {
+  if (renewal) {
+    try {
+      await renewal;
+    } catch {
+      /* Clear an expired session as well. */
+    }
+  }
   const token = useAuthStore().jwt;
   if (token) {
     try {

@@ -17,6 +17,7 @@ import (
 	"github.com/golang-jwt/jwt/v5/request"
 
 	fberrors "github.com/filebrowser/filebrowser/v2/errors"
+	"github.com/filebrowser/filebrowser/v2/storage"
 	"github.com/filebrowser/filebrowser/v2/users"
 )
 
@@ -220,11 +221,15 @@ var signupHandler = func(w http.ResponseWriter, r *http.Request, d *data) (int, 
 func renewHandler(tokenExpireTime time.Duration) handleFunc {
 	return withUser(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
 		w.Header().Set("X-Renew-Token", "false")
-		return printToken(w, r, d, d.user, tokenExpireTime)
+		return issueToken(w, r, d, d.user, tokenExpireTime, d.sessionID)
 	})
 }
 
 func printToken(w http.ResponseWriter, r *http.Request, d *data, user *users.User, tokenExpirationTime time.Duration) (int, error) {
+	return issueToken(w, r, d, user, tokenExpirationTime, "")
+}
+
+func issueToken(w http.ResponseWriter, r *http.Request, d *data, user *users.User, tokenExpirationTime time.Duration, previous string) (int, error) {
 	claims := &authToken{
 		PasswordStamp: passwordStamp(d.settings.Key, user.Password),
 		User: userInfo{
@@ -255,7 +260,15 @@ func printToken(w http.ResponseWriter, r *http.Request, d *data, user *users.Use
 		return http.StatusInternalServerError, err
 	}
 
-	if err := d.store.Sessions.Create(claims.ID, user.ID, claims.ExpiresAt.Time); err != nil {
+	if previous == "" {
+		err = d.store.Sessions.Create(claims.ID, user.ID, claims.ExpiresAt.Time)
+	} else {
+		err = d.store.Sessions.Replace(previous, claims.ID, user.ID, claims.ExpiresAt.Time)
+	}
+	if errors.Is(err, storage.ErrInvalidSession) {
+		return http.StatusUnauthorized, nil
+	}
+	if err != nil {
 		return http.StatusInternalServerError, err
 	}
 	setAuthCookie(w, r, d, signed, tokenExpirationTime)

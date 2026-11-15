@@ -37,6 +37,9 @@ export async function upload(
       headers: {
         "X-Auth": authStore.jwt,
       },
+      onBeforeRequest: function (request) {
+        request.setHeader("X-Auth", authStore.jwt);
+      },
       onShouldRetry: function (err) {
         const status = err.originalResponse
           ? err.originalResponse.getStatus()

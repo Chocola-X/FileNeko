@@ -17,7 +17,8 @@ export class StatusError extends Error {
 export async function fetchURL(
   url: string,
   opts: ApiOpts,
-  auth = true
+  auth = true,
+  retryAfterRenewal = true
 ): Promise<Response> {
   const authStore = useAuthStore();
 
@@ -25,11 +26,12 @@ export async function fetchURL(
   opts.headers = opts.headers || {};
 
   const { headers, ...rest } = opts;
+  const requestToken = authStore.jwt;
   let res;
   try {
     res = await fetch(`${baseURL}${url}`, {
       headers: {
-        "X-Auth": authStore.jwt,
+        "X-Auth": requestToken,
         ...headers,
       },
       ...rest,
@@ -40,6 +42,17 @@ export async function fetchURL(
       throw new StatusError("000 No connection", 0, true);
     }
     throw new StatusError("000 No connection", 0);
+  }
+
+  // A request may already be in flight when another response rotates the
+  // session. Retry that rejected old token once with the current identifier.
+  if (
+    auth &&
+    retryAfterRenewal &&
+    res.status === 401 &&
+    requestToken !== authStore.jwt
+  ) {
+    return fetchURL(url, opts, auth, false);
   }
 
   if (auth && res.headers.get("X-Renew-Token") === "true") {

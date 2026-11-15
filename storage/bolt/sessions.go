@@ -6,6 +6,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/filebrowser/filebrowser/v2/storage"
 	bolt "go.etcd.io/bbolt"
 )
 
@@ -97,5 +98,38 @@ func (s sessionStore) Delete(id string) error {
 			return nil
 		}
 		return b.Delete(sessionKey(id))
+	})
+}
+
+// Replace consumes the old identifier and creates its successor in one write
+// transaction. Two concurrent renewals cannot both redeem the same session.
+func (s sessionStore) Replace(oldID, newID string, userID uint, expires time.Time) error {
+	if oldID == "" || newID == "" {
+		return storage.ErrInvalidSession
+	}
+	return s.db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(sessionBucket)
+		if b == nil {
+			return storage.ErrInvalidSession
+		}
+		value := b.Get(sessionKey(oldID))
+		if value == nil {
+			return storage.ErrInvalidSession
+		}
+		var previous sessionRecord
+		if err := json.Unmarshal(value, &previous); err != nil {
+			return err
+		}
+		if previous.UserID != userID || previous.Expires <= time.Now().Unix() {
+			return storage.ErrInvalidSession
+		}
+		next, err := json.Marshal(sessionRecord{UserID: userID, Expires: expires.Unix()})
+		if err != nil {
+			return err
+		}
+		if err := b.Delete(sessionKey(oldID)); err != nil {
+			return err
+		}
+		return b.Put(sessionKey(newID), next)
 	})
 }

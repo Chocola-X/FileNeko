@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/filebrowser/filebrowser/v2/storage"
 	bolt "go.etcd.io/bbolt"
 )
 
@@ -68,5 +69,36 @@ func TestSessionsExpireAndStayBounded(t *testing.T) {
 		return nil
 	}); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestOnlyOneConcurrentSessionRenewalSucceeds(t *testing.T) {
+	db, err := bolt.Open(filepath.Join(t.TempDir(), "sessions.db"), 0600, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	s := sessionStore{db: db}
+	expiry := time.Now().Add(time.Hour)
+	if err := s.Create("old", 1, expiry); err != nil {
+		t.Fatal(err)
+	}
+	results := make(chan error, 8)
+	for i := 0; i < 8; i++ {
+		go func(i int) { results <- s.Replace("old", fmt.Sprint("new-", i), 1, expiry) }(i)
+	}
+	successes := 0
+	for i := 0; i < 8; i++ {
+		if err := <-results; err == nil {
+			successes++
+		} else if err != storage.ErrInvalidSession {
+			t.Fatal(err)
+		}
+	}
+	if successes != 1 {
+		t.Fatalf("old identifier redeemed %d times", successes)
+	}
+	if valid, err := s.Valid("old", 1, time.Now()); err != nil || valid {
+		t.Fatalf("consumed session: %v %v", valid, err)
 	}
 }
