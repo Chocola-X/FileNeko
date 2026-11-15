@@ -300,28 +300,52 @@ type davLocks struct {
 }
 
 func (l davLocks) Confirm(now time.Time, name0, name1 string, conditions ...webdav.Condition) (func(), error) {
+	var err error
 	if name0 != "" {
-		name0 = l.d.user.FullPath(slashClean(name0))
+		name0, err = l.physicalPath(name0)
+		if err != nil {
+			return nil, err
+		}
 	}
 	if name1 != "" {
-		name1 = l.d.user.FullPath(slashClean(name1))
+		name1, err = l.physicalPath(name1)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return l.LockSystem.Confirm(now, name0, name1, conditions...)
 }
 
 func (l davLocks) Create(now time.Time, details webdav.LockDetails) (string, error) {
-	details.Root = l.d.user.FullPath(slashClean(details.Root))
+	var err error
+	details.Root, err = l.physicalPath(details.Root)
+	if err != nil {
+		return "", err
+	}
 	return l.LockSystem.Create(now, details)
+}
+
+func (l davLocks) physicalPath(name string) (string, error) {
+	resolved, err := files.ResolvePath(l.d.user.FullPath(slashClean(name)))
+	if err != nil {
+		return "", err
+	}
+	// memLS uses slash-separated, absolute keys on every platform.
+	key := "/" + strings.TrimPrefix(filepath.ToSlash(resolved), "/")
+	if l.d.server.CaseInsensitiveFs {
+		key = strings.ToLower(key)
+	}
+	return key, nil
 }
 
 func (l davLocks) Refresh(now time.Time, token string, duration time.Duration) (webdav.LockDetails, error) {
 	details, err := l.LockSystem.Refresh(now, token, duration)
 	if err == nil {
-		rel, e := filepath.Rel(l.d.user.FullPath("/"), details.Root)
-		if e != nil || rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		root, e := l.physicalPath("/")
+		if e != nil || (details.Root != root && !strings.HasPrefix(details.Root, strings.TrimSuffix(root, "/")+"/")) {
 			return webdav.LockDetails{}, os.ErrPermission
 		}
-		details.Root = slashClean(rel)
+		details.Root = slashClean(strings.TrimPrefix(details.Root, root))
 	}
 	return details, err
 }
