@@ -38,7 +38,7 @@ Where `X-My-Header` is the HTTP header provided by your proxy with the username.
 
 > [!WARNING]
 > 
-> File Browser will blindly trust the provided header. If the proxy can be bypassed, an attacker could simply attach the header and get admin access. Please ensure that File Browser is not accessible from untrusted networks, and that the proxy is correctly configured to strip/overwrite the header from client requests.
+> This fork accepts identity headers only from the connection peers configured by `auth.trustedProxies` (loopback by default). Keep the backend inaccessible to untrusted clients, and have the proxy authenticate requests and overwrite client-supplied identity headers. This is separate from the `trustedProxies` setting for client IP/HTTPS metadata; see [reverse proxy deployment](reverse-proxy.md).
 
 ## Hook Authentication
 
@@ -206,12 +206,14 @@ hook provisioning continue to follow their explicitly configured scope policy.
 JSON password login and WebDAV Basic authentication share a failed-attempt
 budget: a burst of ten checks per connection source, refilling one check every
 six seconds. Successful checks refund their credit. At most eight password
-checks run concurrently, and tracked sources are bounded and expire after ten
-minutes of inactivity. IPv6 addresses share a budget per /64. Rejections return
-HTTP 429 with `Retry-After`. Forwarded headers do not change the budget key, so
-clients behind the same reverse proxy share its failed-attempt budget. These
-limits are local to each server process; deployment-wide limits for multiple
-replicas should also be enforced at the trusted proxy.
+checks run concurrently, and tracked sources are bounded. In addition, configurable
+Fail2Ban defaults to five failures within five minutes followed by a five-minute
+ban. IPv6 addresses share a budget per /64. Rejections return HTTP 429 with
+`Retry-After`. Forwarded headers affect the budget key only when the direct peer
+is explicitly configured in the server-level `trustedProxies` list. The same
+resolver is used by WebDAV and error logs. Without that configuration, clients
+behind a proxy share its budget. See [Nginx deployment](reverse-proxy.md) and
+[WebDAV protection settings](webdav.md). Limits remain local to each server process.
 
 ### Session migration (local fork)
 
@@ -223,5 +225,7 @@ by a concurrent renewal. Renewals atomically consume the previous identifier,
 password changes invalidate existing tokens immediately, and expired records are
 reclaimed on access and new logins. At most 64 login sessions are retained per
 user. Authentication cookies are HttpOnly and SameSite=Strict, and are Secure when
-the backend request uses TLS. TLS termination at a proxy still requires the
-normal trusted-network deployment boundary described above.
+the backend request uses TLS or an explicitly trusted reverse proxy sends a
+single `X-Forwarded-Proto: https` value. Untrusted forwarded headers are ignored.
+See [reverse proxy deployment](reverse-proxy.md) for the required trust and header
+configuration when Nginx terminates TLS.

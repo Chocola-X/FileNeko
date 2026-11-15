@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/filebrowser/filebrowser/v2/requestinfo"
 	"github.com/filebrowser/filebrowser/v2/share"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -52,6 +53,6 @@ func authenticateShareRequest(w http.ResponseWriter, r *http.Request, d *data, l
 		expires = link.Expire
 	}
 	path := strings.TrimRight(d.server.BaseURL, "/") + "/api/public/"
-	http.SetCookie(w, &http.Cookie{Name: name, Value: shareAccessValue(d.settings.Key, link, expires), Path: path, HttpOnly: true, Secure: r.TLS != nil, SameSite: http.SameSiteStrictMode, MaxAge: int(expires - time.Now().Unix())})
+	http.SetCookie(w, &http.Cookie{Name: name, Value: shareAccessValue(d.settings.Key, link, expires), Path: path, HttpOnly: true, Secure: requestinfo.Resolve(r, d.server.TrustedProxies).HTTPS, SameSite: http.SameSiteStrictMode, MaxAge: int(expires - time.Now().Unix())})
 	return 0, nil
 }

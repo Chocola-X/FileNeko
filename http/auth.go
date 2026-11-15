@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/filebrowser/filebrowser/v2/auth"
+	"github.com/filebrowser/filebrowser/v2/requestinfo"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/golang-jwt/jwt/v5/request"
 
@@ -314,7 +315,7 @@ func setAuthCookie(w http.ResponseWriter, r *http.Request, d *data, token string
 	if token == "" {
 		maxAge = -1
 	}
-	http.SetCookie(w, &http.Cookie{Name: "auth", Value: token, Path: path, HttpOnly: true, Secure: r.TLS != nil, SameSite: http.SameSiteStrictMode, MaxAge: maxAge})
+	http.SetCookie(w, &http.Cookie{Name: "auth", Value: token, Path: path, HttpOnly: true, Secure: requestinfo.Resolve(r, d.server.TrustedProxies).HTTPS, SameSite: http.SameSiteStrictMode, MaxAge: maxAge})
 }
 
 var logoutHandler = withSession(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {

@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 
@@ -27,6 +28,7 @@ import (
 	"github.com/filebrowser/filebrowser/v2/frontend"
 	fbhttp "github.com/filebrowser/filebrowser/v2/http"
 	"github.com/filebrowser/filebrowser/v2/img"
+	"github.com/filebrowser/filebrowser/v2/requestinfo"
 	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/filebrowser/filebrowser/v2/storage"
 	"github.com/filebrowser/filebrowser/v2/users"
@@ -98,6 +100,7 @@ func init() {
 // in both the root command, config set and config init commands.
 func addServerFlags(flags *pflag.FlagSet) {
 	flags.Bool("enableWebDAV", false, "enable WebDAV at /dav/")
+	flags.StringSlice("trustedProxies", nil, "trusted reverse proxy IPs or CIDRs for client IP and HTTPS headers (default: none)")
 	flags.StringP("address", "a", "127.0.0.1", "address to listen on")
 	flags.StringP("log", "l", "stdout", "log output")
 	flags.StringP("port", "p", "8080", "port to listen on")
@@ -299,6 +302,22 @@ user created with the credentials from options "username" and "password".`,
 	}, storeOptions{allowsNoDatabase: true}),
 }
 
+// Viper's generic string-slice cast splits environment strings on whitespace;
+// accept the same comma-separated list as the StringSlice CLI flag instead.
+func configuredTrustedProxies(v *viper.Viper) []string {
+	if raw, ok := v.Get("trustedProxies").(string); ok {
+		if strings.TrimSpace(raw) == "" {
+			return nil
+		}
+		entries := strings.Split(raw, ",")
+		for i := range entries {
+			entries[i] = strings.TrimSpace(entries[i])
+		}
+		return entries
+	}
+	return v.GetStringSlice("trustedProxies")
+}
+
 func getServerSettings(v *viper.Viper, st *storage.Storage) (*settings.Server, error) {
 	server, err := st.Settings.GetServer()
 	if err != nil {
@@ -380,6 +399,12 @@ func getServerSettings(v *viper.Viper, st *storage.Storage) (*settings.Server, e
 	if v.IsSet("followExternalSymlinks") {
 		server.FollowExternalSymlinks = v.GetBool("followExternalSymlinks")
 	}
+	if v.IsSet("trustedProxies") {
+		server.TrustedProxies = configuredTrustedProxies(v)
+	}
+	if err := requestinfo.ValidateTrustedProxies(server.TrustedProxies); err != nil {
+		return nil, err
+	}
 
 	if isAddrSet && isSocketSet {
 		return nil, errors.New("--socket flag cannot be used with --address, --port, --key nor --cert")
@@ -426,6 +451,9 @@ func setupLog(logMethod string) {
 }
 
 func quickSetup(v *viper.Viper, s *storage.Storage) error {
+	if err := requestinfo.ValidateTrustedProxies(configuredTrustedProxies(v)); err != nil {
+		return err
+	}
 	log.Println("Performing quick setup")
 
 	set := &settings.Settings{
@@ -496,6 +524,7 @@ func quickSetup(v *viper.Viper, s *storage.Storage) error {
 		ImageResolutionCal:     !v.GetBool("disableImageResolutionCalc"),
 		FollowExternalSymlinks: v.GetBool("followExternalSymlinks"),
 		EnableWebDAV:           v.GetBool("enableWebDAV"),
+		TrustedProxies:         configuredTrustedProxies(v),
 	}
 
 	err = s.Settings.SaveServer(ser)

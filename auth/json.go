@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/filebrowser/filebrowser/v2/requestinfo"
 	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/filebrowser/filebrowser/v2/users"
 )
@@ -32,7 +33,8 @@ type JSONAuth struct {
 // Auth authenticates the user via a json in content body.
 func (a JSONAuth) Auth(r *http.Request, usr users.Store, set *settings.Settings, srv *settings.Server) (*users.User, error) {
 
-	finish, err := passwordAttempts.begin(r.RemoteAddr, set.PasswordBanPolicy())
+	client := requestinfo.Resolve(r, srv.TrustedProxies)
+	finish, err := passwordAttempts.begin(client.ClientIP, set.PasswordBanPolicy())
 	if err != nil {
 		return nil, err
 	}

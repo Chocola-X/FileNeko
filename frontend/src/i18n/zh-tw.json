@@ -282,7 +282,7 @@
     "currentPassword": "Your Current Password",
     "fail2ban": {
       "title": "Fail2Ban · 登入保護",
-      "description": "File Browser 登入與 WebDAV 共用密碼失敗計數。在統計時間內達到門檻後，暫時封鎖該來源的密碼驗證；成功請求不計入失敗。依實際連線 IP（IPv6 /64）統計，代理後的使用者共用代理位址的計數。",
+      "description": "File Browser 登入與 WebDAV 共用密碼失敗計數。在統計時間內達到門檻後，暫時封鎖該來源；成功請求不計入失敗，IPv6 依 /64 統計。部署於 Nginx 後時，請透過 trustedProxies 設定受信代理以辨識真實用戶端 IP，否則用戶端共用代理位址的計數。",
       "enabled": "啟用暫時封鎖",
       "maxAttempts": "觸發封鎖的失敗次數",
       "windowMinutes": "失敗統計時間（分鐘）",

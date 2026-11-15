@@ -12,6 +12,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
+	"github.com/filebrowser/filebrowser/v2/requestinfo"
 	"github.com/filebrowser/filebrowser/v2/runner"
 )
 
@@ -29,10 +30,10 @@ var (
 	cmdNotAllowed = []byte("Command not allowed.")
 )
 
-func wsErr(ws *websocket.Conn, r *http.Request, status int, err error) {
+func wsErr(ws *websocket.Conn, r *http.Request, d *data, status int, err error) {
 	txt := http.StatusText(status)
 	if err != nil || status >= 400 {
-		log.Printf("%s: %v %s %v", r.URL.Path, status, r.RemoteAddr, err)
+		log.Printf("%s: %v %s %v", r.URL.Path, status, requestinfo.Resolve(r, d.server.TrustedProxies).ClientIP, err)
 	}
 	if err := ws.WriteControl(websocket.CloseInternalServerErr, []byte(txt), time.Now().Add(WSWriteDeadline)); err != nil {
 		log.Print(err)
@@ -59,7 +60,7 @@ var commandsHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *d
 	for {
 		_, msg, err := conn.ReadMessage()
 		if err != nil {
-			wsErr(conn, r, http.StatusInternalServerError, err)
+			wsErr(conn, r, d, http.StatusInternalServerError, err)
 			return 0, nil
 		}
 
@@ -72,14 +73,14 @@ var commandsHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *d
 	name, args, err := runner.SplitCommandAndArgs(raw)
 	if err != nil {
 		if err := conn.WriteMessage(websocket.TextMessage, []byte(err.Error())); err != nil {
-			wsErr(conn, r, http.StatusInternalServerError, err)
+			wsErr(conn, r, d, http.StatusInternalServerError, err)
 		}
 		return 0, nil
 	}
 
 	if !slices.Contains(d.user.Commands, name) {
 		if err := conn.WriteMessage(websocket.TextMessage, cmdNotAllowed); err != nil {
-			wsErr(conn, r, http.StatusInternalServerError, err)
+			wsErr(conn, r, d, http.StatusInternalServerError, err)
 		}
 
 		return 0, nil
@@ -92,18 +93,18 @@ var commandsHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *d
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		wsErr(conn, r, http.StatusInternalServerError, err)
+		wsErr(conn, r, d, http.StatusInternalServerError, err)
 		return 0, nil
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		wsErr(conn, r, http.StatusInternalServerError, err)
+		wsErr(conn, r, d, http.StatusInternalServerError, err)
 		return 0, nil
 	}
 
 	if err := cmd.Start(); err != nil {
-		wsErr(conn, r, http.StatusInternalServerError, err)
+		wsErr(conn, r, d, http.StatusInternalServerError, err)
 		return 0, nil
 	}
 
@@ -115,7 +116,7 @@ var commandsHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *d
 	}
 
 	if err := cmd.Wait(); err != nil {
-		wsErr(conn, r, http.StatusInternalServerError, err)
+		wsErr(conn, r, d, http.StatusInternalServerError, err)
 	}
 
 	return 0, nil

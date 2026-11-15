@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/afero"
 
 	"github.com/filebrowser/filebrowser/v2/files"
+	"github.com/filebrowser/filebrowser/v2/requestinfo"
 	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/filebrowser/filebrowser/v2/storage"
 )
@@ -26,6 +27,9 @@ func NewHandler(
 	server *settings.Server,
 	assetsFs fs.FS,
 ) (http.Handler, error) {
+	if err := requestinfo.ValidateTrustedProxies(server.TrustedProxies); err != nil {
+		return nil, err
+	}
 	server.Clean()
 	server.CaseInsensitiveFs = files.CaseInsensitive(afero.NewOsFs(), server.Root)
 

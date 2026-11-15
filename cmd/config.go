@@ -13,6 +13,7 @@ import (
 
 	"github.com/filebrowser/filebrowser/v2/auth"
 	fberrors "github.com/filebrowser/filebrowser/v2/errors"
+	"github.com/filebrowser/filebrowser/v2/requestinfo"
 	"github.com/filebrowser/filebrowser/v2/settings"
 )
 
@@ -240,6 +241,7 @@ func printSettings(ser *settings.Server, set *settings.Settings, auther auth.Aut
 	fmt.Fprintf(w, "\tRoot:\t%s\n", ser.Root)
 	fmt.Fprintf(w, "\tSocket:\t%s\n", ser.Socket)
 	fmt.Fprintf(w, "\tAddress:\t%s\n", ser.Address)
+	fmt.Fprintf(w, "\tTrusted Proxies:\t%v\n", ser.TrustedProxies)
 	fmt.Fprintf(w, "\tTLS Cert:\t%s\n", ser.TLSCert)
 	fmt.Fprintf(w, "\tTLS Key:\t%s\n", ser.TLSKey)
 	fmt.Fprintf(w, "\tToken Expiration Time:\t%s\n", ser.TokenExpirationTime)
@@ -341,6 +343,8 @@ func getSettings(flags *pflag.FlagSet, set *settings.Settings, ser *settings.Ser
 			set.EnableWebDAV = &enabled
 		case "followExternalSymlinks":
 			ser.FollowExternalSymlinks, err = flags.GetBool(flag.Name)
+		case "trustedProxies":
+			ser.TrustedProxies, err = flags.GetStringSlice(flag.Name)
 
 		// Settings flags from [addConfigFlags]
 		case "signup":
@@ -416,5 +420,8 @@ func getSettings(flags *pflag.FlagSet, set *settings.Settings, ser *settings.Ser
 		}
 	}
 
+	if err := requestinfo.ValidateTrustedProxies(ser.TrustedProxies); err != nil {
+		return nil, err
+	}
 	return auther, nil
 }

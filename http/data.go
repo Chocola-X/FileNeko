@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/filebrowser/filebrowser/v2/files"
-	"github.com/tomasen/realip"
+	"github.com/filebrowser/filebrowser/v2/requestinfo"
 
 	"github.com/filebrowser/filebrowser/v2/rules"
 	"github.com/filebrowser/filebrowser/v2/runner"
@@ -141,7 +141,7 @@ func handle(fn handleFunc, prefix string, store *storage.Storage, server *settin
 		})
 
 		if status >= 400 || err != nil {
-			clientIP := realip.FromRequest(r)
+			clientIP := requestinfo.Resolve(r, server.TrustedProxies).ClientIP
 			log.Printf("%s: %v %s %v", r.URL.Path, status, clientIP, err)
 		}
 

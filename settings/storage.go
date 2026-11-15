@@ -2,6 +2,7 @@ package settings
 
 import (
 	fberrors "github.com/filebrowser/filebrowser/v2/errors"
+	"github.com/filebrowser/filebrowser/v2/requestinfo"
 	"github.com/filebrowser/filebrowser/v2/rules"
 	"github.com/filebrowser/filebrowser/v2/users"
 )
@@ -129,6 +130,9 @@ func (s *Storage) GetServer() (*Server, error) {
 
 // SaveServer wraps StorageBackend.SaveServer and adds some verification.
 func (s *Storage) SaveServer(ser *Server) error {
+	if err := requestinfo.ValidateTrustedProxies(ser.TrustedProxies); err != nil {
+		return err
+	}
 	ser.Clean()
 	return s.back.SaveServer(ser)
 }

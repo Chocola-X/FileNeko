@@ -303,7 +303,7 @@
     "currentPassword": "当前密码",
     "fail2ban": {
       "title": "Fail2Ban · 登录保护",
-      "description": "File Browser 登录与 WebDAV 共用密码失败计数。在统计时间内达到阈值后，临时封禁该来源的密码认证；成功请求不计入失败。按实际连接 IP（IPv6 /64）统计，代理后的用户共享代理地址的计数。",
+      "description": "File Browser 登录与 WebDAV 共用密码失败计数。在统计时间内达到阈值后，临时封禁该来源；成功请求不计入失败，IPv6 按 /64 统计。部署在 Nginx 后时，请通过 trustedProxies 配置受信代理以识别真实客户端 IP，否则客户端共用代理地址的计数。",
       "enabled": "启用临时封禁",
       "maxAttempts": "触发封禁的失败次数",
       "windowMinutes": "失败统计时间（分钟）",
