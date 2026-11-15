@@ -154,7 +154,7 @@
     "folderScanIncomplete": "Calculation finished; some items could not be read. These totals are incomplete.",
     "folderScanFailed": "Calculation interrupted. The displayed totals are incomplete.",
     "folderScanCanceled": "Calculation canceled. The displayed totals are incomplete.",
-    "folderScanNote": "Includes accessible subfolders and hidden files. Uses file lengths, not disk space. Symbolic links are excluded.",
+    "folderScanNote": "Calculates total file size, including accessible subfolders and hidden files.",
     "folderScanLinks": "Symbolic links are excluded from recursive calculations.",
     "copy": "Copy",
     "copyMessage": "Choose the location to copy your files to:",

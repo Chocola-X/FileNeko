@@ -136,7 +136,7 @@
     "folderScanIncomplete": "統計已結束，部分項目無法讀取，目前結果不完整。",
     "folderScanFailed": "統計中斷，目前結果不完整。",
     "folderScanCanceled": "統計已取消，目前結果不完整。",
-    "folderScanNote": "包含可存取的子資料夾和隱藏檔案，統計檔案總大小，不代表磁碟使用量；不統計符號連結。",
+    "folderScanNote": "包含可存取的子資料夾和隱藏檔案，統計檔案總大小。",
     "folderScanLinks": "符號連結不進行遞迴統計。",
     "copy": "複製",
     "copyMessage": "請選擇欲複製至的目錄：",

@@ -154,7 +154,7 @@
     "folderScanIncomplete": "统计已结束，部分项目无法读取，当前结果不完整。",
     "folderScanFailed": "统计中断，当前结果不完整。",
     "folderScanCanceled": "统计已取消，当前结果不完整。",
-    "folderScanNote": "包含可访问的子文件夹和隐藏文件，统计文件总大小，不代表磁盘占用；不统计符号链接。",
+    "folderScanNote": "包含可访问的子文件夹和隐藏文件，统计文件总大小。",
     "folderScanLinks": "符号链接不进行递归统计。",
     "copy": "复制",
     "copyMessage": "请选择目标目录：",
