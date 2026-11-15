@@ -153,6 +153,9 @@ func resourcePostHandler(fileCache FileCache) handleFunc {
 			Checker:    d,
 		})
 		if err == nil {
+			if file.IsDir {
+				return http.StatusBadRequest, nil
+			}
 			if r.URL.Query().Get("override") != "true" {
 				return http.StatusConflict, nil
 			}
@@ -166,6 +169,8 @@ func resourcePostHandler(fileCache FileCache) handleFunc {
 			if err != nil {
 				return errToStatus(err), err
 			}
+		} else if !errors.Is(err, os.ErrNotExist) {
+			return errToStatus(err), err
 		}
 
 		err = d.RunHook(func() error {
@@ -178,10 +183,6 @@ func resourcePostHandler(fileCache FileCache) handleFunc {
 			w.Header().Set("ETag", etag)
 			return nil
 		}, "upload", r.URL.Path, "", d.user)
-
-		if err != nil {
-			_ = d.user.Fs.RemoveAll(r.URL.Path)
-		}
 
 		return errToStatus(err), err
 	})
