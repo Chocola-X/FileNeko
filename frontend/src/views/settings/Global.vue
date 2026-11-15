@@ -252,7 +252,7 @@ import Rules from "@/components/settings/Rules.vue";
 import Themes from "@/components/settings/Themes.vue";
 import UserForm from "@/components/settings/UserForm.vue";
 import { useLayoutStore } from "@/stores/layout";
-import { enableExec } from "@/utils/constants";
+import { enableExec, authMethod } from "@/utils/constants";
 import { getTheme, setTheme } from "@/utils/theme";
 import Errors from "@/views/Errors.vue";
 import { computed, inject, onBeforeUnmount, onMounted, ref } from "vue";
@@ -327,7 +327,22 @@ const capitalize = (name: string, where: string | RegExp = "_") => {
   return name.slice(0, -1);
 };
 
-const save = async () => {
+const save = () => {
+  if (authMethod === "json") {
+    layoutStore.showHover({
+      prompt: "current-password",
+      confirm: (event: Event, password: string) => {
+        event.preventDefault();
+        layoutStore.closeHovers();
+        performSave(password);
+      },
+    });
+  } else {
+    performSave();
+  }
+};
+
+const performSave = async (currentPassword: string | null = null) => {
   if (settings.value === null) return false;
   applyChunkSize();
   const newSettings: ISettings = {
@@ -367,7 +382,7 @@ const save = async () => {
   }
 
   try {
-    await api.update(newSettings);
+    await api.update(newSettings, currentPassword);
     $showSuccess(t("settings.settingsUpdated"));
   } catch (e: any) {
     $showError(e);

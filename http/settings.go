@@ -4,11 +4,15 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/filebrowser/filebrowser/v2/auth"
+	fberrors "github.com/filebrowser/filebrowser/v2/errors"
 	"github.com/filebrowser/filebrowser/v2/rules"
 	"github.com/filebrowser/filebrowser/v2/settings"
+	"github.com/filebrowser/filebrowser/v2/users"
 )
 
 type settingsData struct {
+	CurrentPassword       string                `json:"current_password,omitempty"`
 	Signup                bool                  `json:"signup"`
 	HideLoginButton       bool                  `json:"hideLoginButton"`
 	CreateUserDir         bool                  `json:"createUserDir"`
@@ -47,6 +51,10 @@ var settingsPutHandler = withAdmin(func(_ http.ResponseWriter, r *http.Request, 
 	err := json.NewDecoder(r.Body).Decode(req)
 	if err != nil {
 		return http.StatusBadRequest, err
+	}
+
+	if d.settings.AuthMethod == auth.MethodJSONAuth && !users.CheckPwd(req.CurrentPassword, d.user.Password) {
+		return http.StatusBadRequest, fberrors.ErrCurrentPasswordIncorrect
 	}
 
 	d.settings.Signup = req.Signup

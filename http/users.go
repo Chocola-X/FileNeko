@@ -47,7 +47,7 @@ func getUser(_ http.ResponseWriter, r *http.Request) (*modifyUserRequest, error)
 		return nil, err
 	}
 
-	if req.What != "user" {
+	if req.What != "user" || req.Data == nil {
 		return nil, fberrors.ErrInvalidDataType
 	}
 
@@ -189,18 +189,21 @@ var userPutHandler = withSelfOrAdmin(func(w http.ResponseWriter, r *http.Request
 			"username":     {},
 			"password":     {},
 			"scope":        {},
-			"lockPassword": {},
+			"lockpassword": {},
+			"rules":        {},
 			"commands":     {},
 			"perm":         {},
 		}
 
+		sensitive := len(req.Which) == 0
 		for _, field := range req.Which {
 			if _, ok := sensibleFields[strings.ToLower(field)]; ok {
-				if !users.CheckPwd(req.CurrentPassword, d.user.Password) {
-					return http.StatusBadRequest, fberrors.ErrCurrentPasswordIncorrect
-				}
+				sensitive = true
 				break
 			}
+		}
+		if sensitive && !users.CheckPwd(req.CurrentPassword, d.user.Password) {
+			return http.StatusBadRequest, fberrors.ErrCurrentPasswordIncorrect
 		}
 	}
 
