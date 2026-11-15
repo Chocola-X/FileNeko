@@ -1,9 +1,11 @@
 package bolt
 
 import (
+	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/json"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/filebrowser/filebrowser/v2/storage"
@@ -18,9 +20,12 @@ type sessionStore struct{ db *bolt.DB }
 type sessionRecord struct {
 	UserID  uint
 	Expires int64
+	Proof   []byte
 }
 
-func sessionKey(id string) []byte { hash := sha256.Sum256([]byte(id)); return hash[:] }
+func sessionProof(id string) []byte  { hash := sha256.Sum256([]byte(id)); return hash[:] }
+func sessionFamily(id string) string { family, _, _ := strings.Cut(id, "."); return family }
+func sessionKey(id string) []byte    { return sessionProof(sessionFamily(id)) }
 
 func (s sessionStore) Create(id string, userID uint, expires time.Time) error {
 	if id == "" {
@@ -56,7 +61,7 @@ func (s sessionStore) Create(id string, userID uint, expires time.Time) error {
 			}
 			owned = owned[1:]
 		}
-		value, err := json.Marshal(sessionRecord{UserID: userID, Expires: expires.Unix()})
+		value, err := json.Marshal(sessionRecord{UserID: userID, Expires: expires.Unix(), Proof: sessionProof(id)})
 		if err != nil {
 			return err
 		}
@@ -65,6 +70,12 @@ func (s sessionStore) Create(id string, userID uint, expires time.Time) error {
 }
 
 func (s sessionStore) Valid(id string, userID uint, now time.Time) (bool, error) {
+	return s.valid(id, userID, now, true)
+}
+func (s sessionStore) ValidFamily(id string, userID uint, now time.Time) (bool, error) {
+	return s.valid(id, userID, now, false)
+}
+func (s sessionStore) valid(id string, userID uint, now time.Time, current bool) (bool, error) {
 	if id == "" {
 		return false, nil
 	}
@@ -88,7 +99,7 @@ func (s sessionStore) Valid(id string, userID uint, now time.Time) (bool, error)
 	if record.Expires <= now.Unix() {
 		return false, s.Delete(id)
 	}
-	return record.UserID == userID, nil
+	return record.UserID == userID && (!current || hmac.Equal(record.Proof, sessionProof(id))), nil
 }
 
 func (s sessionStore) Delete(id string) error {
@@ -104,7 +115,7 @@ func (s sessionStore) Delete(id string) error {
 // Replace consumes the old identifier and creates its successor in one write
 // transaction. Two concurrent renewals cannot both redeem the same session.
 func (s sessionStore) Replace(oldID, newID string, userID uint, expires time.Time) error {
-	if oldID == "" || newID == "" {
+	if oldID == "" || newID == "" || oldID == newID || sessionFamily(oldID) != sessionFamily(newID) {
 		return storage.ErrInvalidSession
 	}
 	return s.db.Update(func(tx *bolt.Tx) error {
@@ -120,10 +131,10 @@ func (s sessionStore) Replace(oldID, newID string, userID uint, expires time.Tim
 		if err := json.Unmarshal(value, &previous); err != nil {
 			return err
 		}
-		if previous.UserID != userID || previous.Expires <= time.Now().Unix() {
+		if previous.UserID != userID || previous.Expires <= time.Now().Unix() || !hmac.Equal(previous.Proof, sessionProof(oldID)) {
 			return storage.ErrInvalidSession
 		}
-		next, err := json.Marshal(sessionRecord{UserID: userID, Expires: expires.Unix()})
+		next, err := json.Marshal(sessionRecord{UserID: userID, Expires: expires.Unix(), Proof: sessionProof(newID)})
 		if err != nil {
 			return err
 		}

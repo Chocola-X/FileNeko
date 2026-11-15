@@ -85,7 +85,7 @@ func TestOnlyOneConcurrentSessionRenewalSucceeds(t *testing.T) {
 	}
 	results := make(chan error, 8)
 	for i := 0; i < 8; i++ {
-		go func(i int) { results <- s.Replace("old", fmt.Sprint("new-", i), 1, expiry) }(i)
+		go func(i int) { results <- s.Replace("old", fmt.Sprint("old.new-", i), 1, expiry) }(i)
 	}
 	successes := 0
 	for i := 0; i < 8; i++ {

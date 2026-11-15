@@ -212,3 +212,16 @@ HTTP 429 with `Retry-After`. Forwarded headers do not change the budget key, so
 clients behind the same reverse proxy share its failed-attempt budget. These
 limits are local to each server process; deployment-wide limits for multiple
 replicas should also be enforced at the trusted proxy.
+
+### Session migration (local fork)
+
+Upgrade all replicas together. Existing stateless tokens are rejected and users
+must sign in again. JWTs remain as a compatibility envelope for frontend user
+metadata; authorization additionally requires a random, database-backed session
+identifier. Logout revokes the entire login session, including a successor issued
+by a concurrent renewal. Renewals atomically consume the previous identifier,
+password changes invalidate existing tokens immediately, and expired records are
+reclaimed on access and new logins. At most 64 login sessions are retained per
+user. Authentication cookies are HttpOnly and SameSite=Strict, and are Secure when
+the backend request uses TLS. TLS termination at a proxy still requires the
+normal trusted-network deployment boundary described above.

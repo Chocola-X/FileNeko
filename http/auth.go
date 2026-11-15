@@ -78,6 +78,10 @@ func (e extractor) ExtractToken(r *http.Request) (string, error) {
 }
 
 func withUser(fn handleFunc) handleFunc {
+	return withSession(fn, false)
+}
+
+func withSession(fn handleFunc, allowRotated bool) handleFunc {
 	return func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
 		keyFunc := func(_ *jwt.Token) (interface{}, error) {
 			return d.settings.Key, nil
@@ -90,7 +94,12 @@ func withUser(fn handleFunc) handleFunc {
 			return http.StatusUnauthorized, nil
 		}
 
-		valid, err := d.store.Sessions.Valid(tk.ID, tk.User.ID, time.Now())
+		var valid bool
+		if allowRotated {
+			valid, err = d.store.Sessions.ValidFamily(tk.ID, tk.User.ID, time.Now())
+		} else {
+			valid, err = d.store.Sessions.Valid(tk.ID, tk.User.ID, time.Now())
+		}
 		if err != nil {
 			return http.StatusInternalServerError, err
 		}
@@ -257,6 +266,11 @@ func issueToken(w http.ResponseWriter, r *http.Request, d *data, user *users.Use
 		},
 	}
 
+	if previous != "" {
+		family, _, _ := strings.Cut(previous, ".")
+		claims.ID = family + "." + rand.Text()
+	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signed, err := token.SignedString(d.settings.Key)
 	if err != nil {
@@ -292,10 +306,10 @@ func setAuthCookie(w http.ResponseWriter, r *http.Request, d *data, token string
 	http.SetCookie(w, &http.Cookie{Name: "auth", Value: token, Path: path, HttpOnly: true, Secure: r.TLS != nil, SameSite: http.SameSiteStrictMode, MaxAge: maxAge})
 }
 
-var logoutHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
+var logoutHandler = withSession(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
 	if err := d.store.Sessions.Delete(d.sessionID); err != nil {
 		return http.StatusInternalServerError, err
 	}
 	setAuthCookie(w, r, d, "", 0)
 	return http.StatusNoContent, nil
-})
+}, true)

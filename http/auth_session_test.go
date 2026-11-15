@@ -92,3 +92,30 @@ func TestRenewConsumesOldToken(t *testing.T) {
 		t.Fatalf("successor rejected: %d", next.Code)
 	}
 }
+
+// Logout must revoke the same login's successor even if renewal wins the race
+// and the browser sends logout with the just-consumed identifier.
+func TestLogoutRevokesRenewedSessionFamily(t *testing.T) {
+	key := []byte("key")
+	perm := users.Permissions{}
+	st := scopedUserStorage(t, t.TempDir(), perm, key)
+	old := signToken(t, perm, key, st)
+	call := func(handler handleFunc, token string) *httptest.ResponseRecorder {
+		req := httptest.NewRequest("POST", "/", nil)
+		req.Header.Set("X-Auth", token)
+		rec := httptest.NewRecorder()
+		handle(handler, "", st, &settings.Server{}).ServeHTTP(rec, req)
+		return rec
+	}
+	renewed := call(renewHandler(DefaultTokenExpirationTime), old)
+	if renewed.Code != 200 {
+		t.Fatalf("renew: %d", renewed.Code)
+	}
+	if rec := call(logoutHandler, old); rec.Code != 204 {
+		t.Fatalf("logout after rotation: %d", rec.Code)
+	}
+	protected := withUser(func(http.ResponseWriter, *http.Request, *data) (int, error) { return 204, nil })
+	if rec := call(protected, renewed.Body.String()); rec.Code != 401 {
+		t.Fatalf("successor survived logout: %d", rec.Code)
+	}
+}
