@@ -7,6 +7,7 @@
       <file-list
         ref="fileList"
         @update:selected="(val) => (dest = val)"
+        @update:navigating="(val) => (navigating = val)"
         :exclude="excludedFolders"
         tabindex="1"
       />
@@ -17,6 +18,7 @@
         <button
           class="button button--flat"
           @click="$refs.fileList.createDir()"
+          :disabled="navigating"
           :aria-label="$t('sidebar.newFolder')"
           :title="$t('sidebar.newFolder')"
         >
@@ -37,7 +39,7 @@
           id="focus-prompt"
           class="button button--flat"
           @click="move"
-          :disabled="$route.path === dest"
+          :disabled="navigating || !dest || $route.path === dest"
           :aria-label="$t('buttons.move')"
           :title="$t('buttons.move')"
           tabindex="2"
@@ -68,6 +70,7 @@ export default {
     return {
       current: window.location.pathname,
       dest: null,
+      navigating: false,
     };
   },
   inject: ["$showError"],

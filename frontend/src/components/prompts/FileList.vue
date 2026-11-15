@@ -1,32 +1,37 @@
 <template>
-  <div>
+  <div class="destination-picker" :aria-busy="navigating">
     <ul class="file-list">
-      <li
-        @click="itemClick"
-        @touchstart="touchstart"
-        @dblclick="next"
-        role="button"
-        tabindex="0"
-        :aria-label="item.name"
-        :aria-selected="selected == item.url"
-        :key="item.name"
-        v-for="item in items"
-        :data-url="item.url"
-      >
-        {{ item.name }}
+      <li :key="item.url" v-for="item in items">
+        <button
+          type="button"
+          class="destination-folder"
+          @click="next"
+          :aria-label="item.name"
+          :data-url="item.url"
+          :disabled="navigating"
+        >
+          <i
+            class="material-icons destination-folder-icon"
+            aria-hidden="true"
+            >{{ item.name === ".." ? "drive_folder_upload" : "folder" }}</i
+          >
+          <span>{{ item.name }}</span>
+          <i class="material-icons destination-folder-arrow" aria-hidden="true"
+            >chevron_right</i
+          >
+        </button>
       </li>
     </ul>
 
-    <p>
-      {{ $t("prompts.currentlyNavigating") }} <code>{{ nav }}</code
-      >.
+    <p class="destination-path" aria-live="polite">
+      <span>{{ $t("prompts.currentlyNavigating") }}</span>
+      <code>{{ nav }}</code>
     </p>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "pinia";
-import { useAuthStore } from "@/stores/auth";
 import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";
 
@@ -36,6 +41,7 @@ import { StatusError } from "@/api/utils.js";
 
 export default {
   name: "file-list",
+  emits: ["update:selected", "update:navigating"],
   props: {
     exclude: {
       type: Array,
@@ -45,18 +51,13 @@ export default {
   data: function () {
     return {
       items: [],
-      touches: {
-        id: "",
-        count: 0,
-      },
-      selected: null,
+      navigating: false,
       current: window.location.pathname,
       nextAbortController: new AbortController(),
     };
   },
   inject: ["$showError"],
   computed: {
-    ...mapState(useAuthStore, ["user"]),
     ...mapState(useFileStore, ["req"]),
     nav() {
       return decodeURIComponent(this.current);
@@ -106,63 +107,35 @@ export default {
         });
       }
     },
-    next: function (event) {
+    next: async function (event) {
+      // A native button emits one click for touch and keyboard activation.
+      // Ignore the second click of a double click, even if the first request
+      // already replaced the row with a child directory in the same position.
+      if (this.navigating || event.detail > 1) return;
       // Retrieves the URL of the directory the user
       // just clicked in and fill the options with its
       // content.
       const uri = event.currentTarget.dataset.url;
       this.abortOngoingNext();
-      this.nextAbortController = new AbortController();
-      files
-        .fetch(uri, this.nextAbortController.signal)
-        .then(this.fillOptions)
-        .catch((e) => {
-          if (e instanceof StatusError && e.is_canceled) {
-            return;
-          }
-          this.$showError(e);
-        });
-    },
-    touchstart(event) {
-      const url = event.currentTarget.dataset.url;
-
-      // In 300 milliseconds, we shall reset the count.
-      setTimeout(() => {
-        this.touches.count = 0;
-      }, 300);
-
-      // If the element the user is touching
-      // is different from the last one he touched,
-      // reset the count.
-      if (this.touches.id !== url) {
-        this.touches.id = url;
-        this.touches.count = 1;
-        return;
+      const controller = new AbortController();
+      this.nextAbortController = controller;
+      this.navigating = true;
+      this.$emit("update:navigating", true);
+      try {
+        const req = await files.fetch(uri, controller.signal);
+        if (!controller.signal.aborted) this.fillOptions(req);
+      } catch (e) {
+        if (
+          controller.signal.aborted ||
+          (e instanceof StatusError && e.is_canceled)
+        ) {
+          return;
+        }
+        this.$showError(e);
+      } finally {
+        this.navigating = false;
+        this.$emit("update:navigating", false);
       }
-
-      this.touches.count++;
-
-      // If there is more than one touch already,
-      // open the next screen.
-      if (this.touches.count > 1) {
-        this.next(event);
-      }
-    },
-    itemClick: function (event) {
-      if (this.user.singleClick) this.next(event);
-      else this.select(event);
-    },
-    select: function (event) {
-      // If the element is already selected, unselect it.
-      if (this.selected === event.currentTarget.dataset.url) {
-        this.selected = null;
-        this.$emit("update:selected", this.current);
-        return;
-      }
-
-      // Otherwise select the element.
-      this.selected = event.currentTarget.dataset.url;
-      this.$emit("update:selected", this.selected);
     },
     createDir: async function () {
       this.showHover({
