@@ -264,6 +264,9 @@ var userPutHandler = withSelfOrAdmin(func(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
+	// A password change invalidates the caller's old token too. Do not ask
+	// the frontend to renew it while handling this successful response.
+	w.Header().Set("X-Renew-Token", "false")
 
 	return http.StatusOK, nil
 })

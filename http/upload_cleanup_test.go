@@ -28,7 +28,7 @@ func TestUploadOverrideDoesNotDeleteDirectory(t *testing.T) {
 	perm := users.Permissions{Create: true, Modify: true}
 	st := denyRuleStorage(t, root, "/team/secret.txt", perm, key)
 	req := httptest.NewRequest(http.MethodPost, "/team?override=true", strings.NewReader("replace"))
-	req.Header.Set("X-Auth", signToken(t, perm, key))
+	req.Header.Set("X-Auth", signToken(t, perm, key, st))
 	rec := httptest.NewRecorder()
 	handle(resourcePostHandler(diskcache.NewNoOp()), "", st, &settings.Server{}).ServeHTTP(rec, req)
 	if rec.Code != http.StatusBadRequest {

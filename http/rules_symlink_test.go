@@ -41,7 +41,7 @@ func TestSymlinkAliasesEnforceTargetRules(t *testing.T) {
 		{"PUT", "/dangling", resourcePutHandler},
 	} {
 		req := httptest.NewRequest(tc.method, tc.path, strings.NewReader("changed"))
-		req.Header.Set("X-Auth", signToken(t, perm, key))
+		req.Header.Set("X-Auth", signToken(t, perm, key, st))
 		rec := httptest.NewRecorder()
 		handle(tc.handler, "", st, &settings.Server{}).ServeHTTP(rec, req)
 		if rec.Code != http.StatusForbidden {
@@ -63,7 +63,7 @@ func TestSymlinkAliasesEnforceTargetRules(t *testing.T) {
 		t.Fatal(err)
 	}
 	req := httptest.NewRequest("GET", "/allowed-link", nil)
-	req.Header.Set("X-Auth", signToken(t, perm, key))
+	req.Header.Set("X-Auth", signToken(t, perm, key, st))
 	rec := httptest.NewRecorder()
 	handle(rawHandler, "", st, &settings.Server{}).ServeHTTP(rec, req)
 	if rec.Code != 200 || rec.Body.String() != "ok" {

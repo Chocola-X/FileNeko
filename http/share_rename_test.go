@@ -34,7 +34,7 @@ func TestRenameRevokesShares(t *testing.T) {
 				}
 			}
 			req := httptest.NewRequest("PATCH", src+"?action=rename&destination=/new", nil)
-			req.Header.Set("X-Auth", signToken(t, perm, key))
+			req.Header.Set("X-Auth", signToken(t, perm, key, st))
 			rec := httptest.NewRecorder()
 			handle(resourcePatchHandler(diskcache.NewNoOp()), "", st, &settings.Server{}).ServeHTTP(rec, req)
 			if rec.Code >= 400 {

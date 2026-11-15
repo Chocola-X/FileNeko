@@ -38,7 +38,7 @@ func TestTusConcurrentPatchCannotExceedLength(t *testing.T) {
 	st := scopedUserStorage(t, root, perm, key)
 	cache := newMemoryUploadCache()
 	defer cache.Close()
-	token := signToken(t, perm, key)
+	token := signToken(t, perm, key, st)
 	post := httptest.NewRequest("POST", "/race.bin", nil)
 	post.Header.Set("X-Auth", token)
 	post.Header.Set("Upload-Length", "5")

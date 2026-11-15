@@ -109,7 +109,7 @@ func TestSharePostHandlerDoesNotLeakSecrets(t *testing.T) {
 	key := []byte("test-signing-key")
 	perm := users.Permissions{Share: true, Download: true}
 	st := scopedUserStorage(t, userScope, perm, key)
-	signed := signToken(t, perm, key)
+	signed := signToken(t, perm, key, st)
 
 	body := `{"password":"ShareSecret123!","expires":"24","unit":"hours"}`
 	req, _ := http.NewRequest(http.MethodPost, "/file.txt", strings.NewReader(body))
@@ -150,7 +150,8 @@ func signShareTestToken(t *testing.T, id uint, username string, perm users.Permi
 	t.Helper()
 
 	claims := &authToken{
-		User: userInfo{ID: id, Username: username, Perm: perm},
+		PasswordStamp: passwordStamp(key, "pw"),
+		User:          userInfo{ID: id, Username: username, Perm: perm},
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(time.Now().Add(-time.Minute)),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),

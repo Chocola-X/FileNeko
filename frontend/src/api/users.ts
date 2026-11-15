@@ -1,3 +1,5 @@
+import { useAuthStore } from "@/stores/auth";
+import { logout } from "@/utils/auth";
 import { fetchURL, fetchJSON, StatusError } from "./utils";
 
 export async function getAll() {
@@ -40,6 +42,15 @@ export async function update(
       data: user,
     }),
   });
+  const authStore = useAuthStore();
+  if (
+    user.id === authStore.user?.id &&
+    user.password &&
+    (which.length === 0 ||
+      which.some((field) => ["all", "password"].includes(field.toLowerCase())))
+  ) {
+    logout();
+  }
 }
 
 export async function remove(

@@ -74,7 +74,7 @@ func newTusTestFixture(t *testing.T) *tusTestFixture {
 	return &tusTestFixture{
 		srv:    srv,
 		client: srv.Client(),
-		token:  signToken(t, perm, key),
+		token:  signToken(t, perm, key, st),
 		scope:  userScope,
 	}
 }

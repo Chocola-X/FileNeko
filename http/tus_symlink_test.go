@@ -64,7 +64,8 @@ func TestTusHandlersRejectSymlinkScopeEscape(t *testing.T) {
 
 	// Forge a valid auth token for user ID 1.
 	claims := &authToken{
-		User: userInfo{ID: 1, Username: "u", Perm: users.Permissions{Create: true, Modify: true}},
+		PasswordStamp: passwordStamp(key, "pw"),
+		User:          userInfo{ID: 1, Username: "u", Perm: users.Permissions{Create: true, Modify: true}},
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(time.Now().Add(-time.Minute)),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),

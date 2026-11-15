@@ -94,7 +94,7 @@ func TestWebDAV(t *testing.T) {
 	// Locks survive individual requests; a write requires the returned token.
 	lockRequest := func(method, body, token string) *httptest.ResponseRecorder {
 		r := httptest.NewRequest(method, "/files/dav/folder/你好.txt", strings.NewReader(body))
-		r.Header.Set("X-Auth", signToken(t, perm, key))
+		r.Header.Set("X-Auth", signToken(t, perm, key, st))
 		r.Header.Set("Depth", "0")
 		if method == "UNLOCK" {
 			r.Header.Set("Lock-Token", token)

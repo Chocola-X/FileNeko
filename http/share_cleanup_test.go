@@ -60,7 +60,7 @@ func TestDeleteRevokesSharesByPhysicalPath(t *testing.T) {
 		}
 	}
 	req := httptest.NewRequest("DELETE", "/nested/a.txt", nil)
-	req.Header.Set("X-Auth", signToken(t, perm, key))
+	req.Header.Set("X-Auth", signToken(t, perm, key, st))
 	rec := httptest.NewRecorder()
 	handle(resourceDeleteHandler(diskcache.NewNoOp()), "", st, &settings.Server{Root: root}).ServeHTTP(rec, req)
 	if rec.Code != 204 {

@@ -177,7 +177,6 @@ const updatePassword = async (event: Event) => {
       password: password.value,
     };
     await api.update(data, ["password"], currentPassword.value);
-    authStore.updateUser(data);
     $showSuccess(t("settings.passwordUpdated"));
   } catch (e: any) {
     $showError(e);

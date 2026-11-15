@@ -40,7 +40,7 @@ func TestRawArchiveDoesNotManufactureTraversal(t *testing.T) {
 	key := []byte("test-signing-key")
 	perm := users.Permissions{Download: true}
 	st := scopedUserStorage(t, userScope, perm, key)
-	signed := signToken(t, perm, key)
+	signed := signToken(t, perm, key, st)
 
 	req, _ := http.NewRequest(http.MethodGet, "/ziptest?algo=zip", http.NoBody)
 	req.Header.Set("X-Auth", signed)

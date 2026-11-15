@@ -1,6 +1,9 @@
 package fbhttp
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"log"
@@ -40,8 +43,16 @@ type userInfo struct {
 }
 
 type authToken struct {
-	User userInfo `json:"user"`
+	User          userInfo `json:"user"`
+	PasswordStamp string   `json:"pwd"`
 	jwt.RegisteredClaims
+}
+
+// Bind sessions to the current password without exposing its stored hash.
+func passwordStamp(key []byte, password string) string {
+	mac := hmac.New(sha256.New, key)
+	_, _ = mac.Write([]byte(password))
+	return hex.EncodeToString(mac.Sum(nil))
 }
 
 type extractor []string
@@ -135,7 +146,10 @@ func withUser(fn handleFunc) handleFunc {
 
 		d.user, err = d.store.Users.Get(d.server.Root, d.server.FollowExternalSymlinks, tk.User.ID)
 		if err != nil {
-			return http.StatusInternalServerError, err
+			return http.StatusUnauthorized, nil
+		}
+		if !hmac.Equal([]byte(tk.PasswordStamp), []byte(passwordStamp(d.settings.Key, d.user.Password))) {
+			return http.StatusUnauthorized, nil
 		}
 
 		canonicalizeRequestPath(r)
@@ -251,6 +265,7 @@ func renewHandler(tokenExpireTime time.Duration) handleFunc {
 
 func printToken(w http.ResponseWriter, _ *http.Request, d *data, user *users.User, tokenExpirationTime time.Duration) (int, error) {
 	claims := &authToken{
+		PasswordStamp: passwordStamp(d.settings.Key, user.Password),
 		User: userInfo{
 			ID:                    user.ID,
 			Locale:                user.Locale,

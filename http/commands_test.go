@@ -27,7 +27,7 @@ func TestCommandWebSocketLimits(t *testing.T) {
 			st := scopedUserStorage(t, t.TempDir(), perm, key)
 			srv := httptest.NewServer(handle(commandsHandler, "", st, &settings.Server{EnableExec: tc.enabled}))
 			defer srv.Close()
-			h := http.Header{"X-Auth": {signToken(t, perm, key)}}
+			h := http.Header{"X-Auth": {signToken(t, perm, key, st)}}
 			conn, resp, err := websocket.DefaultDialer.Dial("ws"+strings.TrimPrefix(srv.URL, "http")+"/", h)
 			if !tc.enabled || !tc.permitted {
 				if conn != nil {
