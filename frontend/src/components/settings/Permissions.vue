@@ -28,7 +28,7 @@
       <input type="checkbox" :disabled="admin" v-model="perm.modify" />
       {{ $t("settings.perm.modify") }}
     </p>
-    <p v-if="isExecEnabled">
+    <p v-if="isExecEnabled && admin">
       <input type="checkbox" :disabled="admin" v-model="perm.execute" />
       {{ $t("settings.perm.execute") }}
     </p>

@@ -56,7 +56,10 @@
     </p>
 
     <permissions v-model:perm="user.perm" />
-    <commands v-if="enableExec" v-model:commands="user.commands" />
+    <commands
+      v-if="enableExec && user.perm.admin"
+      v-model:commands="user.commands"
+    />
 
     <div v-if="!isDefault">
       <h3>{{ t("settings.rules") }}</h3>

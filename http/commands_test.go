@@ -21,20 +21,20 @@ import (
 // complete messages (the upgrader's read buffer does not impose a size limit).
 func TestCommandWebSocketLimits(t *testing.T) {
 	for _, tc := range []struct {
-		name               string
-		enabled, permitted bool
+		name                      string
+		enabled, permitted, admin bool
 	}{
-		{"disabled", false, true}, {"denied", true, false}, {"allowed", true, true},
+		{"disabled", false, true, true}, {"denied", true, false, true}, {"non-admin", true, true, false}, {"allowed", true, true, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			key := []byte("test-signing-key")
-			perm := users.Permissions{Execute: tc.permitted}
+			perm := users.Permissions{Execute: tc.permitted, Admin: tc.admin}
 			st := scopedUserStorage(t, t.TempDir(), perm, key)
 			srv := httptest.NewServer(handle(commandsHandler, "", st, &settings.Server{EnableExec: tc.enabled}))
 			defer srv.Close()
 			h := http.Header{"X-Auth": {signToken(t, perm, key, st)}}
 			conn, resp, err := websocket.DefaultDialer.Dial("ws"+strings.TrimPrefix(srv.URL, "http")+"/", h)
-			if !tc.enabled || !tc.permitted {
+			if !tc.enabled || !tc.permitted || !tc.admin {
 				if conn != nil {
 					conn.Close()
 				}
@@ -70,7 +70,7 @@ func TestCommandMetacharactersAreNotShellCode(t *testing.T) {
 	root := t.TempDir()
 	marker := filepath.Join(root, "injected")
 	key := []byte("key")
-	perm := users.Permissions{Execute: true}
+	perm := users.Permissions{Execute: true, Admin: true}
 	st := scopedUserStorage(t, root, perm, key)
 	user, err := st.Users.Get("", false, uint(1))
 	if err != nil {

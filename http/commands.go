@@ -40,7 +40,7 @@ func wsErr(ws *websocket.Conn, r *http.Request, status int, err error) {
 }
 
 var commandsHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
-	if !d.server.EnableExec || !d.user.Perm.Execute {
+	if !d.server.EnableExec || !d.user.Perm.Admin || !d.user.Perm.Execute {
 		return http.StatusForbidden, nil
 	}
 

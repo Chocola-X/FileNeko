@@ -12,7 +12,10 @@
       <router-view></router-view>
       <shell
         v-if="
-          enableExec && authStore.isLoggedIn && authStore.user?.perm.execute
+          enableExec &&
+          authStore.isLoggedIn &&
+          authStore.user?.perm.admin &&
+          authStore.user?.perm.execute
         "
       />
     </main>

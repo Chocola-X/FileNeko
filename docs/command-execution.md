@@ -65,3 +65,12 @@ hook such as `echo $FILE` now receives the literal argument `$FILE`.
 Interactive commands are executed directly as an executable and an argument
 list. The global shell setting applies only to administrator-configured hooks;
 it does not interpret interactive command input.
+
+Interactive execution is now restricted to administrators with Execute
+permission, and still requires the explicit server execution opt-in. Existing
+Execute grants to non-administrators no longer permit command execution. This
+closes delegated command scope escapes and subprocess allowlist bypasses without
+pretending that a working directory or an executable allowlist is an OS sandbox.
+An administrator who enables this feature receives the server process's OS
+privileges; scope and path rules do not confine those commands. Use file APIs for
+operations that must respect a restricted user's scope.
