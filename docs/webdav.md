@@ -57,6 +57,31 @@ curl --user admin -X PROPFIND -H 'Depth: 1' https://你的域名/dav/
 删除和移动目录、复制目录时会预先检查后代路径规则，避免通过操作父目录绕过限制。
 禁止删除、移动根目录，以及在互为祖先的目录间执行复制或移动。
 
-当前限制：锁保存在当前进程内存中，重启后失效，不适用于多实例共享锁。
+当前限制：锁保存在当前进程内存中，重启后失效，不适用于多实例共享锁；最多同时保留 4096 个锁（含请求期间的临时锁），已到期的锁按访问回收。
 不持久化自定义 WebDAV 属性（PROPPATCH），文件操作暂不触发 Command Runner 的 before/after hooks。
 尚未逐一验证 Windows Explorer、macOS Finder 等系统客户端的兼容性。
+
+## 本轮独立核查（2026-11-15）
+
+设置与认证功能提交：`d0b4c073`。在本地代码及所使用的 `golang.org/x/net/webdav` 实现上独立检查请求分发、密码认证、权限、文件类型、作用域、缓存和锁处理；以下问题均先用回归测试复现，再修复并分别提交。
+
+| 确认的问题 | 修复 | 提交与回归证据 |
+| --- | --- | --- |
+| WebDAV 的 HTML/SVG/JS 下载缺少脚本隔离，可作为应用同源内容使用 | 附件下载、禁止脚本与默认资源的 CSP、sandbox、nosniff；文件内容保持原样 | `2866093c`；`http/webdav_content_test.go` |
+| 特殊文件直接打开，管道可阻塞，设备可产生无界数据 | 打开前检查类型，只允许普通文件和目录；列表中不提供特殊文件 | `c73e6a3f`；`http/webdav_special_test.go` |
+| 同一文件的符号链接别名可绕过原路径上的锁 | 根据解析后的物理路径统一锁键，兼顾大小写不敏感文件系统 | `324cca29`；`http/webdav_alias_lock_test.go` |
+| 底层锁令牌为时间戳递增值；解锁未校验作用域，续期先修改再检查权限 | 外部令牌改用密码学随机值，内部值不可直接授权；解锁和续期先校验作用域、当前路径规则及别名指向，限制映射大小并回收到期条目 | `85e44059`；`http/webdav_lock_scope_test.go` |
+| tagged If 可引用另一文件的有效令牌来绕过当前写入目标的锁 | 锁条件绑定实际操作的源路径；COPY 仅锁定其写入目标 | `766cb102`；`http/webdav_if_lock_test.go` |
+
+同时验证管理员设置持久化与即时启停、普通账户不能修改开关、非法封禁参数不落库、网页登录与 WebDAV 共用失败计数、成功认证不触发封禁、IPv6 /64 合并、修改端口/转发头不能绕过、到期自动恢复、并发失败计数、长时间封禁不被提前回收。对应 `http/security_settings_test.go`、`auth/password_limiter_test.go`、`settings/fail2ban_test.go`。
+
+既有 WebDAV 回归还覆盖 baseURL、中文文件名、下载/上传/复制/移动/删除、锁续期、缩略图失效、递归拒绝规则、根目录保护、作用域外符号链接拒绝、撤销权限立即生效，以及验证码/代理/无认证模式不能绕过密码认证限制。上述测试不代表所有系统挂载客户端或生产代理部署均已验证。
+
+验证结果：
+
+- `go test -race ./...`：全部通过。
+- `go vet ./...`：通过。
+- 前端 `pnpm run lint`、`pnpm run typecheck`、`pnpm run test`（5 个文件、29 项）、`pnpm run build`：全部通过。生产构建仍有原有资源分包、运行时自定义资源及 Browserslist 数据更新提示。
+- `GOOS=windows GOARCH=amd64 go test -c ./http -o /tmp/neko-webdav-http-windows.test.exe`：交叉编译通过，未在 Windows 上执行。
+- `go build -o /tmp/neko-webdav-filebrowser .`：通过。使用当前构建、临时数据库和文件目录、本机随机端口及 `/files` baseURL 运行真实服务：验证即时启停、Basic 与已有会话均受关闭开关限制、重启保留设置、复用账号、PROPFIND/GET/PUT/MOVE/COPY/DELETE、随机锁令牌、拒绝无令牌覆盖、授权覆盖与解锁、混合登录与 WebDAV 失败触发同一 5 分钟封禁、剩余等待时间、已有管理员会话仍可调整保护设置。全部通过；测试服务和临时数据已清理。
+- `git diff --check`：通过。
