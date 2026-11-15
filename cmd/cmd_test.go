@@ -76,6 +76,9 @@ func TestGetSettingsWebDAV(t *testing.T) {
 		if _, err := getSettings(flags, set, server, &auth.JSONAuth{}, false); err != nil {
 			t.Fatal(err)
 		}
+		if set.EnableWebDAV == nil || *set.EnableWebDAV != enabled {
+			t.Fatal("WebDAV flag did not update dynamic settings")
+		}
 		if server.EnableWebDAV != enabled {
 			t.Fatalf("WebDAV = %v, want %v", server.EnableWebDAV, enabled)
 		}

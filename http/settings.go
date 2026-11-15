@@ -25,10 +25,16 @@ type settingsData struct {
 	Tus                   settings.Tus          `json:"tus"`
 	Shell                 []string              `json:"shell"`
 	Commands              map[string][]string   `json:"commands"`
+	Fail2Ban              *settings.Fail2Ban    `json:"fail2ban,omitempty"`
+	EnableWebDAV          *bool                 `json:"enableWebDAV,omitempty"`
 }
 
 var settingsGetHandler = withAdmin(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
+	policy := d.settings.PasswordBanPolicy()
+	enableWebDAV := d.settings.WebDAVEnabled(d.server)
 	data := &settingsData{
+		Fail2Ban:              &policy,
+		EnableWebDAV:          &enableWebDAV,
 		Signup:                d.settings.Signup,
 		HideLoginButton:       d.settings.HideLoginButton,
 		CreateUserDir:         d.settings.CreateUserDir,
@@ -55,6 +61,15 @@ var settingsPutHandler = withAdmin(func(_ http.ResponseWriter, r *http.Request, 
 
 	if d.settings.AuthMethod == auth.MethodJSONAuth && !users.CheckPwd(req.CurrentPassword, d.user.Password) {
 		return http.StatusBadRequest, fberrors.ErrCurrentPasswordIncorrect
+	}
+	if req.Fail2Ban != nil {
+		if err := req.Fail2Ban.Validate(); err != nil {
+			return http.StatusBadRequest, err
+		}
+		d.settings.Fail2Ban = req.Fail2Ban
+	}
+	if req.EnableWebDAV != nil {
+		d.settings.EnableWebDAV = req.EnableWebDAV
 	}
 
 	d.settings.Signup = req.Signup

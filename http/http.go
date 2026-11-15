@@ -45,11 +45,11 @@ func NewHandler(
 	r.HandleFunc("/health", healthHandler)
 	r.PathPrefix("/static").Handler(static)
 	r.NotFoundHandler = index
-	if server.EnableWebDAV {
-		dav := monkey(newWebDAVHandler(fileCache), "")
-		r.Handle("/dav", dav)
-		r.PathPrefix("/dav/").Handler(dav)
-	}
+	// Always register the route; the handler checks persisted settings on each
+	// request so an administrator can enable or disable DAV without a restart.
+	dav := monkey(newWebDAVHandler(fileCache), "")
+	r.Handle("/dav", dav)
+	r.PathPrefix("/dav/").Handler(dav)
 
 	api := r.PathPrefix("/api").Subrouter()
 

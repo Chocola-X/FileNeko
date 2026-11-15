@@ -190,6 +190,19 @@ user created with the credentials from options "username" and "password".`,
 		if err != nil {
 			return err
 		}
+		// Explicit startup flags/environment retain precedence. The persisted
+		// value may subsequently be changed in the UI for this running server.
+		if v.IsSet("enableWebDAV") {
+			set, err := st.Settings.Get()
+			if err != nil {
+				return err
+			}
+			enabled := server.EnableWebDAV
+			set.EnableWebDAV = &enabled
+			if err := st.Settings.Save(set); err != nil {
+				return err
+			}
+		}
 		setupLog(server.Log)
 
 		log.Println("NOTICE: File Browser is being wound down.")

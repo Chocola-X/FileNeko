@@ -162,7 +162,7 @@ func TestWebDAVRejectsBasicAuthBypass(t *testing.T) {
 	if err := st.Auth.Save(&fbAuth.JSONAuth{ReCaptcha: &fbAuth.ReCaptcha{Secret: "required"}}); err != nil {
 		t.Fatal(err)
 	}
-	h := handle(newWebDAVHandler(nil), "", st, &settings.Server{})
+	h := handle(newWebDAVHandler(nil), "", st, &settings.Server{EnableWebDAV: true})
 	for _, method := range []settings.AuthMethod{fbAuth.MethodJSONAuth, fbAuth.MethodProxyAuth, fbAuth.MethodNoAuth} {
 		if err := st.Settings.Save(&settings.Settings{Key: key, AuthMethod: method}); err != nil {
 			t.Fatal(err)

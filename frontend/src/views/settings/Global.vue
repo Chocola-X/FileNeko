@@ -44,6 +44,82 @@
             />
           </p>
 
+          <h3>{{ t("settings.fail2ban.title") }}</h3>
+          <p class="small">{{ t("settings.fail2ban.description") }}</p>
+          <p>
+            <label for="fail2ban-enabled">
+              <input
+                id="fail2ban-enabled"
+                type="checkbox"
+                v-model="settings.fail2ban.enabled"
+              />
+              {{ t("settings.fail2ban.enabled") }}
+            </label>
+          </p>
+          <div v-if="settings.fail2ban.enabled">
+            <p>
+              <label for="fail2ban-attempts">{{
+                t("settings.fail2ban.maxAttempts")
+              }}</label>
+              <vue-number-input
+                id="fail2ban-attempts"
+                controls
+                v-model.number="settings.fail2ban.maxAttempts"
+                :min="1"
+                :max="100"
+              />
+            </p>
+            <p>
+              <label for="fail2ban-window">{{
+                t("settings.fail2ban.windowMinutes")
+              }}</label>
+              <vue-number-input
+                id="fail2ban-window"
+                controls
+                v-model.number="settings.fail2ban.windowMinutes"
+                :min="1"
+                :max="1440"
+              />
+            </p>
+            <p>
+              <label for="fail2ban-duration">{{
+                t("settings.fail2ban.banMinutes")
+              }}</label>
+              <vue-number-input
+                id="fail2ban-duration"
+                controls
+                v-model.number="settings.fail2ban.banMinutes"
+                :min="1"
+                :max="10080"
+              />
+            </p>
+          </div>
+
+          <h3>WebDAV</h3>
+          <p>
+            <label for="webdav-enabled">
+              <input
+                id="webdav-enabled"
+                type="checkbox"
+                v-model="settings.enableWebDAV"
+              />
+              {{ t("settings.webdav.enabled") }}
+            </label>
+          </p>
+          <p class="small">{{ t("settings.webdav.description") }}</p>
+          <p v-if="settings.enableWebDAV">
+            <label for="webdav-address">{{
+              t("settings.webdav.address")
+            }}</label>
+            <input
+              id="webdav-address"
+              class="input input--block"
+              type="text"
+              :value="webdavURL"
+              readonly
+            />
+          </p>
+
           <h3>{{ t("settings.rules") }}</h3>
           <p class="small">{{ t("settings.globalRules") }}</p>
           <rules v-model:rules="settings.rules" />
@@ -252,7 +328,7 @@ import Rules from "@/components/settings/Rules.vue";
 import Themes from "@/components/settings/Themes.vue";
 import UserForm from "@/components/settings/UserForm.vue";
 import { useLayoutStore } from "@/stores/layout";
-import { enableExec, authMethod } from "@/utils/constants";
+import { enableExec, authMethod, baseURL } from "@/utils/constants";
 import { getTheme, setTheme } from "@/utils/theme";
 import Errors from "@/views/Errors.vue";
 import { computed, inject, onBeforeUnmount, onMounted, ref } from "vue";
@@ -261,6 +337,7 @@ import { useI18n } from "vue-i18n";
 const error = ref<StatusError | null>(null);
 const originalSettings = ref<ISettings | null>(null);
 const settings = ref<ISettings | null>(null);
+const webdavURL = `${window.location.origin}${baseURL.replace(/\/$/, "")}/dav/`;
 const debounceTimeout = ref<number | null>(null);
 const pendingChunkSize = ref<string | null>(null);
 

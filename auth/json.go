@@ -2,12 +2,10 @@ package auth
 
 import (
 	"encoding/json"
-	fberrors "github.com/filebrowser/filebrowser/v2/errors"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/filebrowser/filebrowser/v2/users"
@@ -32,11 +30,11 @@ type JSONAuth struct {
 }
 
 // Auth authenticates the user via a json in content body.
-func (a JSONAuth) Auth(r *http.Request, usr users.Store, _ *settings.Settings, srv *settings.Server) (*users.User, error) {
+func (a JSONAuth) Auth(r *http.Request, usr users.Store, set *settings.Settings, srv *settings.Server) (*users.User, error) {
 
-	finish, allowed := passwordAttempts.begin(r.RemoteAddr, time.Now())
-	if !allowed {
-		return nil, fberrors.ErrTooManyAttempts
+	finish, err := passwordAttempts.begin(r.RemoteAddr, set.PasswordBanPolicy())
+	if err != nil {
+		return nil, err
 	}
 	success := false
 	defer func() { finish(success) }()
@@ -46,7 +44,7 @@ func (a JSONAuth) Auth(r *http.Request, usr users.Store, _ *settings.Settings, s
 		return nil, os.ErrPermission
 	}
 
-	err := json.NewDecoder(r.Body).Decode(&cred)
+	err = json.NewDecoder(r.Body).Decode(&cred)
 	if err != nil {
 		return nil, os.ErrPermission
 	}

@@ -10,9 +10,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/filebrowser/filebrowser/v2/auth"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/golang-jwt/jwt/v5/request"
 
@@ -152,7 +154,7 @@ func loginHandler(tokenExpireTime time.Duration) handleFunc {
 		user, err := auther.Auth(r, d.store.Users, d.settings, d.server)
 		switch {
 		case errors.Is(err, fberrors.ErrTooManyAttempts):
-			w.Header().Set("Retry-After", "6")
+			setPasswordRetryAfter(w, err)
 			return http.StatusTooManyRequests, nil
 		case errors.Is(err, os.ErrPermission):
 			return http.StatusForbidden, nil
@@ -162,6 +164,15 @@ func loginHandler(tokenExpireTime time.Duration) handleFunc {
 
 		return printToken(w, r, d, user, tokenExpireTime)
 	}
+}
+
+func setPasswordRetryAfter(w http.ResponseWriter, err error) {
+	seconds := 6
+	var limited *auth.AttemptLimitError
+	if errors.As(err, &limited) {
+		seconds = max(1, int((limited.RetryAfter+time.Second-1)/time.Second))
+	}
+	w.Header().Set("Retry-After", strconv.Itoa(seconds))
 }
 
 type signupBody struct {

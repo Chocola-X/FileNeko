@@ -97,6 +97,9 @@ func newWebDAVHandler(cache FileCache) handleFunc {
 		return 0, nil
 	}
 	return func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
+		if !d.settings.WebDAVEnabled(d.server) {
+			return http.StatusNotFound, nil
+		}
 		if r.Header.Get("X-Auth") != "" {
 			return withUser(serve)(w, r, d)
 		}
@@ -118,7 +121,7 @@ func newWebDAVHandler(cache FileCache) handleFunc {
 		login.Body = io.NopCloser(bytes.NewReader(credentials))
 		d.user, err = j.Auth(login, d.store.Users, d.settings, d.server)
 		if errors.Is(err, fberrors.ErrTooManyAttempts) {
-			w.Header().Set("Retry-After", "6")
+			setPasswordRetryAfter(w, err)
 			return http.StatusTooManyRequests, nil
 		}
 		if err != nil {

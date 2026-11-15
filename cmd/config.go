@@ -247,7 +247,9 @@ func printSettings(ser *settings.Server, set *settings.Settings, auther auth.Aut
 	fmt.Fprintf(w, "\tThumbnails Enabled:\t%t\n", ser.EnableThumbnails)
 	fmt.Fprintf(w, "\tResize Preview:\t%t\n", ser.ResizePreview)
 	fmt.Fprintf(w, "\tType Detection by Header:\t%t\n", ser.TypeDetectionByHeader)
-	fmt.Fprintf(w, "\tWebDAV:\t%t\n", ser.EnableWebDAV)
+	fmt.Fprintf(w, "\tWebDAV:\t%t\n", set.WebDAVEnabled(ser))
+	ban := set.PasswordBanPolicy()
+	fmt.Fprintf(w, "\tFail2Ban:\t%t (%d failures / %d min, ban %d min)\n", ban.Enabled, ban.MaxAttempts, ban.WindowMinutes, ban.BanMinutes)
 	fmt.Fprintf(w, "\tFollow External Symlinks:\t%t\n", ser.FollowExternalSymlinks)
 
 	fmt.Fprintln(w, "\nTUS:")
@@ -335,6 +337,8 @@ func getSettings(flags *pflag.FlagSet, set *settings.Settings, ser *settings.Ser
 			ser.ImageResolutionCal = !ser.ImageResolutionCal
 		case "enableWebDAV":
 			ser.EnableWebDAV, err = flags.GetBool(flag.Name)
+			enabled := ser.EnableWebDAV
+			set.EnableWebDAV = &enabled
 		case "followExternalSymlinks":
 			ser.FollowExternalSymlinks, err = flags.GetBool(flag.Name)
 

@@ -71,6 +71,11 @@ var defaultEvents = []string{
 
 // Save saves the settings for the current instance.
 func (s *Storage) Save(set *Settings) error {
+	if set.Fail2Ban != nil {
+		if err := set.Fail2Ban.Validate(); err != nil {
+			return err
+		}
+	}
 	if len(set.Key) == 0 {
 		return fberrors.ErrEmptyKey
 	}

@@ -142,7 +142,8 @@
     "passwordTooShort": "Password must be at least {min} characters",
     "logout_reasons": {
       "inactivity": "You have been logged out due to inactivity."
-    }
+    },
+    "tooManyAttempts": "Too many failed attempts. Try again in {seconds} seconds."
   },
   "permanent": "Permanent",
   "prompts": {
@@ -299,7 +300,20 @@
     "userUpdated": "User updated!",
     "username": "Username",
     "users": "Users",
-    "currentPassword": "Your Current Password"
+    "currentPassword": "Your Current Password",
+    "fail2ban": {
+      "title": "Fail2Ban — login protection",
+      "description": "Shares failed-password counts between File Browser login and WebDAV. Reaching the threshold within the observation window temporarily blocks password authentication from that source. Successful requests do not count. Sources use the connection IP (IPv6 /64); users behind a proxy share its budget.",
+      "enabled": "Enable temporary bans",
+      "maxAttempts": "Failed attempts before a ban",
+      "windowMinutes": "Observation window (minutes)",
+      "banMinutes": "Ban duration (minutes)"
+    },
+    "webdav": {
+      "enabled": "Enable WebDAV",
+      "description": "Takes effect after saving, without restarting. Use your File Browser username and password over HTTPS; user permissions and Fail2Ban also apply. Basic login is unavailable with CAPTCHA, proxy, hook or no-auth authentication.",
+      "address": "WebDAV address"
+    }
   },
   "sidebar": {
     "diskUsed": "{used} of {total} used",

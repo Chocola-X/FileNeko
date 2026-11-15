@@ -36,7 +36,7 @@ func TestLoginGuessLimitAlsoCoversWebDAV(t *testing.T) {
 	if err := st.Settings.Save(&settings.Settings{Key: key, AuthMethod: auth.MethodJSONAuth}); err != nil {
 		t.Fatal(err)
 	}
-	server := &settings.Server{}
+	server := &settings.Server{EnableWebDAV: true}
 	login := handle(loginHandler(DefaultTokenExpirationTime), "", st, server)
 	var last *httptest.ResponseRecorder
 	for i := 0; i < 11; i++ {

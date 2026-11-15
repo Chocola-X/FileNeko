@@ -38,6 +38,16 @@ type Settings struct {
 	FileMode              fs.FileMode         `json:"fileMode"`
 	DirMode               fs.FileMode         `json:"dirMode"`
 	HideDotfiles          bool                `json:"hideDotfiles"`
+	Fail2Ban              *Fail2Ban           `json:"fail2ban,omitempty"`
+	// Nil preserves the legacy server/CLI setting until explicitly configured.
+	EnableWebDAV *bool `json:"enableWebDAV,omitempty"`
+}
+
+func (s *Settings) WebDAVEnabled(server *Server) bool {
+	if s.EnableWebDAV != nil {
+		return *s.EnableWebDAV
+	}
+	return server.EnableWebDAV
 }
 
 // GetRules implements rules.Provider.

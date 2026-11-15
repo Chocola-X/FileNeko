@@ -66,10 +66,15 @@ export async function login(
   if (res.status === 200) {
     parseToken(body);
   } else {
-    throw new StatusError(
+    const error = new StatusError(
       body || `${res.status} ${res.statusText}`,
       res.status
     );
+    const retryAfter = Number(res.headers.get("Retry-After"));
+    if (Number.isFinite(retryAfter) && retryAfter > 0) {
+      error.retryAfterSeconds = Math.ceil(retryAfter);
+    }
+    throw error;
   }
 }
 

@@ -11,6 +11,15 @@ interface ISettings {
   tus: SettingsTus;
   shell: string[];
   commands: SettingsCommand;
+  fail2ban: SettingsFail2Ban;
+  enableWebDAV: boolean;
+}
+
+interface SettingsFail2Ban {
+  enabled: boolean;
+  maxAttempts: number;
+  windowMinutes: number;
+  banMinutes: number;
 }
 
 interface SettingsDefaults {
