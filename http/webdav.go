@@ -179,7 +179,11 @@ func (f *davFS) Stat(_ context.Context, name string) (os.FileInfo, error) {
 	if !f.d.Check(name) {
 		return nil, os.ErrPermission
 	}
-	return f.d.user.Fs.Stat(name)
+	info, err := f.d.user.Fs.Stat(name)
+	if err == nil && !info.IsDir() && !info.Mode().IsRegular() {
+		return nil, os.ErrPermission
+	}
+	return info, err
 }
 
 func (f *davFS) Mkdir(_ context.Context, name string, _ os.FileMode) error {
@@ -196,11 +200,16 @@ func (f *davFS) Mkdir(_ context.Context, name string, _ os.FileMode) error {
 
 func (f *davFS) OpenFile(ctx context.Context, name string, flag int, _ os.FileMode) (webdav.File, error) {
 	name = slashClean(name)
-	if !f.d.Check(name) {
-		return nil, os.ErrPermission
+	// Opening a FIFO can block before a descriptor exists to inspect. Stat
+	// first, for both reads and writes, and never open a special file.
+	info, err := f.Stat(ctx, name)
+	if err != nil && !os.IsNotExist(err) {
+		return nil, err
 	}
 	if flag&(os.O_WRONLY|os.O_RDWR|os.O_CREATE|os.O_TRUNC) != 0 {
-		_, err := f.d.user.Fs.Stat(name)
+		if err == nil && info.IsDir() {
+			return nil, os.ErrPermission
+		}
 		if (err == nil && !f.d.user.Perm.Modify) || (os.IsNotExist(err) && !f.d.user.Perm.Create) {
 			return nil, os.ErrPermission
 		}
