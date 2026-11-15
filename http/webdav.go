@@ -98,7 +98,12 @@ func newWebDAVHandler(cache FileCache) handleFunc {
 		default:
 			return http.StatusMethodNotAllowed, nil
 		}
-		h := webdav.Handler{Prefix: prefix, FileSystem: &davFS{d: d, cache: cache}, LockSystem: davLocks{locks: locks, d: d}}
+		lockSource := src
+		if r.Method == "COPY" {
+			// COPY reads its source and only locks the destination.
+			lockSource = ""
+		}
+		h := webdav.Handler{Prefix: prefix, FileSystem: &davFS{d: d, cache: cache}, LockSystem: davLocks{locks: locks, d: d, source: &lockSource}}
 		h.ServeHTTP(w, r)
 		return 0, nil
 	}
@@ -295,11 +300,17 @@ func (f *davFile) Readdir(n int) ([]os.FileInfo, error) {
 // LockDetails roots are stored as physical paths so locks work across accounts
 // with overlapping scopes. Refresh converts them back for DAV response hrefs.
 type davLocks struct {
-	locks *davLockRegistry
-	d     *data
+	locks  *davLockRegistry
+	d      *data
+	source *string
 }
 
 func (l davLocks) Confirm(now time.Time, name0, name1 string, conditions ...webdav.Condition) (func(), error) {
+	if l.source != nil {
+		// x/net may take name0 from a client-controlled tagged If URI. A
+		// condition on another resource must not authorize this request's write.
+		name0 = *l.source
+	}
 	var err error
 	if name0 != "" {
 		name0, err = l.physicalPath(name0)
