@@ -1,0 +1,215 @@
+/* Shared reference palette: components select a tone by purpose, not position. */
+:root,
+[data-tone="cobalt"] {
+  --accent-main: var(--cobalt-main);
+  --accent-dark: var(--cobalt-dark);
+  --accent-light: var(--cobalt-light);
+  --accent-surface: var(--cobalt-surface);
+}
+[data-tone="pink"] {
+  --accent-main: var(--pink-main);
+  --accent-dark: var(--pink-dark);
+  --accent-light: var(--pink-light);
+  --accent-surface: var(--pink-surface);
+}
+[data-tone="cyan"] {
+  --accent-main: var(--cyan-main);
+  --accent-dark: var(--cyan-dark);
+  --accent-light: var(--cyan-light);
+  --accent-surface: var(--cyan-surface);
+}
+[data-tone="purple"] {
+  --accent-main: var(--purple-main);
+  --accent-dark: var(--purple-dark);
+  --accent-light: var(--purple-light);
+  --accent-surface: var(--purple-surface);
+}
+[data-tone="mint"] {
+  --accent-main: var(--mint-dark);
+  --accent-dark: var(--mint-dark);
+  --accent-light: #dcfaf2;
+  --accent-surface: #f0fdf9;
+}
+[data-tone="gold"] {
+  --accent-main: var(--star-yellow);
+  --accent-dark: #936600;
+  --accent-light: #fff1b8;
+  --accent-surface: var(--bg-cream);
+}
+
+header .action[data-tone="cyan"],
+header .action[data-tone="purple"],
+header .action[data-tone="gold"] {
+  --action-background: var(--accent-light);
+}
+header .action[data-icon="file_upload"] {
+  --action-background: var(--pink-main);
+  --action-color: white;
+  --action-hover: #ff528c;
+}
+#file-selection .action[data-tone] {
+  color: var(--accent-dark);
+  background: white;
+  border: 2px solid var(--accent-dark);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--accent-dark);
+}
+#file-selection .action[data-tone]:hover {
+  background: var(--accent-light);
+}
+#file-selection .action[data-tone] i,
+.context-menu .action[data-tone] i {
+  color: var(--accent-dark) !important;
+}
+
+/* Keep the native input semantics, keyboard interaction and disabled state. */
+.dashboard input[type="checkbox"],
+#modal-background input[type="checkbox"] {
+  --check-main: var(--panel-main, var(--accent-main));
+  --check-dark: var(--panel-dark, var(--accent-dark));
+  --check-light: var(--panel-light, var(--accent-light));
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 20px !important;
+  height: 20px !important;
+  padding: 0;
+  border: 2px solid var(--check-dark);
+  border-radius: 6px;
+  background-color: white;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 15px 15px;
+  box-shadow: 2px 2px 0 var(--check-dark);
+  vertical-align: -4px;
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+.dashboard input[type="checkbox"]:hover:not(:disabled),
+#modal-background input[type="checkbox"]:hover:not(:disabled) {
+  background-color: var(--check-light);
+  box-shadow: 3px 3px 0 var(--check-dark);
+}
+.dashboard input[type="checkbox"]:checked,
+#modal-background input[type="checkbox"]:checked,
+.dashboard input[type="checkbox"]:indeterminate,
+#modal-background input[type="checkbox"]:indeterminate {
+  background-color: var(--check-main);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m4 10 4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.dashboard input[type="checkbox"]:checked:hover:not(:disabled),
+#modal-background input[type="checkbox"]:checked:hover:not(:disabled),
+.dashboard input[type="checkbox"]:indeterminate:hover:not(:disabled),
+#modal-background input[type="checkbox"]:indeterminate:hover:not(:disabled) {
+  background-color: var(--check-dark);
+}
+.dashboard input[type="checkbox"]:indeterminate,
+#modal-background input[type="checkbox"]:indeterminate {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10h10' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.dashboard input[type="checkbox"]:focus-visible,
+#modal-background input[type="checkbox"]:focus-visible {
+  outline: 3px solid var(--star-gold-dark) !important;
+  outline-offset: 4px;
+}
+.dashboard input[type="checkbox"]:disabled,
+#modal-background input[type="checkbox"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  box-shadow: none;
+}
+@media (forced-colors: active) {
+  .dashboard input[type="checkbox"],
+  #modal-background input[type="checkbox"] {
+    appearance: auto;
+    -webkit-appearance: auto;
+    accent-color: auto !important;
+    background-image: none;
+    box-shadow: none;
+  }
+}
+
+/* Reference-style colored title strips, dashed stationery edges and hard shadows. */
+#modal-background .card.floating {
+  border-color: var(--accent-dark) !important;
+  background: white;
+}
+#modal-background .card-title {
+  position: relative;
+  background: var(--accent-main) !important;
+  border-bottom: 3px solid var(--accent-dark) !important;
+}
+#modal-background .card-title::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: 20px;
+  top: 50%;
+  width: 32px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 5px;
+  color: white;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 5px,
+    currentColor 5px 7px
+  );
+  opacity: 0.7;
+  transform: translateY(-50%) skewX(-12deg);
+  pointer-events: none;
+}
+#modal-background .card-title h2 {
+  padding-inline-end: 48px;
+  color: white !important;
+}
+#modal-background[data-tone="gold"] .card-title h2,
+#modal-background[data-tone="gold"] .card-title::after {
+  color: var(--ink-navy) !important;
+}
+#modal-background .card-content {
+  border-inline: 1px dashed var(--accent-light);
+  margin-inline: 7px;
+}
+#modal-background .input {
+  border-color: var(--accent-dark) !important;
+  background: var(--accent-surface) !important;
+}
+#modal-background .input:focus {
+  box-shadow: 3px 3px 0 var(--accent-light) !important;
+}
+#modal-background .button:not(.button--grey):not(.button--red) {
+  --button-bg: var(--accent-main);
+  --button-hover: var(--accent-dark);
+  --button-border: var(--accent-dark);
+}
+#modal-background .button--grey {
+  --button-ink: var(--accent-dark);
+  --button-border: var(--accent-dark);
+  --button-hover: var(--accent-light);
+}
+#modal-background[data-tone="gold"]
+  .button:not(.button--grey):not(.button--red) {
+  --button-ink: var(--ink-navy);
+  --button-hover: var(--accent-light);
+}
+#modal-background .card-action.full .action {
+  color: var(--cyan-dark);
+  border-color: var(--cyan-dark);
+  background: var(--cyan-surface);
+  box-shadow: 3px 3px 0 var(--cyan-dark);
+}
+#modal-background .card-action.full .action:hover {
+  background: var(--cyan-light);
+}
+#modal-background .card-action.full .action:nth-child(2) {
+  color: var(--purple-dark);
+  border-color: var(--purple-dark);
+  background: var(--purple-surface);
+  box-shadow: 3px 3px 0 var(--purple-dark);
+}
+#modal-background .card-action.full .action:nth-child(2):hover {
+  background: var(--purple-light);
+}

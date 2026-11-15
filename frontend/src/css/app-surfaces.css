@@ -233,7 +233,7 @@ button.button:disabled,
   margin: 0;
   border-width: 2.5px !important;
   border-radius: 20px !important;
-  box-shadow: 6px 6px 0 var(--cobalt-dark) !important;
+  box-shadow: 6px 6px 0 var(--accent-dark) !important;
   animation: dialog-enter 0.15s ease-out !important;
 }
 #modal-background .card-title {
@@ -261,8 +261,8 @@ button.button:disabled,
   flex-wrap: wrap;
   align-items: center;
   padding: 16px 20px !important;
-  border-top-color: var(--cobalt-main) !important;
-  background: var(--surface-ice);
+  border-top-color: var(--accent-main) !important;
+  background: var(--accent-surface);
 }
 #modal-background .card-action > div:not(.action) {
   display: flex;
@@ -284,11 +284,11 @@ button.button:disabled,
   min-width: 0;
 }
 #modal-background .card-content .action {
-  color: var(--cobalt-dark);
+  color: var(--accent-dark);
   border-radius: 9px;
 }
 #modal-background .card-content .action:hover {
-  background: var(--cobalt-light);
+  background: var(--accent-light);
 }
 #modal-background .card-action.full {
   display: grid !important;
@@ -301,15 +301,15 @@ button.button:disabled,
   align-items: center;
   gap: 10px;
   padding: 20px 12px;
-  border: 2px solid var(--cobalt-dark);
+  border: 2px solid var(--accent-dark);
   border-radius: 14px;
   background: white;
-  box-shadow: 3px 3px 0 var(--cobalt-dark);
-  color: var(--cobalt-dark);
+  box-shadow: 3px 3px 0 var(--accent-dark);
+  color: var(--accent-dark);
   font-size: 14px;
 }
 #modal-background .card-action.full .action:hover {
-  background: var(--cobalt-light);
+  background: var(--accent-light);
 }
 #modal-background .card-action.full .action:nth-child(2) {
   color: var(--pink-dark);
@@ -441,7 +441,7 @@ button.button:disabled,
 }
 #previewer header title,
 #previewer header .action i {
-  color: var(--ink-navy) !important;
+  color: inherit !important;
   text-shadow: none !important;
 }
 #previewer .preview {

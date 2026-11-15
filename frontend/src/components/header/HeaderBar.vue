@@ -7,10 +7,7 @@
       role="button"
       tabindex="0"
     >
-      <div class="header-logo-badge">
-        <img :src="logoURL" alt="File Browser" class="header-logo-img" />
-        <span class="header-logo-star">★</span>
-      </div>
+      <img :src="logoURL" alt="File Browser" class="header-logo-img" />
       <div class="header-brand-text">
         <div class="header-brand-main">
           <span class="header-brand-title">{{ name }}</span>

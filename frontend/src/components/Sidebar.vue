@@ -10,12 +10,13 @@
     </div>
 
     <template v-if="isLoggedIn">
-      <button @click="toAccountSettings" class="action">
+      <button @click="toAccountSettings" class="action" data-tone="purple">
         <i class="material-icons">person</i>
         <span>{{ user.username }}</span>
       </button>
       <button
         class="action"
+        data-tone="cobalt"
         :class="{ active: $route.path.startsWith('/files') }"
         @click="toRoot"
         :aria-label="$t('sidebar.myFiles')"
@@ -29,6 +30,7 @@
         <button
           @click="showHover('newDir')"
           class="action"
+          data-tone="cyan"
           :aria-label="$t('sidebar.newFolder')"
           :title="$t('sidebar.newFolder')"
         >
@@ -39,6 +41,7 @@
         <button
           @click="showHover('newFile')"
           class="action"
+          data-tone="purple"
           :aria-label="$t('sidebar.newFile')"
           :title="$t('sidebar.newFile')"
         >
@@ -50,6 +53,7 @@
       <div v-if="user.perm.admin">
         <button
           class="action"
+          data-tone="pink"
           :class="{ active: $route.path.startsWith('/settings') }"
           @click="toGlobalSettings"
           :aria-label="$t('sidebar.settings')"
@@ -63,6 +67,7 @@
         v-if="canLogout"
         @click="logout"
         class="action"
+        data-tone="mint"
         id="logout"
         :aria-label="$t('sidebar.logout')"
         :title="$t('sidebar.logout')"
@@ -75,6 +80,7 @@
       <router-link
         v-if="!hideLoginButton"
         class="action"
+        data-tone="cyan"
         to="/login"
         :aria-label="$t('sidebar.login')"
         :title="$t('sidebar.login')"
@@ -86,6 +92,7 @@
       <router-link
         v-if="signup"
         class="action"
+        data-tone="purple"
         to="/login"
         :aria-label="$t('sidebar.signup')"
         :title="$t('sidebar.signup')"

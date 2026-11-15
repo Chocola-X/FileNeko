@@ -101,48 +101,17 @@ header {
   user-select: none !important;
 }
 
-.header-logo-badge {
-  width: 42px !important;
-  height: 42px !important;
-  border-radius: 13px !important;
-  background: var(--cobalt-main) !important;
-  border: 2.2px solid var(--cobalt-dark) !important;
-  box-shadow: 2.5px 2.5px 0px var(--cobalt-dark) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  position: relative !important;
-  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-}
-
-.header-brand-wrap:hover .header-logo-badge {
-  transform: scale(1.06) rotate(-3deg);
-}
-
 .header-logo-img {
-  width: 30px !important;
-  height: 30px !important;
+  display: block !important;
+  flex: 0 0 auto;
+  width: 54px !important;
+  height: 54px !important;
   object-fit: contain !important;
   margin: 0 !important;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
   filter: none !important;
-}
-
-.header-logo-star {
-  position: absolute !important;
-  top: -6px !important;
-  right: -6px !important;
-  width: 17px !important;
-  height: 17px !important;
-  border-radius: 50% !important;
-  background: var(--star-yellow) !important;
-  border: 1.5px solid var(--cobalt-dark) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 9px !important;
-  font-weight: 900 !important;
-  color: var(--ink-navy) !important;
-  line-height: 1 !important;
 }
 
 .header-brand-text {
@@ -229,11 +198,11 @@ header > div > .action,
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: #ffffff !important;
-  color: var(--ink-navy) !important;
-  border: 2.2px solid var(--cobalt-dark) !important;
+  background: var(--action-background, #ffffff) !important;
+  color: var(--action-color, var(--accent-dark)) !important;
+  border: 2.2px solid var(--accent-dark) !important;
   border-radius: 12px !important;
-  box-shadow: 2.5px 2.5px 0px var(--cobalt-dark) !important;
+  box-shadow: 2.5px 2.5px 0px var(--accent-dark) !important;
   margin: 0 4px !important;
   padding: 4px 8px !important;
   height: 2.5em !important;
@@ -262,7 +231,7 @@ header .action.pink-btn i {
 
 #upload-button:hover,
 header .action.pink-btn:hover {
-  background: var(--pink-hover) !important;
+  background: #ff528c !important;
   box-shadow: 4px 4px 0px var(--pink-dark) !important;
   transform: translate(-1.5px, -1.5px) !important;
 }
@@ -270,7 +239,7 @@ header .action.pink-btn:hover {
 header .action i,
 header > div > .action i,
 #dropdown .action i {
-  color: var(--ink-navy) !important;
+  color: inherit !important;
   font-size: 1.35rem !important;
   padding: 0 !important;
 }
@@ -278,16 +247,16 @@ header > div > .action i,
 header .action:hover,
 header > div > .action:hover,
 #dropdown .action:hover {
-  background: var(--cobalt-light) !important;
+  background: var(--action-hover, var(--accent-light)) !important;
   transform: translate(-1.5px, -1.5px) !important;
-  box-shadow: 4px 4px 0px var(--cobalt-dark) !important;
+  box-shadow: 4px 4px 0px var(--accent-dark) !important;
 }
 
 header .action:active,
 header > div > .action:active,
 #dropdown .action:active {
   transform: translate(2px, 2px) !important;
-  box-shadow: 1px 1px 0px var(--cobalt-dark) !important;
+  box-shadow: 1px 1px 0px var(--accent-dark) !important;
 }
 
 /* Hide Hamburger Menu and Mobile Search on Desktop */
@@ -527,10 +496,10 @@ nav > .action:first-of-type,
   display: flex !important;
   align-items: center !important;
   gap: 10px !important;
-  background: var(--cobalt-light) !important;
-  border: 2.2px solid var(--cobalt-dark) !important;
+  background: var(--accent-light) !important;
+  border: 2.2px solid var(--accent-dark) !important;
   border-radius: 14px !important;
-  box-shadow: 3px 3px 0px var(--cobalt-dark) !important;
+  box-shadow: 3px 3px 0px var(--accent-dark) !important;
   margin-bottom: 14px !important;
   padding: 10px 14px !important;
   font-weight: 800 !important;
@@ -540,14 +509,14 @@ nav > .action:first-of-type,
 
 nav > .action:first-of-type i,
 #sidebar > .action:first-of-type i {
-  color: var(--cobalt-dark) !important;
+  color: var(--accent-dark) !important;
   font-size: 1.5rem !important;
 }
 
 nav > .action:first-of-type span,
 #sidebar > .action:first-of-type span {
   font-weight: 900 !important;
-  color: var(--cobalt-dark) !important;
+  color: var(--accent-dark) !important;
 }
 
 /* Regular Sidebar Action Buttons */
@@ -576,7 +545,7 @@ nav .action,
 
 nav .action i,
 #sidebar .action i {
-  color: var(--cobalt-main) !important;
+  color: var(--accent-main) !important;
   font-size: 1.4rem !important;
   min-width: 24px !important;
   display: inline-flex !important;
@@ -594,10 +563,10 @@ nav .action span,
 
 nav .action:hover,
 #sidebar .action:hover {
-  background: var(--cobalt-surface) !important;
-  border-color: var(--cobalt-main) !important;
+  background: var(--accent-surface) !important;
+  border-color: var(--accent-main) !important;
   transform: translateX(3px) !important;
-  box-shadow: 3px 3px 0px var(--cobalt-light) !important;
+  box-shadow: 3px 3px 0px var(--accent-light) !important;
 }
 
 nav .action:hover i,
@@ -1490,21 +1459,14 @@ main {
 }
 
 #login img {
-  width: 6.5em !important;
-  height: 6.5em !important;
+  width: 10em !important;
+  height: 10em !important;
+  max-width: 100%;
+  object-fit: contain;
   margin: 0 auto 0.5em !important;
-  filter: drop-shadow(3px 3px 0px var(--cobalt-dark));
-  animation: floatCat 3s ease-in-out infinite;
-}
-
-@keyframes floatCat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
+  filter: none;
+  animation: none !important;
+  transform: none !important;
 }
 
 #login h1 {

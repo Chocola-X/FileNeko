@@ -19,6 +19,7 @@
 @import "./context-menu.css";
 @import "./anime-theme.css";
 @import "./app-surfaces.css";
+@import "./theme-details.css";
 
 /* For testing only
  :focus {

@@ -1,5 +1,10 @@
 <template>
-  <div id="modal-background" @click="backgroundClick">
+  <div
+    id="modal-background"
+    :data-prompt="prompt"
+    :data-tone="tone"
+    @click="backgroundClick"
+  >
     <div ref="modalContainer" role="dialog" aria-modal="true" tabindex="-1">
       <slot></slot>
     </div>
@@ -7,7 +12,24 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
+
+const props = defineProps<{ prompt?: string | null }>();
+const tones: Record<string, string> = {
+  upload: "pink",
+  share: "cyan",
+  "share-delete": "pink",
+  copy: "purple",
+  move: "cyan",
+  newFile: "purple",
+  delete: "pink",
+  deleteUser: "pink",
+  replace: "gold",
+  "resolve-conflict": "gold",
+  discardEditorChanges: "gold",
+  "current-password": "purple",
+};
+const tone = computed(() => tones[props.prompt || ""] || "cobalt");
 
 const emit = defineEmits(["closed"]);
 
