@@ -181,3 +181,13 @@ The list also accepts IPv6 addresses and CIDRs and can be imported using the
 establish trust. The proxy must replace, rather than preserve, client-supplied
 identity headers and authenticate every forwarded request. Restrict the backend
 port to that proxy; avoid trusting an entire client network or `0.0.0.0/0`.
+
+### Password-protected shares (local fork)
+
+The legacy `?token=...` password bypass is no longer accepted or returned by
+share APIs. After entering the share password, this browser receives a
+share-specific HttpOnly, SameSite=Strict cookie valid for up to one hour (and
+never past the share's expiry). Downloads, media and archives use that cookie;
+copying their URLs does not transfer password access to another browser. Existing
+password-protected links remain usable by entering the password again. Unprotected
+shares retain their public-link behavior.

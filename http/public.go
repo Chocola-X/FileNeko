@@ -1,17 +1,12 @@
 package fbhttp
 
 import (
-	"crypto/subtle"
-	"errors"
 	"net/http"
-	"net/url"
 	"path"
 	"path/filepath"
 	"strings"
 
 	"github.com/filebrowser/filebrowser/v2/files"
-	"github.com/filebrowser/filebrowser/v2/share"
-	"golang.org/x/crypto/bcrypt"
 )
 
 var withHashFile = func(fn handleFunc) handleFunc {
@@ -22,7 +17,7 @@ var withHashFile = func(fn handleFunc) handleFunc {
 			return errToStatus(err), err
 		}
 
-		status, err := authenticateShareRequest(r, link)
+		status, err := authenticateShareRequest(w, r, d, link)
 		if status != 0 || err != nil {
 			return status, err
 		}
@@ -46,7 +41,6 @@ var withHashFile = func(fn handleFunc) handleFunc {
 			ReadHeader: d.server.TypeDetectionByHeader,
 			CalcImgRes: d.server.TypeDetectionByHeader,
 			Checker:    d,
-			Token:      link.Token,
 		})
 		if err != nil {
 			return errToStatus(err), err
@@ -83,7 +77,6 @@ var withHashFile = func(fn handleFunc) handleFunc {
 			Modify:  d.user.Perm.Modify,
 			Expand:  true,
 			Checker: d,
-			Token:   link.Token,
 		})
 		if err != nil {
 			return errToStatus(err), err
@@ -137,33 +130,6 @@ var publicDlHandler = withHashFile(func(w http.ResponseWriter, r *http.Request, 
 
 	return rawDirHandler(w, r, d, file)
 })
-
-func authenticateShareRequest(r *http.Request, l *share.Link) (int, error) {
-	if l.PasswordHash == "" {
-		return 0, nil
-	}
-
-	if subtle.ConstantTimeCompare([]byte(r.URL.Query().Get("token")), []byte(l.Token)) == 1 {
-		return 0, nil
-	}
-
-	password := r.Header.Get("X-SHARE-PASSWORD")
-	password, err := url.QueryUnescape(password)
-	if err != nil {
-		return 0, err
-	}
-	if password == "" {
-		return http.StatusUnauthorized, nil
-	}
-	if err := bcrypt.CompareHashAndPassword([]byte(l.PasswordHash), []byte(password)); err != nil {
-		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
-			return http.StatusUnauthorized, nil
-		}
-		return 0, err
-	}
-
-	return 0, nil
-}
 
 func healthHandler(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)

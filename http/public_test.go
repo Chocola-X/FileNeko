@@ -42,12 +42,12 @@ func TestPublicShareHandlerAuthentication(t *testing.T) {
 			downloadPerm:       true,
 			expectedStatusCode: 401,
 		},
-		"Private share, authentication via token": {
+		"Private share, legacy URL token is rejected": {
 			share:              &share.Link{Hash: "h", UserID: 1, PasswordHash: passwordBcrypt, Token: "123"},
 			req:                newHTTPRequest(t, func(r *http.Request) { r.URL.RawQuery = "token=123" }),
 			sharePerm:          true,
 			downloadPerm:       true,
-			expectedStatusCode: 200,
+			expectedStatusCode: 401,
 		},
 		"Private share, authentication via invalid token, 401": {
 			share:              &share.Link{Hash: "h", UserID: 1, PasswordHash: passwordBcrypt, Token: "123"},

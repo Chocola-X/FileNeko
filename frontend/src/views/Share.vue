@@ -325,7 +325,6 @@ const showLimit = ref<number>(100);
 const password = ref<string>("");
 const attemptedPasswordLogin = ref<boolean>(false);
 const hash = ref<string>("");
-const token = ref<string>("");
 const audio = ref<HTMLAudioElement>();
 const tag = ref<boolean>(false);
 
@@ -361,7 +360,7 @@ const raw = computed(() => {
   if (!req.value || !req.value.items[fileStore.selected[0]]) return "";
   return createURL(
     `api/public/dl/${hash.value}${req.value.items[fileStore.selected[0]].path}`,
-    { token: token.value }
+    {}
   );
 });
 const inlineLink = computed(() =>
@@ -415,8 +414,6 @@ const fetchData = async () => {
     const file = await api.fetch(url, password.value);
     file.hash = hash.value;
 
-    token.value = file.token || "";
-
     fileStore.updateRequest(file);
     document.title = `${file.name} - ${document.title}`;
   } catch (err) {
@@ -450,12 +447,7 @@ const download = () => {
   if (!req.value) return false;
 
   if (isSingleFile()) {
-    api.download(
-      null,
-      hash.value,
-      token.value,
-      req.value.items[fileStore.selected[0]].path
-    );
+    api.download(null, hash.value, req.value.items[fileStore.selected[0]].path);
     return true;
   }
 
@@ -471,7 +463,7 @@ const download = () => {
         files.push(req.value.items[i].path);
       }
 
-      api.download(format, hash.value, token.value, ...files);
+      api.download(format, hash.value, ...files);
       return true;
     },
   });
