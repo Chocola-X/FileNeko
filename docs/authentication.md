@@ -191,3 +191,12 @@ never past the share's expiry). Downloads, media and archives use that cookie;
 copying their URLs does not transfer password access to another browser. Existing
 password-protected links remain usable by entering the password again. Unprotected
 shares retain their public-link behavior.
+
+### Self-registration isolation (local fork)
+
+Public signup always creates a new private directory under `userHomeBasePath`
+(default `/users`), regardless of `createUserDir` and the default user scope.
+An existing directory or symlink cannot be claimed by choosing its name as a
+username. Existing accounts are not moved automatically; administrators should
+review scopes of accounts created by older releases. Proxy and authentication
+hook provisioning continue to follow their explicitly configured scope policy.

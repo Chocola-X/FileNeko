@@ -201,14 +201,14 @@ var signupHandler = func(w http.ResponseWriter, r *http.Request, d *data) (int, 
 
 	user.Password = pwd
 
-	derivedScope, err := d.settings.CreateUserHome(user, d.server.Root, false)
+	err = d.settings.CreateSignupHome(user, d.server.Root)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return errToStatus(err), err
 	}
 
 	log.Printf("new user: %s, home dir: [%s].", user.Username, user.Scope)
 
-	err = d.store.Users.SaveProvisioned(user, derivedScope)
+	err = d.store.Users.SaveProvisioned(user, true)
 	if errors.Is(err, fberrors.ErrExist) {
 		return http.StatusConflict, err
 	} else if err != nil {

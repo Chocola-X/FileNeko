@@ -11,6 +11,7 @@ import (
 
 	"github.com/spf13/afero"
 
+	"github.com/filebrowser/filebrowser/v2/files"
 	"github.com/filebrowser/filebrowser/v2/users"
 )
 
@@ -79,4 +80,29 @@ func cleanUsername(s string) string {
 	// Remove any multiple dashes caused by replacements above
 	s = dashes.ReplaceAllString(s, "-")
 	return s
+}
+
+// CreateSignupHome always allocates a new isolated directory for an untrusted
+// self-registrant. Public signup must not inherit a shared/default root scope,
+// nor claim a pre-existing directory just by choosing its name as a username.
+func (s *Settings) CreateSignupHome(user *users.User, serverRoot string) error {
+	name := cleanUsername(user.Username)
+	if name == "" || name == "-" || name == "." {
+		return errors.New("invalid username for home directory")
+	}
+	base := s.UserHomeBasePath
+	if base == "" {
+		base = DefaultUsersHomeBasePath
+	}
+	user.Scope = path.Join("/", base, name)
+	scoped := files.NewScopedFs(afero.NewOsFs(), serverRoot)
+	mode := s.DirMode
+	if mode == 0 {
+		mode = DefaultDirMode
+	}
+	if err := scoped.MkdirAll(path.Dir(user.Scope), mode); err != nil {
+		return err
+	}
+	// Mkdir, unlike MkdirAll, refuses both an existing directory and a symlink.
+	return scoped.Mkdir(user.Scope, mode)
 }
