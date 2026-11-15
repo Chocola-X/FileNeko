@@ -243,8 +243,8 @@ func tusPatchUpload(w http.ResponseWriter, r *http.Request, d *data, cache Uploa
 	defer openFile.Close()
 	// Kernel locks coordinate independent processes sharing an upload directory,
 	// including replicas using Redis. In-memory test files have no descriptor.
-	if fd, ok := openFile.(interface{ Fd() uintptr }); ok {
-		unlock, err := lockUploadFD(fd.Fd())
+	if fd, ok := uploadFileDescriptor(openFile); ok {
+		unlock, err := lockUploadFD(fd)
 		if err != nil {
 			return http.StatusConflict, err
 		}
@@ -364,4 +364,20 @@ func getUploadOffset(r *http.Request) (int64, error) {
 		return 0, fmt.Errorf("invalid upload offset: %w", err)
 	}
 	return uploadOffset, nil
+}
+
+// BasePathFile embeds the afero.File interface, which does not expose Fd even
+// when its underlying file is an OS file. Unwrap every scope before locking.
+func uploadFileDescriptor(file afero.File) (uintptr, bool) {
+	for {
+		if scoped, ok := file.(*afero.BasePathFile); ok {
+			file = scoped.File
+			continue
+		}
+		fd, ok := file.(interface{ Fd() uintptr })
+		if !ok {
+			return 0, false
+		}
+		return fd.Fd(), true
+	}
 }
