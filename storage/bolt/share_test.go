@@ -4,6 +4,7 @@ import (
 	"os"
 	"sort"
 	"testing"
+	"time"
 
 	"github.com/asdine/storm/v3"
 
@@ -96,7 +97,7 @@ func TestDeleteWithPathPrefixTrailingSlash(t *testing.T) {
 		{Hash: "u1-a", Path: "/a", UserID: 1},
 		{Hash: "u1-a-child", Path: "/a/child.txt", UserID: 1},
 		{Hash: "u1-abc", Path: "/abc", UserID: 1}, // sibling sharing a byte prefix
-		{Hash: "u2-a", Path: "/a", UserID: 2},      // other user, must remain
+		{Hash: "u2-a", Path: "/a", UserID: 2},     // other user, must remain
 	}
 	for _, l := range links {
 		if err := s.Save(l); err != nil {
@@ -131,5 +132,37 @@ func TestDeleteWithPathPrefixNoMatch(t *testing.T) {
 	// must be treated as a no-op rather than surfaced as an error.
 	if err := s.DeleteWithPathPrefix("/a", 1); err != nil {
 		t.Fatalf("DeleteWithPathPrefix on empty store returned error: %v", err)
+	}
+}
+
+func TestShareExpiryFiltersWithoutMutatingIteration(t *testing.T) {
+	for _, kind := range []string{"all", "user", "path"} {
+		back := newTestShareBackend(t)
+		for _, link := range []*share.Link{
+			{Hash: "a-expired", Path: "/shared", UserID: 1, Expire: time.Now().Add(-time.Hour).Unix()},
+			{Hash: "b-expired", Path: "/shared", UserID: 1, Expire: time.Now().Add(-time.Hour).Unix()},
+			{Hash: "c-live", Path: "/shared", UserID: 1},
+			{Hash: "d-expired", Path: "/shared", UserID: 1, Expire: time.Now().Add(-time.Hour).Unix()},
+		} {
+			if err := back.Save(link); err != nil {
+				t.Fatal(err)
+			}
+		}
+		store := share.NewStorage(back)
+		var links []*share.Link
+		var err error
+		if kind == "path" {
+			links, err = store.Gets("/shared", 1)
+		} else if kind == "user" {
+			links, err = store.FindByUserID(1)
+		} else {
+			links, err = store.All()
+		}
+		if err != nil || len(links) != 1 || links[0].Hash != "c-live" {
+			t.Fatalf("expired records not filtered: %+v %v", links, err)
+		}
+		if got := remainingHashes(t, back); len(got) != 1 || got[0] != "c-live" {
+			t.Fatalf("expired records not deleted: %v", got)
+		}
 	}
 }
