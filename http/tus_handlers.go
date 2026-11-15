@@ -3,12 +3,14 @@ package fbhttp
 import (
 	"errors"
 	"fmt"
+	"hash/fnv"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/filebrowser/filebrowser/v2/files"
@@ -189,6 +191,8 @@ func tusPatchHandler(cache UploadCache) handleFunc {
 	})
 }
 
+var uploadLocks [256]sync.Mutex
+
 func tusPatchUpload(w http.ResponseWriter, r *http.Request, d *data, cache UploadCache) (int, error) {
 	if !d.user.Perm.Create || !d.Check(r.URL.Path) {
 		return http.StatusForbidden, nil
@@ -197,6 +201,17 @@ func tusPatchUpload(w http.ResponseWriter, r *http.Request, d *data, cache Uploa
 		return http.StatusUnsupportedMediaType, nil
 	}
 
+	target, err := files.ResolvePath(d.user.FullPath(r.URL.Path))
+	if err != nil {
+		return errToStatus(err), err
+	}
+	hash := fnv.New32a()
+	_, _ = hash.Write([]byte(target))
+	lock := &uploadLocks[hash.Sum32()%uint32(len(uploadLocks))]
+	if !lock.TryLock() {
+		return http.StatusConflict, nil
+	}
+	defer lock.Unlock()
 	uploadOffset, err := getUploadOffset(r)
 	if err != nil {
 		return http.StatusBadRequest, fmt.Errorf("invalid upload offset")
@@ -218,35 +233,43 @@ func tusPatchUpload(w http.ResponseWriter, r *http.Request, d *data, cache Uploa
 		return errToStatus(err), err
 	}
 
+	if !file.Mode.IsRegular() {
+		return http.StatusBadRequest, nil
+	}
+	openFile, err := d.user.Fs.OpenFile(r.URL.Path, os.O_WRONLY, d.settings.FileMode)
+	if err != nil {
+		return errToStatus(err), err
+	}
+	defer openFile.Close()
+	// Kernel locks coordinate independent processes sharing an upload directory,
+	// including replicas using Redis. In-memory test files have no descriptor.
+	if fd, ok := openFile.(interface{ Fd() uintptr }); ok {
+		unlock, err := lockUploadFD(fd.Fd())
+		if err != nil {
+			return http.StatusConflict, err
+		}
+		defer unlock()
+	}
+	// Re-read metadata under the lock; the earlier FileInfo may be stale.
+	info, err := openFile.Stat()
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	if !info.Mode().IsRegular() {
+		return http.StatusBadRequest, nil
+	}
 	uploadLength, err := cache.GetLength(file.RealPath())
 	if err != nil {
 		return http.StatusNotFound, err
 	}
-
 	if uploadOffset > uploadLength {
-		return http.StatusBadRequest, fmt.Errorf("upload offset %d exceeds declared length %d", uploadOffset, uploadLength)
+		return http.StatusBadRequest, fmt.Errorf("offset exceeds upload length")
 	}
-
-	// Prevent the upload from being evicted during the transfer
+	if info.Size() != uploadOffset {
+		return http.StatusConflict, fmt.Errorf("file size does not match upload offset")
+	}
 	stop := keepUploadActive(cache, file.RealPath())
 	defer stop()
-
-	switch {
-	case file.IsDir:
-		return http.StatusBadRequest, fmt.Errorf("cannot upload to a directory %s", file.RealPath())
-	case file.Size != uploadOffset:
-		return http.StatusConflict, fmt.Errorf(
-			"%s file size doesn't match the provided offset: %d",
-			file.RealPath(),
-			uploadOffset,
-		)
-	}
-
-	openFile, err := d.user.Fs.OpenFile(r.URL.Path, os.O_WRONLY|os.O_APPEND, d.settings.FileMode)
-	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("could not open file: %w", err)
-	}
-	defer openFile.Close()
 
 	_, err = openFile.Seek(uploadOffset, 0)
 	if err != nil {
