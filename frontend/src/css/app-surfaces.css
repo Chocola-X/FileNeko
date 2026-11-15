@@ -407,6 +407,12 @@ button.button:disabled,
 }
 
 /* Share management uses the same pastel stationery and semantic action colors. */
+.share-management-page .column {
+  width: 100%;
+}
+.share-manager {
+  container-type: inline-size;
+}
 .share-manager .card-title h2 {
   display: flex;
   align-items: center;
@@ -420,16 +426,23 @@ button.button:disabled,
   font-size: 24px;
   box-shadow: 2px 2px 0 var(--cobalt-dark);
 }
-.share-manager .card-content.full {
-  padding: 0;
+.share-manager .share-list-content {
+  min-width: 0;
+  padding: 18px;
 }
-.shares-table {
+.share-manager .shares-table {
+  /* Legacy card tables extend into the gutter with negative margins. */
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
   table-layout: fixed;
 }
-.shares-table th,
-.shares-table td {
+.share-manager .shares-table th,
+.share-manager .shares-table td {
   padding: 14px 12px;
   overflow-wrap: anywhere;
+}
+.shares-table td {
   color: var(--ink-slate);
 }
 .shares-table th {
@@ -444,7 +457,7 @@ button.button:disabled,
   background: var(--cobalt-surface);
 }
 .shares-table th:first-child {
-  width: 42%;
+  width: 55%;
 }
 .shares-table th:last-child {
   width: 120px;
@@ -563,7 +576,7 @@ button.button:disabled,
   color: var(--purple-dark);
   font-weight: 700;
 }
-@media (max-width: 736px) {
+@container (max-width: 640px) {
   .shares-table thead {
     position: absolute;
     width: 1px;
@@ -576,8 +589,12 @@ button.button:disabled,
     display: block;
     width: 100%;
   }
+  .share-manager .shares-table {
+    border: 0;
+    overflow: visible;
+  }
   .shares-table tbody {
-    padding: 12px;
+    padding: 0;
   }
   .shares-table tbody tr {
     display: grid;
@@ -593,9 +610,11 @@ button.button:disabled,
     margin-bottom: 0;
     border: 1px solid var(--cobalt-main);
   }
-  .shares-table td {
+  .share-manager .shares-table td {
     display: block;
+    min-width: 0;
     padding: 0;
+    border: 0;
   }
   .shares-table .share-path-cell {
     grid-column: 1 / -1;

@@ -403,6 +403,19 @@ with tempfile.TemporaryDirectory(prefix='neko-theme-regression-') as folder:
                     wait("!!document.querySelector('.epub-reader .tocAreaButton.active')")
                     assert ev("getComputedStyle(document.querySelector('.epub-reader .tocAreaButton.active')).color") == 'rgb(78, 141, 245)'
                 shot(label+'-preview-'+str(width))
+        # Check against the content box, not just the viewport: legacy table
+        # gutters can overflow a card while remaining within the page bounds.
+        long_share_name = 'Library_' + 'long_path_' * 16
+        (root/long_share_name).mkdir()
+        ev('fetch('+json.dumps('/library/api/share/'+long_share_name+'/')+',{method:"POST",headers:{"X-Auth":localStorage.getItem("jwt")},body:"{}"}).then(r=>{if(!r.ok)throw new Error("temporary share failed");return r.json()})')
+        for width in [1440,1024,800,390,320]:
+            call('Emulation.setDeviceMetricsOverride',{'width':width,'height':1000 if width>736 else 844,'deviceScaleFactor':1,'mobile':width<=736})
+            nav('/settings/shares','.shares-table')
+            assert ev("(()=>{let c=document.querySelector('.share-manager'),p=c.parentElement,s=getComputedStyle(p);return Math.abs(c.getBoundingClientRect().width-(p.clientWidth-parseFloat(s.paddingLeft)-parseFloat(s.paddingRight)))<=1})()"), 'share management must use the available column width'
+            assert ev("(()=>{let e=document.querySelector('.share-list-content'),t=e.querySelector('table'),r=e.getBoundingClientRect(),q=t.getBoundingClientRect(),s=getComputedStyle(e);return q.left>=r.left+parseFloat(s.paddingLeft)-1&&q.right<=r.right-parseFloat(s.paddingRight)+1&&e.scrollWidth<=e.clientWidth+1&&e.scrollHeight<=e.clientHeight+1})()"), 'share list must remain inside its padded content box without nested scrolling'
+            assert ev("getComputedStyle(document.querySelector('.share-manager')).isolation==='isolate'&&getComputedStyle(document.querySelector('.share-manager'),'::before').zIndex==='-1'"), 'decorative frame must stay behind card contents'
+            assert ev('document.documentElement.scrollWidth<=innerWidth+1')
+            shot('share-management-'+str(width))
         errors=[e['params']['response'] for e in events if e.get('method')=='Network.responseReceived' and e['params']['response']['status']>=400]
         assert not errors,errors
         print('PASS: theme states captured; responsive controls, dialogs, local assets and keyboard interactions verified under /library.',flush=True)

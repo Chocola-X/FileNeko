@@ -1,6 +1,6 @@
 <template>
   <errors v-if="error" :errorCode="error.status" />
-  <div class="row" v-else-if="!layoutStore.loading">
+  <div class="row share-management-page" v-else-if="!layoutStore.loading">
     <div class="column">
       <div class="card share-manager">
         <div class="card-title">
@@ -12,7 +12,7 @@
           </h2>
         </div>
 
-        <div class="card-content full" v-if="links.length > 0">
+        <div class="card-content share-list-content" v-if="links.length > 0">
           <table class="shares-table">
             <thead>
               <tr>
@@ -21,12 +21,9 @@
                 <th v-if="authStore.user?.perm.admin">
                   {{ t("settings.username") }}
                 </th>
-                <th>
-                  <span class="sr-only"
-                    >{{ t("buttons.delete") }} /
-                    {{ t("buttons.copyToClipboard") }}</span
-                  >
-                </th>
+                <th
+                  :aria-label="`${t('buttons.delete')} / ${t('buttons.copyToClipboard')}`"
+                ></th>
               </tr>
             </thead>
             <tbody>

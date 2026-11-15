@@ -2226,6 +2226,8 @@ header .action:focus-visible {
   --panel-dark: var(--cobalt-dark);
   --panel-light: var(--cobalt-light);
   position: relative;
+  /* Contain the frame's negative layer above this card's own background. */
+  isolation: isolate;
   margin-bottom: 24px;
   border-color: var(--panel-dark);
   box-shadow: 4px 4px 0 var(--panel-dark);
@@ -2238,6 +2240,7 @@ header .action:focus-visible {
 .dashboard .card::before {
   content: "";
   position: absolute;
+  z-index: -1;
   inset: 6px;
   border: 1px dashed var(--panel-main);
   border-radius: 12px;
