@@ -4,8 +4,11 @@ import (
 	"log"
 	"net/http"
 	gopath "path"
+	"path/filepath"
 	"strconv"
+	"strings"
 
+	"github.com/filebrowser/filebrowser/v2/files"
 	"github.com/tomasen/realip"
 
 	"github.com/filebrowser/filebrowser/v2/rules"
@@ -31,6 +34,8 @@ type data struct {
 	// original scope — are still matched against the real path instead of the
 	// rebased one. Empty for regular requests.
 	checkerPrefix string
+	// Original on-disk scope, retained when a public share rebases the FS.
+	ruleRoot string
 }
 
 // Check implements rules.Checker.
@@ -46,7 +51,38 @@ func (d *data) Check(path string) bool {
 // Check, it ignores HideDotfiles: hiding dotfiles is a display preference, so
 // it must not stop a user from operating on a tree that contains one.
 func (d *data) CheckRules(path string) bool {
-	path = d.rulePath(path)
+	if !d.checkRulePath(d.rulePath(path)) {
+		return false
+	}
+	if len(d.settings.Rules) == 0 && len(d.user.Rules) == 0 {
+		return true
+	}
+	if files.BasePath(d.user.Fs) == nil {
+		return true
+	}
+	root := d.ruleRoot
+	if root == "" {
+		root = d.user.FullPath("/")
+	}
+	root, err := files.ResolvePath(root)
+	if err != nil {
+		return false
+	}
+	target, err := files.ResolvePath(d.user.FullPath(path))
+	if err != nil {
+		return false
+	}
+	rel, err := filepath.Rel(root, target)
+	if err != nil {
+		return false
+	}
+	if rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return d.server.FollowExternalSymlinks
+	}
+	return d.checkRulePath(slashClean(filepath.ToSlash(rel)))
+}
+
+func (d *data) checkRulePath(path string) bool {
 
 	allow := true
 	for _, rule := range d.settings.Rules {
