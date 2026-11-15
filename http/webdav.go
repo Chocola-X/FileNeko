@@ -220,6 +220,9 @@ func (f *davFS) RemoveAll(ctx context.Context, name string) error {
 	if err := f.invalidate(ctx, name, true); err != nil {
 		return err
 	}
+	if err := revokeSharesForPath(f.d, name); err != nil {
+		return err
+	}
 	return f.d.user.Fs.RemoveAll(name)
 }
 
@@ -232,6 +235,9 @@ func (f *davFS) Rename(ctx context.Context, oldName, newName string) error {
 		return err
 	}
 	if err := f.invalidate(ctx, oldName, true); err != nil {
+		return err
+	}
+	if err := revokeSharesForPath(f.d, oldName); err != nil {
 		return err
 	}
 	return f.d.user.Fs.Rename(oldName, newName)

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -107,9 +106,9 @@ func resourceDeleteHandler(fileCache FileCache) handleFunc {
 			return errToStatus(err), err
 		}
 
-		err = d.store.Share.DeleteWithPathPrefix(file.Path, d.user.ID)
+		err = revokeSharesForPath(d, file.Path)
 		if err != nil {
-			log.Printf("WARNING: Error(s) occurred while deleting associated shares with file: %s", err)
+			return errToStatus(err), err
 		}
 
 		// delete thumbnails
@@ -423,7 +422,7 @@ func patchAction(ctx context.Context, action, src, dst string, d *data, fileCach
 
 		// Revoke before moving: a stale link must not expose a different file
 		// later recreated at the old name, including descendants of a directory.
-		if err := d.store.Share.DeleteWithPathPrefix(src, d.user.ID); err != nil {
+		if err := revokeSharesForPath(d, src); err != nil {
 			return err
 		}
 		return fileutils.MoveFile(d.user.Fs, src, dst, d.settings.FileMode, d.settings.DirMode)
