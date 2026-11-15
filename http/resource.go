@@ -48,20 +48,9 @@ var resourceGetHandler = withUser(func(w http.ResponseWriter, r *http.Request, d
 			return renderJSON(w, r, file)
 		}
 
-		f, err := d.user.Fs.Open(r.URL.Path)
-		if err != nil {
-			return errToStatus(err), err
-		}
-		defer f.Close()
-
-		data, err := io.ReadAll(f)
-		if err != nil {
-			return http.StatusInternalServerError, err
-		}
-
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.WriteHeader(http.StatusOK)
-		_, err = w.Write(data)
+		_, err = w.Write([]byte(file.Content))
 		return 0, err
 	}
 

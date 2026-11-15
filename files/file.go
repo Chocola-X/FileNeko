@@ -27,6 +27,8 @@ import (
 	"github.com/spf13/afero"
 )
 
+const MaxTextSize = 10 << 20
+
 var (
 	reSubDirs = regexp.MustCompile("(?i)^sub(s|titles)$")
 	reSubExts = regexp.MustCompile("(?i)(.vtt|.srt|.ass|.ssa)$")
@@ -262,7 +264,7 @@ func (i *FileInfo) detectType(modify, saveContent, readHeader bool, calcImgRes b
 	case strings.HasSuffix(mimetype, "pdf"):
 		i.Type = "pdf"
 		return nil
-	case (strings.HasPrefix(mimetype, "text") || !isBinary(buffer)) && i.Size <= 10*1024*1024: // 10 MB
+	case (strings.HasPrefix(mimetype, "text") || !isBinary(buffer)) && i.Size <= MaxTextSize:
 		i.Type = "text"
 
 		if !modify {
@@ -270,10 +272,20 @@ func (i *FileInfo) detectType(modify, saveContent, readHeader bool, calcImgRes b
 		}
 
 		if saveContent {
-			afs := &afero.Afero{Fs: i.Fs}
-			content, err := afs.ReadFile(i.Path)
+			reader, err := i.Fs.Open(i.Path)
 			if err != nil {
 				return err
+			}
+			defer reader.Close()
+			// The file may grow after Stat/type detection. Bound the actual
+			// read rather than trusting only the metadata snapshot.
+			content, err := io.ReadAll(io.LimitReader(reader, MaxTextSize+1))
+			if err != nil {
+				return err
+			}
+
+			if len(content) > MaxTextSize {
+				return fberrors.ErrFileTooLarge
 			}
 
 			i.Content = string(content)

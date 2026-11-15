@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	ErrFileTooLarge             = errors.New("file exceeds text preview size limit")
 	ErrEmptyKey                 = errors.New("empty key")
 	ErrExist                    = errors.New("the resource already exists")
 	ErrNotExist                 = errors.New("the resource does not exist")
