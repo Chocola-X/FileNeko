@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div
+    class="file-listing"
+    :style="{
+      '--selection-dock-space': dockHeight ? `${dockHeight + 32}px` : '0px',
+    }"
+  >
     <header-bar showMenu showLogo>
       <search />
       <title />
@@ -82,45 +87,49 @@
     </header-bar>
 
     <div
-      v-if="isMobile"
-      id="file-selection"
-      :class="{
-        'file-selection-margin-bottom': fileStore.multiple,
-      }"
+      v-if="fileStore.multiple || (isMobile && fileStore.selectedCount > 0)"
+      ref="selectionDock"
+      class="selection-dock"
     >
-      <span v-if="fileStore.selectedCount > 0">
-        {{ t("prompts.filesSelected", fileStore.selectedCount) }}
-      </span>
-      <action
-        v-if="headerButtons.share"
-        icon="share"
-        :label="t('buttons.share')"
-        show="share"
-      />
-      <action
-        v-if="headerButtons.rename"
-        icon="mode_edit"
-        :label="t('buttons.rename')"
-        show="rename"
-      />
-      <action
-        v-if="headerButtons.copy"
-        icon="content_copy"
-        :label="t('buttons.copyFile')"
-        show="copy"
-      />
-      <action
-        v-if="headerButtons.move"
-        icon="forward"
-        :label="t('buttons.moveFile')"
-        show="move"
-      />
-      <action
-        v-if="headerButtons.delete"
-        icon="delete"
-        :label="t('buttons.delete')"
-        show="delete"
-      />
+      <div v-if="isMobile && fileStore.selectedCount > 0" id="file-selection">
+        <span class="selection-summary" role="status">
+          <i class="material-icons" aria-hidden="true">task_alt</i>
+          {{ t("prompts.filesSelected", fileStore.selectedCount) }}
+        </span>
+        <div class="selection-actions">
+          <action
+            v-if="headerButtons.share"
+            icon="share"
+            :label="t('buttons.share')"
+            show="share"
+          />
+          <action
+            v-if="headerButtons.rename"
+            icon="mode_edit"
+            :label="t('buttons.rename')"
+            show="rename"
+          />
+          <action
+            v-if="headerButtons.copy"
+            icon="content_copy"
+            :label="t('buttons.copyFile')"
+            show="copy"
+          />
+          <action
+            v-if="headerButtons.move"
+            icon="forward"
+            :label="t('buttons.moveFile')"
+            show="move"
+          />
+          <action
+            v-if="headerButtons.delete"
+            icon="delete"
+            :label="t('buttons.delete')"
+            show="delete"
+          />
+        </div>
+      </div>
+      <selection-notice v-if="fileStore.multiple" />
     </div>
 
     <div v-if="layoutStore.loading">
@@ -330,20 +339,6 @@
           webkitdirectory
           multiple
         />
-
-        <div :class="{ active: fileStore.multiple }" id="multiple-selection">
-          <p>{{ t("files.multipleSelectionEnabled") }}</p>
-          <div
-            @click="() => (fileStore.multiple = false)"
-            tabindex="0"
-            role="button"
-            :title="t('buttons.clear')"
-            :aria-label="t('buttons.clear')"
-            class="action"
-          >
-            <i class="material-icons">clear</i>
-          </div>
-        </div>
       </div>
     </template>
   </div>
@@ -367,6 +362,7 @@ import HeaderBar from "@/components/header/HeaderBar.vue";
 import Action from "@/components/header/Action.vue";
 import Search from "@/components/Search.vue";
 import Item from "@/components/files/ListingItem.vue";
+import SelectionNotice from "@/components/files/SelectionNotice.vue";
 import ContextMenu from "@/components/ContextMenu.vue";
 import {
   computed,
@@ -380,7 +376,11 @@ import {
 import { useRoute, onBeforeRouteUpdate } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
+import { useElementSize } from "@vueuse/core";
 import { removePrefix } from "@/api/utils";
+
+const selectionDock = ref<HTMLElement | null>(null);
+const { height: dockHeight } = useElementSize(selectionDock);
 
 const showLimit = ref<number>(50);
 const columnWidth = ref<number>(280);
@@ -1135,9 +1135,5 @@ const handleEmptyAreaClick = (e: MouseEvent) => {
 <style scoped>
 #listing {
   min-height: calc(100vh - 8rem);
-}
-
-.file-selection-margin-bottom {
-  margin-bottom: 3.5rem;
 }
 </style>

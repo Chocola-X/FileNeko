@@ -1,8 +1,6 @@
 <template>
   <div class="card floating help">
-    <div class="card-title">
-      <h2>{{ $t("help.help") }}</h2>
-    </div>
+    <prompt-header>{{ $t("help.help") }}</prompt-header>
 
     <div class="card-content">
       <ul>
@@ -35,10 +33,12 @@
 </template>
 
 <script>
+import PromptHeader from "./PromptHeader.vue";
 import { mapActions } from "pinia";
 import { useLayoutStore } from "@/stores/layout";
 
 export default {
+  components: { PromptHeader },
   name: "help",
   methods: {
     ...mapActions(useLayoutStore, ["closeHovers"]),

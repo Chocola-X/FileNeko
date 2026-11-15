@@ -1,5 +1,6 @@
 <template>
   <div class="card floating">
+    <prompt-header>{{ $t("buttons.delete") }}</prompt-header>
     <div class="card-content">
       <p>{{ t("prompts.deleteUser") }}</p>
     </div>
@@ -27,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+import PromptHeader from "./PromptHeader.vue";
 import { useLayoutStore } from "@/stores/layout";
 import { useI18n } from "vue-i18n";
 

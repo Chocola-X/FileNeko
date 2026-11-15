@@ -1,5 +1,6 @@
 <template>
   <div class="card floating">
+    <prompt-header>{{ $t("buttons.discardChanges") }}</prompt-header>
     <div class="card-content">
       <p>
         {{ $t("prompts.discardEditorChanges") }}
@@ -39,10 +40,12 @@
 </template>
 
 <script>
+import PromptHeader from "./PromptHeader.vue";
 import { useLayoutStore } from "@/stores/layout";
 import { mapActions, mapState } from "pinia";
 
 export default {
+  components: { PromptHeader },
   name: "discardEditorChanges",
   computed: {
     ...mapState(useLayoutStore, ["currentPrompt"]),

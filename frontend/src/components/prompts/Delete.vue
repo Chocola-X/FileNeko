@@ -1,5 +1,6 @@
 <template>
   <div class="card floating">
+    <prompt-header>{{ $t("buttons.delete") }}</prompt-header>
     <div class="card-content">
       <p v-if="!this.isListing || selectedCount === 1">
         {{ $t("prompts.deleteMessageSingle") }}
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+import PromptHeader from "./PromptHeader.vue";
 import { mapActions, mapState, mapWritableState } from "pinia";
 import { files as api } from "@/api";
 import buttons from "@/utils/buttons";
@@ -40,6 +42,7 @@ import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";
 
 export default {
+  components: { PromptHeader },
   name: "delete",
   inject: ["$showError"],
   computed: {

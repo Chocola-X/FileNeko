@@ -213,7 +213,8 @@ button.button:disabled,
 /* One dialog frame, independent of the height or contents of each operation. */
 #modal-background {
   padding: 20px 16px;
-  background: rgba(30, 42, 74, 0.28) !important;
+  background: var(--dialog-backdrop) !important;
+  background-size: 12px 12px !important;
   z-index: 30000 !important;
 }
 #modal-background > div {

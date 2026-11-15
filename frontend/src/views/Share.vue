@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div
+    class="file-listing"
+    :style="{
+      '--selection-dock-space': dockHeight ? `${dockHeight + 32}px` : '0px',
+    }"
+  >
     <header-bar showMenu showLogo>
       <title />
 
@@ -27,6 +32,9 @@
     </header-bar>
 
     <breadcrumbs :base="'/share/' + hash" />
+    <div v-if="fileStore.multiple" ref="selectionDock" class="selection-dock">
+      <selection-notice />
+    </div>
 
     <div v-if="layoutStore.loading">
       <h2 class="message delayed" style="padding-top: 3em !important">
@@ -267,23 +275,6 @@
                 <p class="name">+ {{ req.items.length - showLimit }}</p>
               </div>
             </div>
-
-            <div
-              :class="{ active: fileStore.multiple }"
-              id="multiple-selection"
-            >
-              <p>{{ t("files.multipleSelectionEnabled") }}</p>
-              <div
-                @click="() => (fileStore.multiple = false)"
-                tabindex="0"
-                role="button"
-                :data-title="t('buttons.clear')"
-                :aria-label="t('buttons.clear')"
-                class="action"
-              >
-                <i class="material-icons">clear</i>
-              </div>
-            </div>
           </div>
         </div>
         <div
@@ -312,6 +303,8 @@ import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import Errors from "@/views/Errors.vue";
 import QrcodeVue from "qrcode.vue";
 import Item from "@/components/files/ListingItem.vue";
+import SelectionNotice from "@/components/files/SelectionNotice.vue";
+import { useElementSize } from "@vueuse/core";
 import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";
 import { computed, inject, onMounted, onBeforeUnmount, ref, watch } from "vue";
@@ -319,6 +312,9 @@ import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { StatusError } from "@/api/utils";
 import { copy } from "@/utils/clipboard";
+
+const selectionDock = ref<HTMLElement | null>(null);
+const { height: dockHeight } = useElementSize(selectionDock);
 
 const error = ref<StatusError | null>(null);
 const showLimit = ref<number>(100);

@@ -1,8 +1,6 @@
 <template>
   <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.replace") }}</h2>
-    </div>
+    <prompt-header>{{ $t("prompts.replace") }}</prompt-header>
 
     <div class="card-content">
       <p>{{ $t("prompts.replaceMessage") }}</p>
@@ -42,10 +40,12 @@
 </template>
 
 <script>
+import PromptHeader from "./PromptHeader.vue";
 import { mapActions, mapState } from "pinia";
 import { useLayoutStore } from "@/stores/layout";
 
 export default {
+  components: { PromptHeader },
   name: "replace",
   computed: {
     ...mapState(useLayoutStore, ["currentPrompt"]),

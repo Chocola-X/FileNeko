@@ -1,8 +1,6 @@
 <template>
   <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.rename") }}</h2>
-    </div>
+    <prompt-header>{{ $t("prompts.rename") }}</prompt-header>
 
     <div class="card-content">
       <p>
@@ -42,6 +40,7 @@
 </template>
 
 <script>
+import PromptHeader from "./PromptHeader.vue";
 import { mapActions, mapState, mapWritableState } from "pinia";
 import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";
@@ -50,6 +49,7 @@ import { files as api } from "@/api";
 import { removePrefix } from "@/api/utils";
 
 export default {
+  components: { PromptHeader },
   name: "rename",
   data: function () {
     return {

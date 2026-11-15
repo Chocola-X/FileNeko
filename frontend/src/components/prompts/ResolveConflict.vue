@@ -1,14 +1,12 @@
 <template>
   <div class="card floating">
-    <div class="card-title">
-      <h2>
-        {{
-          personalized
-            ? $t("prompts.resolveConflict")
-            : $t("prompts.replaceOrSkip")
-        }}
-      </h2>
-    </div>
+    <prompt-header>
+      {{
+        personalized
+          ? $t("prompts.resolveConflict")
+          : $t("prompts.replaceOrSkip")
+      }}
+    </prompt-header>
 
     <div class="card-content">
       <template v-if="personalized">
@@ -158,6 +156,7 @@
 </template>
 
 <script setup lang="ts">
+import PromptHeader from "./PromptHeader.vue";
 import { computed, ref } from "vue";
 import { useLayoutStore } from "@/stores/layout";
 import { filesize } from "@/utils";

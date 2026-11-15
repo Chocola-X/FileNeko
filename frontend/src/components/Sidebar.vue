@@ -1,5 +1,9 @@
 <template>
-  <div v-show="active" @click="closeHovers" class="overlay"></div>
+  <div
+    v-show="active"
+    @click="closeHovers"
+    class="overlay theme-backdrop"
+  ></div>
   <nav id="sidebar" :class="{ active }">
     <!-- File navigation -->
     <div class="sidebar-badge-banner">

@@ -1,8 +1,6 @@
 <template>
   <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.copy") }}</h2>
-    </div>
+    <prompt-header>{{ $t("prompts.copy") }}</prompt-header>
 
     <div class="card-content">
       <p>{{ $t("prompts.copyMessage") }}</p>
@@ -54,6 +52,7 @@
 </template>
 
 <script>
+import PromptHeader from "./PromptHeader.vue";
 import { mapActions, mapState, mapWritableState } from "pinia";
 import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";
@@ -66,7 +65,7 @@ import { removePrefix } from "@/api/utils";
 
 export default {
   name: "copy",
-  components: { FileList },
+  components: { PromptHeader, FileList },
   data: function () {
     return {
       current: window.location.pathname,

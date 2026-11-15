@@ -1,8 +1,6 @@
 <template>
   <div class="card floating" id="share">
-    <div class="card-title">
-      <h2>{{ $t("buttons.share") }}</h2>
-    </div>
+    <prompt-header>{{ $t("buttons.share") }}</prompt-header>
 
     <template v-if="listing">
       <div class="card-content">
@@ -142,6 +140,7 @@
 </template>
 
 <script>
+import PromptHeader from "./PromptHeader.vue";
 import { mapActions, mapState } from "pinia";
 import { useFileStore } from "@/stores/file";
 import * as api from "@/api/index";
@@ -150,6 +149,7 @@ import { useLayoutStore } from "@/stores/layout";
 import { copy } from "@/utils/clipboard";
 
 export default {
+  components: { PromptHeader },
   name: "share",
   data: function () {
     return {

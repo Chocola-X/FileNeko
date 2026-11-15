@@ -1,8 +1,6 @@
 <template>
   <div class="card floating">
-    <div class="card-title">
-      <h2>{{ t("prompts.newDir") }}</h2>
-    </div>
+    <prompt-header>{{ t("prompts.newDir") }}</prompt-header>
 
     <div class="card-content">
       <p>{{ t("prompts.newDirMessage") }}</p>
@@ -41,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+import PromptHeader from "./PromptHeader.vue";
 import { computed, inject, ref } from "vue";
 import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";

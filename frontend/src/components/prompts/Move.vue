@@ -1,8 +1,6 @@
 <template>
   <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.move") }}</h2>
-    </div>
+    <prompt-header>{{ $t("prompts.move") }}</prompt-header>
 
     <div class="card-content">
       <p>{{ $t("prompts.moveMessage") }}</p>
@@ -56,6 +54,7 @@
 </template>
 
 <script>
+import PromptHeader from "./PromptHeader.vue";
 import { mapActions, mapState, mapWritableState } from "pinia";
 import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";
@@ -68,7 +67,7 @@ import { removePrefix } from "@/api/utils";
 
 export default {
   name: "move",
-  components: { FileList },
+  components: { PromptHeader, FileList },
   data: function () {
     return {
       current: window.location.pathname,

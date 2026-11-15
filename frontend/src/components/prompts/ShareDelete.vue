@@ -1,5 +1,6 @@
 <template>
   <div class="card floating">
+    <prompt-header>{{ $t("buttons.delete") }}</prompt-header>
     <div class="card-content">
       <p>{{ $t("prompts.deleteMessageShare", { path: "" }) }}</p>
     </div>
@@ -28,10 +29,12 @@
 </template>
 
 <script>
+import PromptHeader from "./PromptHeader.vue";
 import { mapActions, mapState } from "pinia";
 import { useLayoutStore } from "@/stores/layout";
 
 export default {
+  components: { PromptHeader },
   name: "share-delete",
   computed: {
     ...mapState(useLayoutStore, ["currentPrompt"]),

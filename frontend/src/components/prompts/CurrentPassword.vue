@@ -1,8 +1,6 @@
 <template>
   <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.currentPassword") }}</h2>
-    </div>
+    <prompt-header>{{ $t("prompts.currentPassword") }}</prompt-header>
 
     <div class="card-content">
       <p>
@@ -40,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+import PromptHeader from "./PromptHeader.vue";
 import { ref } from "vue";
 import { useLayoutStore } from "@/stores/layout";
 const layoutStore = useLayoutStore();

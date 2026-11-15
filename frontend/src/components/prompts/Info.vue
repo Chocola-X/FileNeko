@@ -1,8 +1,6 @@
 <template>
   <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.fileInfo") }}</h2>
-    </div>
+    <prompt-header>{{ $t("prompts.fileInfo") }}</prompt-header>
 
     <div class="card-content">
       <p v-if="selected.length > 1">
@@ -122,6 +120,7 @@
 </template>
 
 <script>
+import PromptHeader from "./PromptHeader.vue";
 import { mapActions, mapState } from "pinia";
 import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";
@@ -130,6 +129,7 @@ import dayjs from "dayjs";
 import { files as api } from "@/api";
 
 export default {
+  components: { PromptHeader },
   name: "info",
   inject: ["$showError"],
   data() {

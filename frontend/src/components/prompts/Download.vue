@@ -1,8 +1,6 @@
 <template>
   <div class="card floating" id="download">
-    <div class="card-title">
-      <h2>{{ t("prompts.download") }}</h2>
-    </div>
+    <prompt-header>{{ t("prompts.download") }}</prompt-header>
 
     <div class="card-content">
       <p>{{ t("prompts.downloadMessage") }}</p>
@@ -21,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+import PromptHeader from "./PromptHeader.vue";
 import { useI18n } from "vue-i18n";
 import { useLayoutStore } from "@/stores/layout";
 

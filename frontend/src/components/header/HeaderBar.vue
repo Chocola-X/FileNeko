@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header @keydown.esc.stop="layoutStore.closeHovers">
     <div
       v-if="showLogo"
       class="header-brand-wrap"
@@ -48,7 +48,7 @@
     />
 
     <div
-      class="overlay"
+      class="overlay theme-backdrop"
       v-show="layoutStore.currentPromptName == 'more'"
       @click="layoutStore.closeHovers"
     />

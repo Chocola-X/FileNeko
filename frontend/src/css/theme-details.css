@@ -6,6 +6,18 @@
   --accent-light: var(--cobalt-light);
   --accent-surface: var(--cobalt-surface);
 }
+:root {
+  --dialog-backdrop: radial-gradient(
+      rgba(255, 255, 255, 0.18) 1.5px,
+      transparent 1.5px
+    )
+    0 0 / 12px 12px rgba(30, 42, 74, 0.55);
+}
+.theme-backdrop {
+  background: var(--dialog-backdrop) !important;
+  background-size: 12px 12px !important;
+  backdrop-filter: none;
+}
 [data-tone="pink"] {
   --accent-main: var(--pink-main);
   --accent-dark: var(--pink-dark);
@@ -142,31 +154,51 @@ header .action[data-icon="file_upload"] {
   background: var(--accent-main) !important;
   border-bottom: 3px solid var(--accent-dark) !important;
 }
-#modal-background .card-title::after {
-  content: "";
-  position: absolute;
-  inset-inline-end: 20px;
-  top: 50%;
-  width: 32px;
-  height: 16px;
-  border: 2px solid currentColor;
-  border-radius: 5px;
-  color: white;
-  background: repeating-linear-gradient(
-    135deg,
-    transparent 0 5px,
-    currentColor 5px 7px
-  );
-  opacity: 0.7;
-  transform: translateY(-50%) skewX(-12deg);
-  pointer-events: none;
+#modal-background .prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px !important;
 }
 #modal-background .card-title h2 {
-  padding-inline-end: 48px;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
   color: white !important;
 }
+#modal-background .prompt-icon {
+  flex: 0 0 auto;
+  color: white;
+  font-size: 26px;
+}
+#modal-background .prompt-close,
+.selection-dismiss {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 2px solid var(--accent-dark);
+  border-radius: 9px;
+  background: white;
+  color: var(--accent-dark);
+  box-shadow: 2px 2px 0 var(--accent-dark);
+  cursor: pointer;
+}
+#modal-background .prompt-close:hover,
+.selection-dismiss:hover {
+  background: var(--accent-light);
+}
+#modal-background .prompt-close:focus-visible,
+.selection-dismiss:focus-visible,
+#file-selection .action:focus-visible {
+  outline: 3px solid var(--star-gold-dark) !important;
+  outline-offset: 3px;
+}
 #modal-background[data-tone="gold"] .card-title h2,
-#modal-background[data-tone="gold"] .card-title::after {
+#modal-background[data-tone="gold"] .prompt-icon {
   color: var(--ink-navy) !important;
 }
 #modal-background .card-content {
@@ -212,4 +244,134 @@ header .action[data-icon="file_upload"] {
 }
 #modal-background .card-action.full .action:nth-child(2):hover {
   background: var(--purple-light);
+}
+
+/* One dock lets translated notices and mobile actions grow without overlapping. */
+.file-listing {
+  padding-bottom: calc(
+    var(--selection-dock-space, 0px) + env(safe-area-inset-bottom)
+  );
+}
+.selection-dock {
+  position: fixed;
+  inset-inline: 16px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 900;
+  display: grid;
+  gap: 10px;
+  max-width: 680px;
+  margin-inline: auto;
+}
+.selection-dock #multiple-selection {
+  --accent-main: var(--purple-main);
+  --accent-dark: var(--purple-dark);
+  --accent-light: var(--purple-light);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 2px solid var(--purple-dark);
+  border-radius: 16px;
+  background: var(--purple-surface);
+  color: var(--purple-dark);
+  box-shadow: 4px 4px 0 var(--purple-dark);
+}
+.selection-dock #multiple-selection p {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.selection-mode-icon {
+  flex: 0 0 auto;
+  font-size: 26px;
+  padding: 6px;
+  border: 2px solid var(--purple-dark);
+  border-radius: 10px;
+  background: var(--purple-light);
+}
+
+@media (max-width: 736px) {
+  /* The header is its own stacking context: the menu stays above this scrim. */
+  header .overlay.theme-backdrop {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    z-index: 1;
+  }
+  header #dropdown {
+    z-index: 2;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - 32px - env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: white;
+  }
+  .selection-dock {
+    inset-inline: 12px;
+  }
+  .selection-dock #file-selection {
+    position: static;
+    transform: none;
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 12px;
+    background: white;
+    border: 2px solid var(--cobalt-dark);
+    border-radius: 16px;
+    box-shadow: 4px 4px 0 var(--cobalt-dark);
+    isolation: isolate;
+  }
+  #file-selection > .selection-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding-bottom: 9px;
+    border-bottom: 2px dashed var(--cobalt-light);
+    color: var(--cobalt-dark);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  #file-selection .selection-summary i {
+    flex-shrink: 0;
+    color: var(--pink-dark);
+    font-size: 22px;
+  }
+  #file-selection .selection-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+  #file-selection .selection-actions .action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 0 40px;
+    min-width: 40px;
+    height: 42px;
+    margin: 0;
+    padding: 6px;
+  }
+  #file-selection .selection-actions .action i {
+    padding: 0;
+    font-size: 24px;
+  }
+  .selection-dock #multiple-selection {
+    gap: 9px;
+    padding: 10px;
+  }
+  .selection-dock .selection-mode-icon {
+    font-size: 22px;
+    padding: 4px;
+  }
 }

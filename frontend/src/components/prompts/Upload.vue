@@ -1,8 +1,6 @@
 <template>
   <div class="card floating">
-    <div class="card-title">
-      <h2>{{ t("prompts.upload") }}</h2>
-    </div>
+    <prompt-header>{{ t("prompts.upload") }}</prompt-header>
 
     <div class="card-content">
       <p>{{ t("prompts.uploadMessage") }}</p>
@@ -33,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+import PromptHeader from "./PromptHeader.vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { useLayoutStore } from "@/stores/layout";

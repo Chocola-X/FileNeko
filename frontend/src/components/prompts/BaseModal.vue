@@ -1,6 +1,7 @@
 <template>
   <div
     id="modal-background"
+    class="theme-backdrop"
     :data-prompt="prompt"
     :data-tone="tone"
     @click="backgroundClick"
