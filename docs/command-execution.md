@@ -52,3 +52,16 @@ You can do this by adding them in Settings > User Management > (edit user) > Com
 > FROM filebrowser/filebrowser
 > RUN sudo apt install p7zip-full
 > ```
+
+## Local fork security changes
+
+Hook variables are passed only as environment variables. They are no longer
+expanded by the server into executable arguments or shell source. For example,
+use a script that reads its environment, or configure a POSIX shell hook as
+`sh -c 'printf "%s\n" "$FILE"'`. Quote variable expansions in scripts and do not
+pass their contents to `eval` or another interpreter as source code. A direct
+hook such as `echo $FILE` now receives the literal argument `$FILE`.
+
+Interactive commands are executed directly as an executable and an argument
+list. The global shell setting applies only to administrator-configured hooks;
+it does not interpret interactive command input.
