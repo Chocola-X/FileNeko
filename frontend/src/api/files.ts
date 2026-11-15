@@ -5,6 +5,8 @@ import { upload as postTus, useTus } from "./tus";
 import { createURL, fetchURL, removePrefix, StatusError } from "./utils";
 import { isEncodableResponse, makeRawResource } from "@/utils/encodings";
 
+export { scanDirectory } from "./directory-stats";
+
 export async function fetch(url: string, signal?: AbortSignal) {
   const encoding = isEncodableResponse(url);
   url = removePrefix(url);

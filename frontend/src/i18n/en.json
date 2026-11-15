@@ -16,6 +16,7 @@
     "settings": "Preferences"
   },
   "buttons": {
+    "stopScan": "Stop scanning",
     "cancel": "Cancel",
     "clear": "Clear",
     "close": "Close",
@@ -147,6 +148,14 @@
   },
   "permanent": "Permanent",
   "prompts": {
+    "folderScanRunning": "Calculating size and contents…",
+    "folderScanQueued": "Waiting to scan…",
+    "folderScanComplete": "Calculation complete",
+    "folderScanIncomplete": "Calculation finished; some items could not be read. These totals are incomplete.",
+    "folderScanFailed": "Calculation interrupted. The displayed totals are incomplete.",
+    "folderScanCanceled": "Calculation canceled. The displayed totals are incomplete.",
+    "folderScanNote": "Includes accessible subfolders and hidden files. Uses file lengths, not disk space. Symbolic links are excluded.",
+    "folderScanLinks": "Symbolic links are excluded from recursive calculations.",
     "copy": "Copy",
     "copyMessage": "Choose the location to copy your files to:",
     "currentlyNavigating": "Currently navigating on:",
