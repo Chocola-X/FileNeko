@@ -57,7 +57,7 @@
 
     <permissions v-model:perm="user.perm" />
     <commands
-      v-if="enableExec && user.perm.admin"
+      v-if="enableExec && user.perm?.admin"
       v-model:commands="user.commands"
     />
 

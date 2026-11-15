@@ -76,23 +76,25 @@ export async function login(
 let renewal: Promise<void> | null = null;
 
 export function renew(jwt: string): Promise<void> {
-  if (!renewal) {
-    const refresh = async () => {
-      const latest = localStorage.getItem("jwt");
-      if (latest && latest !== jwt) {
-        parseToken(latest);
-        return;
-      }
-      await renewSession(jwt);
-    };
-    const request = navigator.locks
-      ? navigator.locks.request("filebrowser-session-renew", refresh)
-      : refresh();
-    renewal = request.finally(() => {
-      renewal = null;
-    });
-  }
-  return renewal;
+  if (renewal) return renewal;
+  const refresh = async () => {
+    const latest = localStorage.getItem("jwt");
+    if (latest && latest !== jwt) {
+      parseToken(latest);
+      return;
+    }
+    await renewSession(jwt);
+  };
+  const request = navigator.locks
+    ? navigator.locks.request("filebrowser-session-renew", refresh)
+    : refresh();
+  const pending = (async () => {
+    await request;
+  })().finally(() => {
+    renewal = null;
+  });
+  renewal = pending;
+  return pending;
 }
 
 async function renewSession(jwt: string) {
