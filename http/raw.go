@@ -112,6 +112,11 @@ func getFiles(d *data, path, commonPath string) ([]archives.FileInfo, error) {
 	if err != nil {
 		return nil, err
 	}
+	// FIFOs, devices and sockets are not archive members: opening them can
+	// block indefinitely, even after the download request is cancelled.
+	if !info.IsDir() && !info.Mode().IsRegular() {
+		return nil, nil
+	}
 
 	var archiveFiles []archives.FileInfo
 
@@ -217,6 +222,13 @@ func rawDirHandler(w http.ResponseWriter, r *http.Request, d *data, file *files.
 }
 
 func rawFileHandler(w http.ResponseWriter, r *http.Request, file *files.FileInfo) (int, error) {
+	info, err := file.Fs.Stat(file.Path)
+	if err != nil {
+		return errToStatus(err), err
+	}
+	if !info.Mode().IsRegular() {
+		return http.StatusBadRequest, nil
+	}
 	fd, err := file.Fs.Open(file.Path)
 	if err != nil {
 		return http.StatusInternalServerError, err
