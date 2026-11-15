@@ -7,6 +7,7 @@ import (
 	"errors"
 	fberrors "github.com/filebrowser/filebrowser/v2/errors"
 	"io"
+	"mime"
 	"net/http"
 	"net/url"
 	"os"
@@ -41,6 +42,11 @@ func newWebDAVHandler(cache FileCache) handleFunc {
 			if !p.Download {
 				return http.StatusForbidden, nil
 			}
+			// DAV files are untrusted downloads on the application's origin.
+			// Prevent uploaded HTML/SVG/JS from becoming executable UI content.
+			w.Header().Set("Content-Security-Policy", "sandbox; default-src 'none'; script-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
+			w.Header().Set("X-Content-Type-Options", "nosniff")
+			w.Header().Set("Content-Disposition", mime.FormatMediaType("attachment", map[string]string{"filename": path.Base(src)}))
 		case "PUT":
 			_, err := d.user.Fs.Stat(src)
 			if (err == nil && !p.Modify) || (os.IsNotExist(err) && !p.Create) {
