@@ -360,8 +360,8 @@ body.rtl .card .card-action {
 }
 
 .file-list li[aria-selected="true"] {
-  background: var(--blue) !important;
-  color: var(--iconSecondary) !important;
+  background: var(--blue);
+  color: var(--iconSecondary);
   transition: 0.1s ease all;
 }
 

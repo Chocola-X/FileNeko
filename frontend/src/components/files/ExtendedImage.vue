@@ -310,27 +310,29 @@ const pxStringToNumber = (style: string) => {
 };
 </script>
 <style>
-.image-ex-container {
-  margin: auto;
-  overflow: hidden;
-  position: relative;
-}
+@layer components {
+  .image-ex-container {
+    margin: auto;
+    overflow: hidden;
+    position: relative;
+  }
 
-.image-ex-img {
-  position: absolute;
-}
+  .image-ex-img {
+    position: absolute;
+  }
 
-.image-ex-img-center {
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  position: absolute;
-  transition: none;
-}
+  .image-ex-img-center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    transition: none;
+  }
 
-.image-ex-img-ready {
-  left: 0;
-  top: 0;
-  transition: transform 0.1s ease;
+  .image-ex-img-ready {
+    left: 0;
+    top: 0;
+    transition: transform 0.1s ease;
+  }
 }
 </style>

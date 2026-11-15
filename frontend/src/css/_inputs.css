@@ -27,9 +27,9 @@
 }
 
 .input--red {
-  background: var(--input-red) !important;
+  background: var(--input-red);
 }
 
 .input--green {
-  background: var(--input-green) !important;
+  background: var(--input-green);
 }

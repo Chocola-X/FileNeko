@@ -14,8 +14,8 @@
     0 0 / 12px 12px rgba(30, 42, 74, 0.55);
 }
 .theme-backdrop {
-  background: var(--dialog-backdrop) !important;
-  background-size: 12px 12px !important;
+  background: var(--dialog-backdrop);
+  background-size: 12px 12px;
   backdrop-filter: none;
 }
 [data-tone="pink"] {
@@ -71,7 +71,7 @@ header .action[data-icon="file_upload"] {
 }
 #file-selection .action[data-tone] i,
 .context-menu .action[data-tone] i {
-  color: var(--accent-dark) !important;
+  color: var(--accent-dark);
 }
 
 /* Keep the native input semantics, keyboard interaction and disabled state. */
@@ -84,8 +84,8 @@ header .action[data-icon="file_upload"] {
   -webkit-appearance: none;
   display: inline-block;
   flex: 0 0 auto;
-  width: 20px !important;
-  height: 20px !important;
+  width: 20px;
+  height: 20px;
   padding: 0;
   border: 2px solid var(--check-dark);
   border-radius: 6px;
@@ -124,13 +124,13 @@ header .action[data-icon="file_upload"] {
 }
 .dashboard input[type="checkbox"]:focus-visible,
 #modal-background input[type="checkbox"]:focus-visible {
-  outline: 3px solid var(--star-gold-dark) !important;
+  outline: 3px solid var(--star-gold-dark);
   outline-offset: 4px;
 }
 .dashboard input[type="checkbox"]:disabled,
 #modal-background input[type="checkbox"]:disabled {
   opacity: 0.5;
-  cursor: not-allowed !important;
+  cursor: not-allowed;
   box-shadow: none;
 }
 @media (forced-colors: active) {
@@ -138,7 +138,7 @@ header .action[data-icon="file_upload"] {
   #modal-background input[type="checkbox"] {
     appearance: auto;
     -webkit-appearance: auto;
-    accent-color: auto !important;
+    accent-color: auto;
     background-image: none;
     box-shadow: none;
   }
@@ -146,25 +146,25 @@ header .action[data-icon="file_upload"] {
 
 /* Reference-style colored title strips, dashed stationery edges and hard shadows. */
 #modal-background .card.floating {
-  border-color: var(--accent-dark) !important;
+  border-color: var(--accent-dark);
   background: white;
 }
 #modal-background .card-title {
   position: relative;
-  background: var(--accent-main) !important;
-  border-bottom: 3px solid var(--accent-dark) !important;
+  background: var(--accent-main);
+  border-bottom: 3px solid var(--accent-dark);
 }
 #modal-background .prompt-header {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 16px !important;
+  padding: 14px 16px;
 }
 #modal-background .card-title h2 {
   flex: 1 1 auto;
   min-width: 0;
   margin: 0;
-  color: white !important;
+  color: white;
 }
 #modal-background .prompt-icon {
   flex: 0 0 auto;
@@ -194,23 +194,23 @@ header .action[data-icon="file_upload"] {
 #modal-background .prompt-close:focus-visible,
 .selection-dismiss:focus-visible,
 #file-selection .action:focus-visible {
-  outline: 3px solid var(--star-gold-dark) !important;
+  outline: 3px solid var(--star-gold-dark);
   outline-offset: 3px;
 }
 #modal-background[data-tone="gold"] .card-title h2,
 #modal-background[data-tone="gold"] .prompt-icon {
-  color: var(--ink-navy) !important;
+  color: var(--ink-navy);
 }
 #modal-background .card-content {
   border-inline: 1px dashed var(--accent-light);
   margin-inline: 7px;
 }
 #modal-background .input {
-  border-color: var(--accent-dark) !important;
-  background: var(--accent-surface) !important;
+  border-color: var(--accent-dark);
+  background: var(--accent-surface);
 }
 #modal-background .input:focus {
-  box-shadow: 3px 3px 0 var(--accent-light) !important;
+  box-shadow: 3px 3px 0 var(--accent-light);
 }
 #modal-background .button:not(.button--grey):not(.button--red) {
   --button-bg: var(--accent-main);

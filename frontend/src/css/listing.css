@@ -61,7 +61,7 @@ html[dir="rtl"] #listing {
   text-align: center;
   font-size: 2em;
   margin: 1em auto;
-  display: block !important;
+  display: block;
   width: 95%;
   color: var(--textPrimary);
   font-weight: 500;
@@ -91,7 +91,7 @@ html[dir="rtl"] #listing {
 #listing.mosaic .item:hover {
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.12),
-    0 1px 2px rgba(0, 0, 0, 0.24) !important;
+    0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 #listing.mosaic .header {
@@ -120,12 +120,12 @@ html[dir="rtl"] #listing {
 }
 
 #listing .item[aria-selected="true"] {
-  background: var(--blue) !important;
-  color: var(--iconSecondary) !important;
+  background: var(--blue);
+  color: var(--iconSecondary);
 }
 
 #listing .item.header {
-  display: none !important;
+  display: none;
   background-color: var(--iconTertiary);
 }
 
@@ -136,7 +136,7 @@ html[dir="rtl"] #listing {
 }
 
 #listing.list .item.header {
-  display: flex !important;
+  display: flex;
   background: var(--background);
   z-index: 999;
   padding: 0.85em;

@@ -14,10 +14,10 @@
 button.button,
 .button--flat,
 .button--blue {
-  background: var(--button-bg) !important;
-  color: var(--button-ink) !important;
-  border-color: var(--button-border) !important;
-  box-shadow: 3px 3px 0 var(--button-border) !important;
+  background: var(--button-bg);
+  color: var(--button-ink);
+  border-color: var(--button-border);
+  box-shadow: 3px 3px 0 var(--button-border);
 }
 .button--grey,
 .button--flat.button--grey {
@@ -35,26 +35,26 @@ button.button,
 button.button:hover,
 .button--flat:hover,
 .button--red:hover {
-  background: var(--button-hover) !important;
-  color: var(--button-ink) !important;
-  border-color: var(--button-border) !important;
-  box-shadow: 4px 4px 0 var(--button-border) !important;
+  background: var(--button-hover);
+  color: var(--button-ink);
+  border-color: var(--button-border);
+  box-shadow: 4px 4px 0 var(--button-border);
 }
 .button:disabled,
 button.button:disabled,
 .action:disabled {
-  opacity: 0.5 !important;
-  cursor: not-allowed !important;
-  transform: none !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 .button:disabled:hover {
-  background: var(--button-bg) !important;
-  box-shadow: 3px 3px 0 var(--button-border) !important;
+  background: var(--button-bg);
+  box-shadow: 3px 3px 0 var(--button-border);
 }
 .button:focus-visible,
 .action:focus-visible,
 #search button:focus-visible {
-  outline: 3px solid var(--star-gold-dark) !important;
+  outline: 3px solid var(--star-gold-dark);
   outline-offset: 3px;
 }
 .button i,
@@ -64,60 +64,60 @@ button.button:disabled,
 
 /* Search is a bounded panel with its own scrolling result area. */
 #search.active {
-  display: flex !important;
+  display: flex;
   flex-direction: column;
   gap: 18px;
   align-items: center;
-  height: 100dvh !important;
-  padding: 28px max(16px, env(safe-area-inset-right)) !important;
-  background: var(--bg-sky-mid) !important;
+  height: 100dvh;
+  padding: 28px max(16px, env(safe-area-inset-right));
+  background: var(--bg-sky-mid);
   background-image:
     radial-gradient(var(--cobalt-light) 2px, transparent 2px),
-    linear-gradient(150deg, #dff2ff, #fff5f8) !important;
+    linear-gradient(150deg, #dff2ff, #fff5f8);
   background-size:
     24px 24px,
-    100% 100% !important;
+    100% 100%;
   overflow: hidden;
 }
 #search.active #input {
   width: 100%;
   min-height: 58px;
-  height: 58px !important;
-  max-width: 760px !important;
+  height: 58px;
+  max-width: 760px;
   flex: 0 0 auto;
-  margin: 0 !important;
-  border-radius: 18px !important;
-  border-color: var(--cobalt-dark) !important;
-  box-shadow: 4px 4px 0 var(--cobalt-dark) !important;
-  padding: 6px 12px !important;
+  margin: 0;
+  border-radius: 18px;
+  border-color: var(--cobalt-dark);
+  box-shadow: 4px 4px 0 var(--cobalt-dark);
+  padding: 6px 12px;
 }
 #search.active #input input {
   min-width: 0;
   flex: 1;
-  width: 0 !important;
+  width: 0;
   height: 100%;
 }
 #search.active #input > .action {
   flex-shrink: 0;
-  margin: 0 8px 0 0 !important;
+  margin: 0 8px 0 0;
 }
 #search.active #input > span {
   flex-shrink: 0;
-  margin: 0 4px !important;
+  margin: 0 4px;
   font-size: 13px;
   color: var(--pink-dark);
 }
 #search.active #result {
   width: 100%;
-  max-width: 760px !important;
-  height: auto !important;
+  max-width: 760px;
+  height: auto;
   min-height: 0;
-  max-height: none !important;
+  max-height: none;
   flex: 0 1 auto;
-  margin: 0 0 8px !important;
-  padding: 24px !important;
-  border-radius: 20px !important;
-  box-shadow: 5px 5px 0 var(--cobalt-dark) !important;
+  margin: 0 0 8px;
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 0 var(--cobalt-dark);
   overflow: auto;
   overflow-wrap: anywhere;
   white-space: normal;
@@ -136,9 +136,9 @@ button.button:disabled,
   margin: 20px 0 0;
 }
 #search .boxes h3 {
-  padding: 0 0 12px;
+  padding: 0 0 6px;
   font-size: 14px;
-  border: 0 !important;
+  border: 0;
 }
 #search .boxes > div {
   display: grid;
@@ -186,7 +186,7 @@ button.button:disabled,
   transform: translate(-1px, -2px);
 }
 #search .boxes button i {
-  color: var(--tile-main) !important;
+  color: var(--tile-main);
   font-size: 34px;
 }
 #search .boxes button p {
@@ -197,7 +197,7 @@ button.button:disabled,
   margin: 0 0 8px;
 }
 #search #result ul li a {
-  padding: 12px !important;
+  padding: 12px;
   border: 1px solid var(--cobalt-light);
   background: var(--surface-ice);
 }
@@ -213,9 +213,9 @@ button.button:disabled,
 /* One dialog frame, independent of the height or contents of each operation. */
 #modal-background {
   padding: 20px 16px;
-  background: var(--dialog-backdrop) !important;
-  background-size: 12px 12px !important;
-  z-index: 30000 !important;
+  background: var(--dialog-backdrop);
+  background-size: 12px 12px;
+  z-index: 30000;
 }
 #modal-background > div {
   width: min(100%, 560px);
@@ -223,23 +223,23 @@ button.button:disabled,
   min-height: 0;
 }
 #modal-background .card.floating {
-  position: relative !important;
-  inset: auto !important;
-  transform: none !important;
+  position: relative;
+  inset: auto;
+  transform: none;
   display: flex;
   flex-direction: column;
-  width: 100% !important;
-  max-width: none !important;
+  width: 100%;
+  max-width: none;
   max-height: calc(100dvh - 40px);
   margin: 0;
-  border-width: 2.5px !important;
-  border-radius: 20px !important;
-  box-shadow: 6px 6px 0 var(--accent-dark) !important;
-  animation: dialog-enter 0.15s ease-out !important;
+  border-width: 2.5px;
+  border-radius: 20px;
+  box-shadow: 6px 6px 0 var(--accent-dark);
+  animation: dialog-enter 0.15s ease-out;
 }
 #modal-background .card-title {
   flex-shrink: 0;
-  padding: 18px 20px !important;
+  padding: 18px 20px;
 }
 #modal-background .card-title h2 {
   font-size: 20px;
@@ -249,7 +249,7 @@ button.button:disabled,
 #modal-background .card-content {
   min-height: 0;
   overflow: auto;
-  padding: 20px !important;
+  padding: 20px;
   line-height: 1.6;
   font-size: 14px;
   overflow-wrap: anywhere;
@@ -261,8 +261,9 @@ button.button:disabled,
   flex-shrink: 0;
   flex-wrap: wrap;
   align-items: center;
-  padding: 16px 20px !important;
-  border-top-color: var(--accent-main) !important;
+  justify-content: flex-end;
+  padding: 16px 20px;
+  border-top-color: var(--accent-main);
   background: var(--accent-surface);
 }
 #modal-background .card-action > div:not(.action) {
@@ -292,9 +293,9 @@ button.button:disabled,
   background: var(--accent-light);
 }
 #modal-background .card-action.full {
-  display: grid !important;
+  display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 10px;
 }
 #modal-background .card-action.full .action {
   display: flex;
@@ -304,21 +305,7 @@ button.button:disabled,
   padding: 20px 12px;
   border: 2px solid var(--accent-dark);
   border-radius: 14px;
-  background: white;
-  box-shadow: 3px 3px 0 var(--accent-dark);
-  color: var(--accent-dark);
   font-size: 14px;
-}
-#modal-background .card-action.full .action:hover {
-  background: var(--accent-light);
-}
-#modal-background .card-action.full .action:nth-child(2) {
-  color: var(--pink-dark);
-  border-color: var(--pink-dark);
-  box-shadow: 3px 3px 0 var(--pink-dark);
-}
-#modal-background .card-action.full .action:nth-child(2):hover {
-  background: var(--pink-light);
 }
 #modal-background .card-action.full .action i {
   font-size: 36px;
@@ -355,7 +342,7 @@ button.button:disabled,
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
-  padding: 12px !important;
+  padding: 12px;
 }
 #share .input-group .vue-number-input {
   flex: 1 1 170px;
@@ -372,8 +359,8 @@ button.button:disabled,
 }
 #share .input-group select,
 #share .input-group .vue-number-input input {
-  box-shadow: none !important;
-  background: white !important;
+  box-shadow: none;
+  background: white;
 }
 
 /* Upload progress stays anchored without covering the whole file browser. */
@@ -385,13 +372,13 @@ button.button:disabled,
   width: min(460px, calc(100vw - 40px));
 }
 .upload-files .card.floating {
-  position: relative !important;
-  inset: auto !important;
-  transform: none !important;
-  width: 100% !important;
-  max-width: none !important;
+  position: relative;
+  inset: auto;
+  transform: none;
+  width: 100%;
+  max-width: none;
   margin: 0;
-  animation: none !important;
+  animation: none;
 }
 .upload-files .card-title {
   flex-wrap: wrap;
@@ -412,14 +399,14 @@ button.button:disabled,
 }
 .upload-files .card-content {
   max-height: 40dvh;
-  overflow: auto !important;
+  overflow: auto;
 }
 .upload-files .file-name {
   overflow-wrap: anywhere;
-  font-size: 14px !important;
+  font-size: 14px;
 }
 .upload-files .file-progress {
-  height: 12px !important;
+  height: 12px;
   padding: 2px;
   border: 1px solid var(--cobalt-dark);
   border-radius: 8px;
@@ -427,27 +414,27 @@ button.button:disabled,
   overflow: hidden;
 }
 .upload-files .file-progress > div {
-  background: var(--pink-main) !important;
+  background: var(--pink-main);
 }
 
 /* Preview controls and reading surfaces share the file browser's bright palette. */
 #previewer,
 #editor-container {
-  background: var(--surface-ice) !important;
+  background: var(--surface-ice);
   color: var(--ink-navy);
 }
 #previewer header {
-  background: white !important;
-  color: var(--ink-navy);
+  background: white;
+  color: white;
 }
 #previewer header title,
 #previewer header .action i {
-  color: inherit !important;
-  text-shadow: none !important;
+  color: inherit;
+  text-shadow: none;
 }
 #previewer .preview {
   margin: calc(4em + 16px) 16px 16px;
-  height: calc(100% - 4em - 32px) !important;
+  height: calc(100% - 4em - 32px);
   width: calc(100% - 32px);
   border: 2px solid var(--cobalt-dark);
   border-radius: 16px;
@@ -459,15 +446,15 @@ button.button:disabled,
     24px;
 }
 #previewer .preview audio {
-  width: min(640px, 90%) !important;
-  height: 54px !important;
+  width: min(640px, 90%);
+  height: 54px;
   position: relative;
   top: calc(50% - 27px);
   color-scheme: light;
 }
 #previewer .preview .info {
   width: min(560px, 90%);
-  color: var(--ink-navy) !important;
+  color: var(--ink-navy);
   font-size: 18px;
 }
 #previewer .preview .info .title i {
@@ -478,11 +465,15 @@ button.button:disabled,
 }
 #previewer > button,
 #previewer .reader-button {
-  background: white !important;
-  color: var(--cobalt-dark) !important;
+  background: white;
+  color: var(--cobalt-dark);
   border: 2px solid var(--cobalt-dark);
   border-radius: 12px;
   box-shadow: 3px 3px 0 var(--cobalt-dark);
+}
+#previewer > button {
+  border: 0;
+  border-radius: 50%;
 }
 #previewer > button:hover,
 #previewer .reader-button:hover {
@@ -490,7 +481,7 @@ button.button:disabled,
   color: var(--cobalt-dark);
 }
 #previewer .pdf {
-  padding: 0 !important;
+  padding: 0;
   background: white;
 }
 #previewer h2.message {
@@ -501,11 +492,15 @@ button.button:disabled,
 }
 #previewer .epub-reader .readerArea,
 #previewer .epub-reader .tocArea {
-  background: white !important;
+  background: white;
   color: var(--ink-navy);
 }
 #previewer .epub-reader .tocButton {
   top: 12px;
+}
+#previewer .epub-reader .tocAreaButton.active {
+  color: var(--blue);
+  border-color: var(--dark-blue);
 }
 #previewer .epub-reader .size {
   top: 14px;
@@ -523,6 +518,9 @@ button.button:disabled,
   color: var(--cobalt-dark);
 }
 #previewer .video-js {
+  /* Video.js inserts an unlayered dimensions rule after reading metadata. */
+  width: 100%;
+  height: 100%;
   background: var(--surface-ice);
 }
 #previewer .video-js .vjs-control-bar {
@@ -536,7 +534,7 @@ button.button:disabled,
   border-radius: 14px;
 }
 #editor-container {
-  z-index: 20000;
+  z-index: 9998;
 }
 #editor-container .editor-header {
   display: flex;
@@ -550,7 +548,7 @@ button.button:disabled,
 #editor-container .editor-header .breadcrumbs {
   flex: 1 1 240px;
   min-width: 0;
-  margin: 0 !important;
+  margin: 0;
   min-height: 42px;
   overflow-wrap: anywhere;
 }
@@ -579,7 +577,7 @@ button.button:disabled,
   margin: 0 16px 16px;
   border: 2px solid var(--cobalt-dark);
   border-radius: 12px;
-  font-family: var(--font-mono) !important;
+  font-family: var(--font-mono);
   font-weight: 400;
 }
 #editor-container .ace_gutter {
@@ -613,11 +611,11 @@ button.button:disabled,
 }
 @media (max-width: 736px) {
   #search.active {
-    padding: 16px 12px !important;
+    padding: 16px 12px;
     gap: 14px;
   }
   #search.active #result {
-    padding: 16px !important;
+    padding: 16px;
   }
   #search .boxes > div {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -631,17 +629,17 @@ button.button:disabled,
   }
   #modal-background .card-content,
   #modal-background .card-title {
-    padding: 16px !important;
+    padding: 16px;
   }
   #modal-background .card-action {
-    padding: 14px 16px !important;
+    padding: 14px 16px;
   }
   #modal-background .card-action .button {
-    padding: 8px 12px !important;
+    padding: 8px 12px;
   }
   #previewer .preview {
     margin: calc(4em + 10px) 10px 10px;
-    height: calc(100% - 4em - 20px) !important;
+    height: calc(100% - 4em - 20px);
     width: calc(100% - 20px);
   }
   #editor-container .editor-header {
@@ -663,7 +661,7 @@ button.button:disabled,
   overflow-wrap: anywhere;
 }
 #previewer .epub-reader .arrow {
-  color: var(--cobalt-dark) !important;
+  color: var(--cobalt-dark);
   opacity: 1;
 }
 #previewer .epub-reader .tocButton,
@@ -671,7 +669,7 @@ button.button:disabled,
   z-index: 200;
 }
 #previewer > button:hover {
-  background: var(--cobalt-light) !important;
+  background: var(--cobalt-light);
 }
 #previewer .csv-viewer select {
   border-radius: 10px;
@@ -685,8 +683,8 @@ button.button:disabled,
 }
 
 /* Number fields use the same outlined light surface as other form controls. */
-.vue-number-input {
-  display: flex !important;
+#app .vue-number-input {
+  display: flex;
   align-items: stretch;
   max-width: 100%;
   min-width: 0;
@@ -695,36 +693,43 @@ button.button:disabled,
   border-radius: 12px;
   background: var(--surface-ice);
   box-shadow: 3px 3px 0 var(--cobalt-dark);
-  font-size: 16px !important;
+  font-size: 16px;
   transition:
     border-color 0.12s,
     box-shadow 0.12s;
 }
-.vue-number-input:focus-within {
+#app .vue-number-input:focus-within {
   border-color: var(--pink-dark);
   box-shadow: 3px 3px 0 var(--pink-dark);
 }
-.vue-number-input > input.vue-number-input__input {
+#app #share .vue-number-input {
+  border: 0;
+}
+#app #share .vue-number-input > input.vue-number-input__input {
+  background: var(--surfacePrimary);
+  border-radius: 3px;
+}
+#app .vue-number-input > input.vue-number-input__input {
   flex: 1 1 0%;
-  width: 0 !important;
+  width: 0;
   min-width: 0;
   max-width: 100%;
   min-height: 44px;
-  height: auto !important;
-  padding: 8px 12px !important;
-  border: 0 !important;
+  height: auto;
+  padding: 8px 12px;
+  border: 0;
   border-radius: 0;
-  box-shadow: none !important;
-  background: var(--surface-ice) !important;
-  color: var(--ink-navy) !important;
+  box-shadow: none;
+  background: var(--surface-ice);
+  color: var(--ink-navy);
   font-family: inherit;
-  font-size: 16px !important;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1.5;
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
-.vue-number-input > button.vue-number-input__button {
+#app .vue-number-input > button.vue-number-input__button {
   position: relative;
   inset: auto;
   flex: 0 0 44px;
@@ -733,66 +738,66 @@ button.button:disabled,
   padding: 0;
   border: 0;
   border-radius: 0;
-  background: var(--cobalt-light) !important;
+  background: var(--cobalt-light);
   color: var(--cobalt-dark);
   cursor: pointer;
   transition: background 0.12s;
 }
-.vue-number-input > button.vue-number-input__button--minus {
-  border-right: 2px solid var(--cobalt-dark) !important;
+#app .vue-number-input > button.vue-number-input__button--minus {
+  border-right: 2px solid var(--cobalt-dark);
 }
-.vue-number-input > button.vue-number-input__button--plus {
-  border-left: 2px solid var(--cobalt-dark) !important;
+#app .vue-number-input > button.vue-number-input__button--plus {
+  border-left: 2px solid var(--cobalt-dark);
 }
-.vue-number-input > button.vue-number-input__button::before,
-.vue-number-input > button.vue-number-input__button::after {
-  background: currentColor !important;
+#app .vue-number-input > button.vue-number-input__button::before,
+#app .vue-number-input > button.vue-number-input__button::after {
+  background: currentColor;
   border-radius: 2px;
 }
-.vue-number-input > button.vue-number-input__button::before {
+#app .vue-number-input > button.vue-number-input__button::before {
   width: 14px;
   height: 2px;
 }
-.vue-number-input > button.vue-number-input__button::after {
+#app .vue-number-input > button.vue-number-input__button::after {
   width: 2px;
   height: 14px;
 }
-.vue-number-input > button.vue-number-input__button:hover:not(:disabled) {
-  background: var(--pink-light) !important;
+#app .vue-number-input > button.vue-number-input__button:hover:not(:disabled) {
+  background: var(--pink-light);
   color: var(--pink-dark);
 }
-.vue-number-input > button.vue-number-input__button:active:not(:disabled) {
-  background: var(--pink-main) !important;
+#app .vue-number-input > button.vue-number-input__button:active:not(:disabled) {
+  background: var(--pink-main);
   color: white;
 }
-.vue-number-input > button.vue-number-input__button:disabled {
+#app .vue-number-input > button.vue-number-input__button:disabled {
   color: var(--ink-muted);
   opacity: 0.5;
   cursor: not-allowed;
 }
-.vue-number-input > button.vue-number-input__button:focus-visible {
+#app .vue-number-input > button.vue-number-input__button:focus-visible {
   outline: 2px solid var(--pink-dark);
   outline-offset: -4px;
 }
-.vue-number-input > input.vue-number-input__input:disabled {
-  color: var(--ink-muted) !important;
+#app .vue-number-input > input.vue-number-input__input:disabled {
+  color: var(--ink-muted);
   cursor: not-allowed;
 }
-.vue-number-input--small > input.vue-number-input__input {
+#app .vue-number-input--small > input.vue-number-input__input {
   min-height: 38px;
 }
-.vue-number-input--small > button.vue-number-input__button {
+#app .vue-number-input--small > button.vue-number-input__button {
   flex-basis: 38px;
   width: 38px;
 }
-.vue-number-input--large > input.vue-number-input__input {
+#app .vue-number-input--large > input.vue-number-input__input {
   min-height: 50px;
 }
-.vue-number-input--large > button.vue-number-input__button {
+#app .vue-number-input--large > button.vue-number-input__button {
   flex-basis: 50px;
   width: 50px;
 }
-.vue-number-input--inline {
-  display: inline-flex !important;
+#app .vue-number-input--inline {
+  display: inline-flex;
   width: 200px;
 }

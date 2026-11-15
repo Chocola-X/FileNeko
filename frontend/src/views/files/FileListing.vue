@@ -354,7 +354,6 @@ import { users, files as api } from "@/api";
 import { enableExec } from "@/utils/constants";
 import * as upload from "@/utils/upload";
 import buttons from "@/utils/buttons";
-import css from "@/utils/css";
 import { throttle } from "lodash-es";
 import { Base64 } from "js-base64";
 
@@ -383,7 +382,6 @@ const selectionDock = ref<HTMLElement | null>(null);
 const { height: dockHeight } = useElementSize(selectionDock);
 
 const showLimit = ref<number>(50);
-const columnWidth = ref<number>(280);
 const dragCounter = ref<number>(0);
 const width = ref<number>(window.innerWidth);
 const itemWeight = ref<number>(0);
@@ -523,9 +521,6 @@ watch(req, () => {
 });
 
 onMounted(() => {
-  // Check the columns size for the first time.
-  columnsResize();
-
   // How much every listing item affects the window height
   setItemWeight();
 
@@ -742,18 +737,6 @@ const paste = async (event: Event) => {
   }
 
   action(false, false);
-};
-
-const columnsResize = () => {
-  // Update the columns size based on the window width.
-  const items_ = css(["#listing.mosaic .item", ".mosaic#listing .item"]);
-  if (items_ === null) return;
-
-  let columns = Math.floor(
-    (document.querySelector("main")?.offsetWidth ?? 0) / columnWidth.value
-  );
-  if (columns === 0) columns = 1;
-  items_.style.width = `calc(${100 / columns}% - 1em)`;
 };
 
 const scrollEvent = throttle(() => {
@@ -982,7 +965,6 @@ const toggleMultipleSelection = () => {
 };
 
 const windowsResize = throttle(() => {
-  columnsResize();
   width.value = window.innerWidth;
 
   // Listing element is not displayed
@@ -1133,7 +1115,9 @@ const handleEmptyAreaClick = (e: MouseEvent) => {
 };
 </script>
 <style scoped>
-#listing {
-  min-height: calc(100vh - 8rem);
+@layer components {
+  #listing {
+    min-height: calc(100vh - 8rem);
+  }
 }
 </style>

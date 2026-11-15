@@ -28,7 +28,7 @@
         style="display: inline-block"
         >autorenew
       </i>
-      <span style="margin-top: 5px" v-show="results.length > 0">
+      <span v-show="results.length > 0">
         {{ results.length }}
       </span>
     </div>

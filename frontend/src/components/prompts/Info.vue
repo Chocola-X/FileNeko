@@ -339,29 +339,31 @@ export default {
 </script>
 
 <style scoped>
-.folder-scan {
-  margin-top: 16px;
-  padding: 12px;
-  border: 2px dashed var(--cobalt-light);
-  border-radius: 12px;
-  background: var(--surface-ice);
-}
-.folder-scan-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0 0 8px;
-  color: var(--cobalt-dark);
-  font-weight: 700;
-}
-.folder-scan-note {
-  margin: 0;
-  color: var(--ink-slate);
-  font-size: 0.85em;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-}
-.folder-scan button {
-  margin-top: 10px;
+@layer components {
+  .folder-scan {
+    margin-top: 16px;
+    padding: 12px;
+    border: 2px dashed var(--cobalt-light);
+    border-radius: 12px;
+    background: var(--surface-ice);
+  }
+  .folder-scan-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 8px;
+    color: var(--cobalt-dark);
+    font-weight: 700;
+  }
+  .folder-scan-note {
+    margin: 0;
+    color: var(--ink-slate);
+    font-size: 0.85em;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+  .folder-scan button {
+    margin-top: 10px;
+  }
 }
 </style>

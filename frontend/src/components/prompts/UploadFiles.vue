@@ -214,9 +214,11 @@ const abortAll = () => {
 </script>
 
 <style scoped>
-.upload-info {
-  min-width: 19ch;
-  width: auto;
-  text-align: left;
+@layer components {
+  .upload-info {
+    min-width: 19ch;
+    width: auto;
+    text-align: left;
+  }
 }
 </style>

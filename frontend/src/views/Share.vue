@@ -37,7 +37,7 @@
     </div>
 
     <div v-if="layoutStore.loading">
-      <h2 class="message delayed" style="padding-top: 3em !important">
+      <h2 class="message delayed" style="padding-top: 3em">
         <div class="spinner">
           <div class="bounce1"></div>
           <div class="bounce2"></div>
@@ -157,7 +157,7 @@
           <div
             v-if="req.isDir"
             class="share__box__element share__box__center share__box__icon"
-            style="padding: 0em !important; height: 12em !important"
+            style="padding: 0em; height: 12em"
           >
             <a
               target="_blank"
@@ -188,7 +188,7 @@
                 @click="play"
                 v-if="!tag"
                 style="
-                  font-size: 6em !important;
+                  font-size: 6em;
                   border: 0px;
                   outline: none;
                   background: white;
@@ -201,7 +201,7 @@
                 @click="play"
                 v-if="tag"
                 style="
-                  font-size: 6em !important;
+                  font-size: 6em;
                   border: 0px;
                   outline: none;
                   background: white;
@@ -513,18 +513,20 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-#listing.list {
-  height: auto;
-}
+@layer components {
+  #listing.list {
+    height: auto;
+  }
 
-#shareList {
-  overflow-y: scroll;
-}
-
-@media (min-width: 930px) {
   #shareList {
-    height: calc(100vh - 9.8em);
-    overflow-y: auto;
+    overflow-y: scroll;
+  }
+
+  @media (min-width: 930px) {
+    #shareList {
+      height: calc(100vh - 9.8em);
+      overflow-y: auto;
+    }
   }
 }
 </style>

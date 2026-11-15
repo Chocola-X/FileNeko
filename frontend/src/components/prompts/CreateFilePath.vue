@@ -62,30 +62,32 @@ watch(path, () => {
 </script>
 
 <style scoped>
-.path-container {
-  display: flex;
-  align-items: center;
-  margin: 0.2em 0;
-  gap: 0.25em;
-  overflow-x: auto;
-  max-width: 100%;
-  scrollbar-width: none;
-  opacity: 0.5;
-}
+@layer components {
+  .path-container {
+    display: flex;
+    align-items: center;
+    margin: 0.2em 0;
+    gap: 0.25em;
+    overflow-x: auto;
+    max-width: 100%;
+    scrollbar-width: none;
+    opacity: 0.5;
+  }
 
-.path-container::-webkit-scrollbar {
-  display: none;
-}
+  .path-container::-webkit-scrollbar {
+    display: none;
+  }
 
-.path-item {
-  display: flex;
-  align-items: center;
-  margin: 0.2em 0;
-  gap: 0.25em;
-  white-space: nowrap;
-}
+  .path-item {
+    display: flex;
+    align-items: center;
+    margin: 0.2em 0;
+    gap: 0.25em;
+    white-space: nowrap;
+  }
 
-.path-item > span {
-  font-size: 0.9em;
+  .path-item > span {
+    font-size: 0.9em;
+  }
 }
 </style>

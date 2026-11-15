@@ -179,8 +179,10 @@ const languageImports: LanguageImports = {
 };
 </script>
 <style scoped>
-.video-max {
-  width: 100%;
-  height: 100%;
+@layer components {
+  .video-max {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

@@ -2,11 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <!-- Declare cascade order before Vite emits any component styles. -->
+    <style>
+      @layer vendor, base, components;
+    </style>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     [{[ if .ReCaptcha -]}]
     <script src="[{[ .ReCaptchaHost ]}]/recaptcha/api.js?render=explicit"></script>

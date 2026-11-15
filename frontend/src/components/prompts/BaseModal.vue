@@ -63,24 +63,26 @@ onUnmounted(() => window.removeEventListener("keydown", keydown));
 </script>
 
 <style scoped>
-#modal-background {
-  position: fixed;
-  inset: 0;
-  background-color: #00000096;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000;
-  animation: ease-in 150ms opacity-enter;
-}
-
-@keyframes opacity-enter {
-  from {
-    opacity: 0;
+@layer components {
+  #modal-background {
+    position: fixed;
+    inset: 0;
+    background-color: #00000096;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: ease-in 150ms opacity-enter;
   }
 
-  to {
-    opacity: 1;
+  @keyframes opacity-enter {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 }
 </style>

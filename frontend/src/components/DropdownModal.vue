@@ -104,39 +104,41 @@ export default {
 </template>
 
 <style scoped>
-.dropdown-modal-trigger {
-  background: var(--surfacePrimary);
-  color: var(--textSecondary);
-  border: 1px solid var(--borderPrimary);
-  border-radius: 0.1em;
-  padding: 0.5em 1em;
-  transition: 0.2s ease all;
-  margin: 0;
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: center;
-}
+@layer components {
+  .dropdown-modal-trigger {
+    background: var(--surfacePrimary);
+    color: var(--textSecondary);
+    border: 1px solid var(--borderPrimary);
+    border-radius: 0.1em;
+    padding: 0.5em 1em;
+    transition: 0.2s ease all;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+  }
 
-.dropdown-modal-trigger > i {
-  transform: rotate(90deg);
-}
+  .dropdown-modal-trigger > i {
+    transform: rotate(90deg);
+  }
 
-.dropdown-modal-list {
-  padding: 0.25rem;
-  background-color: var(--surfacePrimary);
-  color: var(--textSecondary);
-  display: none;
-  border: 1px solid var(--borderPrimary);
-  border-radius: 0.1em;
-}
+  .dropdown-modal-list {
+    padding: 0.25rem;
+    background-color: var(--surfacePrimary);
+    color: var(--textSecondary);
+    display: none;
+    border: 1px solid var(--borderPrimary);
+    border-radius: 0.1em;
+  }
 
-.dropdown-modal-list > div {
-  max-height: 450px;
-  padding: 0.25rem;
-}
+  .dropdown-modal-list > div {
+    max-height: 450px;
+    padding: 0.25rem;
+  }
 
-.dropdown-modal-open {
-  display: block;
+  .dropdown-modal-open {
+    display: block;
+  }
 }
 </style>

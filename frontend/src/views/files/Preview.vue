@@ -235,7 +235,7 @@ const getRendition = (_rendition: Rendition) => {
   rendition.themes.override("color", "#1E2A4A");
   rendition.themes.registerRules("h2Transparent", {
     "h1,h2,h3,h4": {
-      "background-color": "transparent !important",
+      "background-color": "transparent",
     },
   });
   rendition?.themes.fontSize(`${size.value}%`);

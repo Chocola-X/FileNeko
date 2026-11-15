@@ -30,7 +30,7 @@ video {
 }
 
 .mobile-only {
-  display: none !important;
+  display: none;
 }
 
 .container {
@@ -155,37 +155,37 @@ html[dir="rtl"] .breadcrumbs a {
 }
 
 .vue-number-input > input {
-  background: var(--surfacePrimary) !important;
-  border-color: var(--surfaceSecondary) !important;
-  color: var(--textSecondary) !important;
+  background: var(--surfacePrimary);
+  border-color: var(--surfaceSecondary);
+  color: var(--textSecondary);
 }
 
 .vue-number-input--small > input {
-  height: 1rem !important;
-  font-size: 1rem !important;
+  height: 1rem;
+  font-size: 1rem;
 }
 
 .vue-number-input :hover,
 .vue-number-input :focus {
-  border-color: var(--borderSecondary) !important;
+  border-color: var(--borderSecondary);
 }
 
 .vue-number-input__button {
-  background: var(--surfacePrimary) !important;
+  background: var(--surfacePrimary);
 }
 
 .vue-number-input__button--minus,
 .vue-number-input__button--plus {
-  border-color: var(--surfaceSecondary) !important;
+  border-color: var(--surfaceSecondary);
 }
 
 .vue-number-input__button::before,
 .vue-number-input__button::after {
-  background: var(--textSecondary) !important;
+  background: var(--textSecondary);
 }
 
 body > div[style*="z-index: 9990"] {
-  z-index: 10000 !important;
+  z-index: 10000;
 }
 
 #modal-background .button:focus {

@@ -326,36 +326,38 @@ const preview = () => {
 </script>
 
 <style scoped>
-.editor-font-size {
-  margin: 0 0.5em;
-  color: var(--fg);
-}
+@layer components {
+  .editor-font-size {
+    margin: 0 0.5em;
+    color: var(--fg);
+  }
 
-.editor-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  .editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-.editor-header > div > button {
-  background: transparent;
-  color: var(--action);
-  border: none;
-  outline: none;
-  opacity: 0.8;
-  cursor: pointer;
-}
+  .editor-header > div > button {
+    background: transparent;
+    color: var(--action);
+    border: none;
+    outline: none;
+    opacity: 0.8;
+    cursor: pointer;
+  }
 
-.editor-header > div > button:hover:not(:disabled) {
-  opacity: 1;
-}
+  .editor-header > div > button:hover:not(:disabled) {
+    opacity: 1;
+  }
 
-.editor-header > div > button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+  .editor-header > div > button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
-.editor-header > div > button > span > i {
-  font-size: 1.2rem;
+  .editor-header > div > button > span > i {
+    font-size: 1.2rem;
+  }
 }
 </style>

@@ -1,0 +1,42 @@
+/* Copy this file to branding.files/custom.css and provide the referenced img
+   assets. Relative paths also work when File Browser uses a base URL. */
+@font-face {
+  font-family: "PersonalCute";
+  src: url("./img/JCuYuan.woff2") format("woff2");
+  font-display: swap;
+}
+:root {
+  --font-ui:
+    "PersonalCute", "Fredoka", "CuteRound", "Microsoft YaHei", system-ui, sans-serif;
+  --page-background-image: url("./img/background.jpg");
+  --login-background-image: url("./img/login.jpg");
+  --personal-panel-background: rgb(255 255 255 / 72%);
+  --personal-decoration-opacity: 0.35;
+  --file-card-background: var(--personal-panel-background);
+  --file-card-inner-background: transparent;
+  --login-panel-background: var(--personal-panel-background);
+  --sidebar-background: var(--personal-panel-background);
+  --login-frame-opacity: var(--personal-decoration-opacity);
+  --sidebar-frame-opacity: var(--personal-decoration-opacity);
+  --settings-frame-opacity: var(--personal-decoration-opacity);
+}
+body {
+  background: var(--page-background-image) center / cover no-repeat fixed;
+}
+#login {
+  background: var(--login-background-image) center / cover no-repeat;
+}
+#modal-background .card.floating,
+.dashboard .card {
+  background: var(--personal-panel-background);
+}
+#listing .card-inner-dashed {
+  border-color: color-mix(in srgb, var(--card-main) 35%, transparent);
+}
+#listing .card-corner-slash,
+#listing .cat-postmark-svg,
+#listing .dot-matrix,
+#listing .css-barcode {
+  opacity: var(--personal-decoration-opacity);
+}
+/* Keep text, images, selection markers and action buttons fully opaque. */
