@@ -69,7 +69,7 @@ var commandsHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *d
 		}
 	}
 
-	command, name, err := runner.ParseCommand(d.settings, raw)
+	name, args, err := runner.SplitCommandAndArgs(raw)
 	if err != nil {
 		if err := conn.WriteMessage(websocket.TextMessage, []byte(err.Error())); err != nil {
 			wsErr(conn, r, http.StatusInternalServerError, err)
@@ -85,7 +85,9 @@ var commandsHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *d
 		return 0, nil
 	}
 
-	cmd := exec.Command(command[0], command[1:]...)
+	// Interactive input is never interpolated into an administrator-configured
+	// shell. Metacharacters remain ordinary executable arguments.
+	cmd := exec.Command(name, args...)
 	cmd.Dir = d.user.FullPath(r.URL.Path)
 
 	stdout, err := cmd.StdoutPipe()
