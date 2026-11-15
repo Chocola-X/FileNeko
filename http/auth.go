@@ -2,6 +2,7 @@ package fbhttp
 
 import (
 	"crypto/hmac"
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -15,9 +16,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/golang-jwt/jwt/v5/request"
 
-	fbAuth "github.com/filebrowser/filebrowser/v2/auth"
 	fberrors "github.com/filebrowser/filebrowser/v2/errors"
-	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/filebrowser/filebrowser/v2/users"
 )
 
@@ -77,53 +76,6 @@ func (e extractor) ExtractToken(r *http.Request) (string, error) {
 	return "", request.ErrNoTokenInRequest
 }
 
-func renewableErr(err error, r *http.Request, d *data, tk *authToken) bool {
-	if d.settings.AuthMethod != fbAuth.MethodProxyAuth || err == nil {
-		return false
-	}
-
-	if d.settings.LogoutPage == settings.DefaultLogoutPage {
-		return false
-	}
-
-	if !errors.Is(err, jwt.ErrTokenExpired) {
-		return false
-	}
-
-	// The expiration is only waived because the trusted proxy, not the token,
-	// decides when the session ends. Require the proxy to still assert the same
-	// identity on this request, otherwise a token that leaked before it expired
-	// would authenticate on its own forever.
-	return proxyAsserts(r, d, tk.User.ID)
-}
-
-// proxyAsserts reports whether the proxy-auth header on r identifies the user
-// the token was issued for. The username is resolved through the user store, so
-// that it is matched exactly as a regular proxy login would match it.
-func proxyAsserts(r *http.Request, d *data, id uint) bool {
-	auther, err := d.store.Auth.Get(fbAuth.MethodProxyAuth)
-	if err != nil {
-		return false
-	}
-
-	proxy, ok := auther.(*fbAuth.ProxyAuth)
-	if !ok || proxy.Header == "" {
-		return false
-	}
-
-	username := r.Header.Get(proxy.Header)
-	if username == "" {
-		return false
-	}
-
-	user, err := d.store.Users.Get(d.server.Root, d.server.FollowExternalSymlinks, username)
-	if err != nil {
-		return false
-	}
-
-	return user.ID == id
-}
-
 func withUser(fn handleFunc) handleFunc {
 	return func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
 		keyFunc := func(_ *jwt.Token) (interface{}, error) {
@@ -133,9 +85,18 @@ func withUser(fn handleFunc) handleFunc {
 		var tk authToken
 		p := jwt.NewParser(jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}), jwt.WithExpirationRequired())
 		token, err := request.ParseFromRequest(r, &extractor{}, keyFunc, request.WithClaims(&tk), request.WithParser(p))
-		if (err != nil || !token.Valid) && !renewableErr(err, r, d, &tk) {
+		if err != nil || token == nil || !token.Valid {
 			return http.StatusUnauthorized, nil
 		}
+
+		valid, err := d.store.Sessions.Valid(tk.ID, tk.User.ID, time.Now())
+		if err != nil {
+			return http.StatusInternalServerError, err
+		}
+		if !valid {
+			return http.StatusUnauthorized, nil
+		}
+		d.sessionID = tk.ID
 
 		expiresSoon := tk.ExpiresAt != nil && time.Until(tk.ExpiresAt.Time) < time.Hour
 		updated := tk.IssuedAt != nil && tk.IssuedAt.Unix() < d.store.Users.LastUpdate(tk.User.ID)
@@ -263,7 +224,7 @@ func renewHandler(tokenExpireTime time.Duration) handleFunc {
 	})
 }
 
-func printToken(w http.ResponseWriter, _ *http.Request, d *data, user *users.User, tokenExpirationTime time.Duration) (int, error) {
+func printToken(w http.ResponseWriter, r *http.Request, d *data, user *users.User, tokenExpirationTime time.Duration) (int, error) {
 	claims := &authToken{
 		PasswordStamp: passwordStamp(d.settings.Key, user.Password),
 		User: userInfo{
@@ -284,6 +245,7 @@ func printToken(w http.ResponseWriter, _ *http.Request, d *data, user *users.Use
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenExpirationTime)),
 			Issuer:    "File Browser",
+			ID:        rand.Text(),
 		},
 	}
 
@@ -293,9 +255,31 @@ func printToken(w http.ResponseWriter, _ *http.Request, d *data, user *users.Use
 		return http.StatusInternalServerError, err
 	}
 
+	if err := d.store.Sessions.Create(claims.ID, user.ID, claims.ExpiresAt.Time); err != nil {
+		return http.StatusInternalServerError, err
+	}
+	setAuthCookie(w, r, d, signed, tokenExpirationTime)
+
 	w.Header().Set("Content-Type", "text/plain")
 	if _, err := w.Write([]byte(signed)); err != nil {
 		return http.StatusInternalServerError, err
 	}
 	return 0, nil
 }
+
+func setAuthCookie(w http.ResponseWriter, r *http.Request, d *data, token string, lifetime time.Duration) {
+	path := strings.TrimRight(d.server.BaseURL, "/") + "/"
+	maxAge := int(lifetime.Seconds())
+	if token == "" {
+		maxAge = -1
+	}
+	http.SetCookie(w, &http.Cookie{Name: "auth", Value: token, Path: path, HttpOnly: true, Secure: r.TLS != nil, SameSite: http.SameSiteStrictMode, MaxAge: maxAge})
+}
+
+var logoutHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
+	if err := d.store.Sessions.Delete(d.sessionID); err != nil {
+		return http.StatusInternalServerError, err
+	}
+	setAuthCookie(w, r, d, "", 0)
+	return http.StatusNoContent, nil
+})

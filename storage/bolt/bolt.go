@@ -24,6 +24,7 @@ func NewStorage(db *storm.DB) (*storage.Storage, error) {
 
 	return &storage.Storage{
 		Auth:     authStore,
+		Sessions: sessionStore{db: db.Bolt},
 		Users:    userStore,
 		Share:    shareStore,
 		Settings: settingsStore,

@@ -71,6 +71,7 @@ func TestTusHandlersRejectSymlinkScopeEscape(t *testing.T) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
 		},
 	}
+	registerTestSession(t, st, claims)
 	signed, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(key)
 	if err != nil {
 		t.Fatalf("failed to sign token: %v", err)

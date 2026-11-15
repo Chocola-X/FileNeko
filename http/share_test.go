@@ -15,6 +15,7 @@ import (
 
 	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/filebrowser/filebrowser/v2/share"
+	"github.com/filebrowser/filebrowser/v2/storage"
 	"github.com/filebrowser/filebrowser/v2/storage/bolt"
 	"github.com/filebrowser/filebrowser/v2/users"
 )
@@ -75,7 +76,7 @@ func TestAdminShareGetsHandlerMatchesOwnerScope(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to construct request: %v", err)
 	}
-	req.Header.Set("X-Auth", signShareTestToken(t, admin.ID, admin.Username, adminPerm, key))
+	req.Header.Set("X-Auth", signShareTestToken(t, admin.ID, admin.Username, adminPerm, key, st))
 
 	rec := httptest.NewRecorder()
 	handle(shareGetsHandler, "", st, &settings.Server{Root: root}).ServeHTTP(rec, req)
@@ -146,7 +147,7 @@ func TestSharePostHandlerDoesNotLeakSecrets(t *testing.T) {
 	}
 }
 
-func signShareTestToken(t *testing.T, id uint, username string, perm users.Permissions, key []byte) string {
+func signShareTestToken(t *testing.T, id uint, username string, perm users.Permissions, key []byte, st *storage.Storage) string {
 	t.Helper()
 
 	claims := &authToken{
@@ -157,6 +158,7 @@ func signShareTestToken(t *testing.T, id uint, username string, perm users.Permi
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
 		},
 	}
+	registerTestSession(t, st, claims)
 	signed, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(key)
 	if err != nil {
 		t.Fatalf("failed to sign token: %v", err)

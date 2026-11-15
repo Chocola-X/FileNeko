@@ -1,6 +1,7 @@
 package fbhttp
 
 import (
+	"crypto/rand"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -116,6 +117,7 @@ func signToken(t *testing.T, perm users.Permissions, key []byte, st *storage.Sto
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
 		},
 	}
+	registerTestSession(t, st, claims)
 	signed, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(key)
 	if err != nil {
 		t.Fatalf("failed to sign token: %v", err)
@@ -260,5 +262,13 @@ func TestResourcePostRunsUploadHooksForDirectories(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(userScope, "created")); err != nil {
 		t.Fatalf("expected directory to be created before its after hook, got %v", err)
+	}
+}
+
+func registerTestSession(t *testing.T, st *storage.Storage, claims *authToken) {
+	t.Helper()
+	claims.ID = rand.Text()
+	if err := st.Sessions.Create(claims.ID, claims.User.ID, claims.ExpiresAt.Time); err != nil {
+		t.Fatal(err)
 	}
 }

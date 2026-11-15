@@ -10,8 +10,6 @@ export function parseToken(token: string) {
   // falsy or malformed jwt will throw InvalidTokenError
   const data = jwtDecode<JwtPayload & { user: IUser }>(token);
 
-  document.cookie = `auth=${token}; Path=/; SameSite=Strict;`;
-
   localStorage.setItem("jwt", token);
 
   const authStore = useAuthStore();
@@ -115,7 +113,22 @@ export async function signup(username: string, password: string) {
   }
 }
 
-export function logout(reason?: string) {
+export async function logout(reason?: string) {
+  const token = useAuthStore().jwt;
+  if (token) {
+    try {
+      await fetch(`${baseURL}/api/logout`, {
+        method: "POST",
+        headers: { "X-Auth": token },
+      });
+    } catch (error) {
+      console.warn(
+        "Could not contact the server to revoke this session",
+        error
+      );
+    }
+  }
+
   document.cookie = "auth=; Max-Age=0; Path=/; SameSite=Strict;";
 
   const authStore = useAuthStore();

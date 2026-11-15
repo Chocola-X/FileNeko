@@ -46,7 +46,7 @@ func TestPasswordChangeInvalidatesToken(t *testing.T) {
 		t.Fatalf("old token renewed: %d", rec.Code)
 	}
 	rec = httptest.NewRecorder()
-	d := &data{settings: &settings.Settings{Key: key}, store: st}
+	d := &data{settings: &settings.Settings{Key: key}, store: st, server: &settings.Server{}}
 	if _, err := printToken(rec, req, d, user, DefaultTokenExpirationTime); err != nil {
 		t.Fatal(err)
 	}

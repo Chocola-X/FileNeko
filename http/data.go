@@ -35,7 +35,8 @@ type data struct {
 	// rebased one. Empty for regular requests.
 	checkerPrefix string
 	// Original on-disk scope, retained when a public share rebases the FS.
-	ruleRoot string
+	ruleRoot  string
+	sessionID string
 }
 
 // Check implements rules.Checker.
