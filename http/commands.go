@@ -17,6 +17,7 @@ import (
 
 const (
 	WSWriteDeadline = 10 * time.Second
+	maxCommandSize  = 64 << 10
 )
 
 var upgrader = websocket.Upgrader{
@@ -39,11 +40,19 @@ func wsErr(ws *websocket.Conn, r *http.Request, status int, err error) {
 }
 
 var commandsHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
+	if !d.server.EnableExec || !d.user.Perm.Execute {
+		return http.StatusForbidden, nil
+	}
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
 	defer conn.Close()
+	conn.SetReadLimit(maxCommandSize)
+	if err := conn.SetReadDeadline(time.Now().Add(WSWriteDeadline)); err != nil {
+		return 0, err
+	}
 
 	var raw string
 
@@ -58,15 +67,6 @@ var commandsHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *d
 		if raw != "" {
 			break
 		}
-	}
-
-	// Fail fast
-	if !d.server.EnableExec || !d.user.Perm.Execute {
-		if err := conn.WriteMessage(websocket.TextMessage, cmdNotAllowed); err != nil {
-			wsErr(conn, r, http.StatusInternalServerError, err)
-		}
-
-		return 0, nil
 	}
 
 	command, name, err := runner.ParseCommand(d.settings, raw)
