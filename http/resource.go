@@ -421,6 +421,11 @@ func patchAction(ctx context.Context, action, src, dst string, d *data, fileCach
 			return err
 		}
 
+		// Revoke before moving: a stale link must not expose a different file
+		// later recreated at the old name, including descendants of a directory.
+		if err := d.store.Share.DeleteWithPathPrefix(src, d.user.ID); err != nil {
+			return err
+		}
 		return fileutils.MoveFile(d.user.Fs, src, dst, d.settings.FileMode, d.settings.DirMode)
 	default:
 		return fmt.Errorf("unsupported action %s: %w", action, fberrors.ErrInvalidRequestParams)
