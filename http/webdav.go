@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
+	fberrors "github.com/filebrowser/filebrowser/v2/errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -115,6 +117,10 @@ func newWebDAVHandler(cache FileCache) handleFunc {
 		login := r.Clone(r.Context())
 		login.Body = io.NopCloser(bytes.NewReader(credentials))
 		d.user, err = j.Auth(login, d.store.Users, d.settings, d.server)
+		if errors.Is(err, fberrors.ErrTooManyAttempts) {
+			w.Header().Set("Retry-After", "6")
+			return http.StatusTooManyRequests, nil
+		}
 		if err != nil {
 			return http.StatusUnauthorized, nil
 		}

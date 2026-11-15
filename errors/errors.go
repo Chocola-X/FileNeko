@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	ErrTooManyAttempts          = errors.New("too many password attempts")
 	ErrFileTooLarge             = errors.New("file exceeds text preview size limit")
 	ErrEmptyKey                 = errors.New("empty key")
 	ErrExist                    = errors.New("the resource already exists")

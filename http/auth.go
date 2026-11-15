@@ -142,6 +142,9 @@ func loginHandler(tokenExpireTime time.Duration) handleFunc {
 
 		user, err := auther.Auth(r, d.store.Users, d.settings, d.server)
 		switch {
+		case errors.Is(err, fberrors.ErrTooManyAttempts):
+			w.Header().Set("Retry-After", "6")
+			return http.StatusTooManyRequests, nil
 		case errors.Is(err, os.ErrPermission):
 			return http.StatusForbidden, nil
 		case err != nil:

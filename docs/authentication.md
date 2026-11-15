@@ -200,3 +200,15 @@ An existing directory or symlink cannot be claimed by choosing its name as a
 username. Existing accounts are not moved automatically; administrators should
 review scopes of accounts created by older releases. Proxy and authentication
 hook provisioning continue to follow their explicitly configured scope policy.
+
+### Password guessing limits (local fork)
+
+JSON password login and WebDAV Basic authentication share a failed-attempt
+budget: a burst of ten checks per connection source, refilling one check every
+six seconds. Successful checks refund their credit. At most eight password
+checks run concurrently, and tracked sources are bounded and expire after ten
+minutes of inactivity. IPv6 addresses share a budget per /64. Rejections return
+HTTP 429 with `Retry-After`. Forwarded headers do not change the budget key, so
+clients behind the same reverse proxy share its failed-attempt budget. These
+limits are local to each server process; deployment-wide limits for multiple
+replicas should also be enforced at the trusted proxy.
