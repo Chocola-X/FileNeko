@@ -1,4 +1,20 @@
 {
+  "interface": {
+    "archiveTagline": "Ideas archived, ready to summon",
+    "libraryTitle": "Otherworld Magic Library",
+    "navigation": "Navigation",
+    "storage": "Storage",
+    "fileManager": "File manager",
+    "folder": "Folder",
+    "image": "Image",
+    "audio": "Audio",
+    "video": "Video",
+    "archive": "Archive",
+    "document": "Document",
+    "file": "File",
+    "signIn": "Account sign in",
+    "settings": "Preferences"
+  },
   "buttons": {
     "cancel": "Cancel",
     "clear": "Clear",

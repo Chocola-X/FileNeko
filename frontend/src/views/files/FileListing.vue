@@ -212,8 +212,13 @@
           </div>
         </div>
 
-        <h2 data-clear-on-click="true" v-if="fileStore.req?.numDirs ?? false">
-          {{ t("files.folders") }}
+        <h2
+          class="listing-section-title"
+          data-clear-on-click="true"
+          v-if="fileStore.req?.numDirs ?? false"
+        >
+          <span class="section-label">{{ t("files.folders") }}</span>
+          <span class="section-count">{{ fileStore.req?.numDirs }}</span>
         </h2>
         <div
           v-if="fileStore.req?.numDirs ?? false"
@@ -235,8 +240,13 @@
           </item>
         </div>
 
-        <h2 data-clear-on-click="true" v-if="fileStore.req?.numFiles ?? false">
-          {{ t("files.files") }}
+        <h2
+          class="listing-section-title files-section-title"
+          data-clear-on-click="true"
+          v-if="fileStore.req?.numFiles ?? false"
+        >
+          <span class="section-label">{{ t("files.files") }}</span>
+          <span class="section-count">{{ fileStore.req?.numFiles }}</span>
         </h2>
         <div
           v-if="fileStore.req?.numFiles ?? false"

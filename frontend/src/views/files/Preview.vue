@@ -6,7 +6,7 @@
     @mousemove="toggleNavigation"
     @touchstart="toggleNavigation"
   >
-    <header-bar v-if="isPdf || isEpub || isCsv || showNav">
+    <header-bar>
       <action icon="close" :label="$t('buttons.close')" @action="close()" />
       <title>{{ name }}</title>
       <action
@@ -90,12 +90,14 @@
           <div class="size">
             <button
               @click="changeSize(Math.max(100, size - 10))"
+              :aria-label="t('buttons.decreaseFontSize')"
               class="reader-button"
             >
               <i class="material-icons">remove</i>
             </button>
             <button
               @click="changeSize(Math.min(150, size + 10))"
+              :aria-label="t('buttons.increaseFontSize')"
               class="reader-button"
             >
               <i class="material-icons">add</i>
@@ -154,6 +156,7 @@
     </template>
 
     <button
+      v-if="!isEpub && !isPdf && !isCsv"
       @click="prev"
       @mouseover="hoverNav = true"
       @mouseleave="hoverNav = false"
@@ -164,6 +167,7 @@
       <i class="material-icons">chevron_left</i>
     </button>
     <button
+      v-if="!isEpub && !isPdf && !isCsv"
       @click="next"
       @mouseover="hoverNav = true"
       @mouseleave="hoverNav = false"
@@ -198,7 +202,6 @@ import { VueReader } from "vue-reader";
 import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Rendition } from "epubjs";
-import { getTheme } from "@/utils/theme";
 import { useI18n } from "vue-i18n";
 
 // CSV file size limit for preview (5MB)
@@ -229,16 +232,7 @@ const changeSize = (val: number) => {
 
 const getRendition = (_rendition: Rendition) => {
   rendition = _rendition;
-  switch (getTheme()) {
-    case "dark": {
-      rendition.themes.override("color", "rgba(255, 255, 255, 0.6)");
-      break;
-    }
-    case "light": {
-      rendition.themes.override("color", "rgb(111, 111, 111)");
-      break;
-    }
-  }
+  rendition.themes.override("color", "#1E2A4A");
   rendition.themes.registerRules("h2Transparent", {
     "h1,h2,h3,h4": {
       "background-color": "transparent !important",

@@ -1,13 +1,13 @@
 <template>
   <div id="modal-background" @click="backgroundClick">
-    <div ref="modalContainer">
+    <div ref="modalContainer" role="dialog" aria-modal="true" tabindex="-1">
       <slot></slot>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 const emit = defineEmits(["closed"]);
 
@@ -29,12 +29,14 @@ const backgroundClick = (event: Event) => {
   }
 };
 
-window.addEventListener("keydown", (event) => {
+const keydown = (event: KeyboardEvent) => {
   if (event.key === "Escape") {
     event.stopImmediatePropagation();
     emit("closed");
   }
-});
+};
+onMounted(() => window.addEventListener("keydown", keydown));
+onUnmounted(() => window.removeEventListener("keydown", keydown));
 </script>
 
 <style scoped>

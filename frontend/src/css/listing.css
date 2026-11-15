@@ -9,11 +9,6 @@ html[dir="rtl"] #listing {
   font-weight: 500;
 }
 
-#listing .item div:last-of-type * {
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
 #listing > div {
   display: flex;
   flex-wrap: wrap;
@@ -33,12 +28,6 @@ html[dir="rtl"] #listing {
   align-items: center;
   cursor: pointer;
   user-select: none;
-}
-
-#listing .item div:last-of-type {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
 }
 
 #listing .item p {
@@ -109,48 +98,7 @@ html[dir="rtl"] #listing {
   display: none;
 }
 
-#listing.mosaic .item div:first-of-type {
-  width: 5em;
-}
-
-#listing.mosaic .item div:last-of-type {
-  width: calc(100% - 5vw);
-}
-
-#listing.mosaic.gallery .item div:first-of-type {
-  width: 100%;
-  height: 12em;
-}
-
-#listing.mosaic.gallery .item div:last-of-type {
-  position: absolute;
-  bottom: 0.5em;
-  padding: 1em;
-  width: calc(100% - 1em);
-  text-align: center;
-}
-
-#listing.mosaic.gallery .item[data-type="image"] div:last-of-type {
-  color: white;
-  background: linear-gradient(#0000, #0009);
-}
-
-#listing.mosaic.gallery .item i {
-  width: 100%;
-  margin-right: 0;
-  font-size: 8em;
-  text-align: center;
-}
-
-#listing.mosaic.gallery .item img {
-  width: 100%;
-  height: 100%;
-}
-
-#listing.gallery .size,
-#listing.gallery .modified {
-  display: none;
-}
+/* Legacy mosaic layout rules replaced by anime-theme.css */
 
 #listing.list {
   flex-direction: column;
@@ -174,33 +122,6 @@ html[dir="rtl"] #listing {
 #listing .item[aria-selected="true"] {
   background: var(--blue) !important;
   color: var(--iconSecondary) !important;
-}
-
-#listing.list .item div:first-of-type {
-  width: 3em;
-}
-
-#listing.list .item div:first-of-type i {
-  font-size: 2em;
-}
-
-#listing.list .item div:first-of-type img {
-  width: 2em;
-  height: 2em;
-}
-
-#listing.list .item div:last-of-type {
-  width: calc(100% - 3em);
-  display: flex;
-  align-items: center;
-}
-
-#listing.list .item .name {
-  width: 50%;
-}
-
-#listing.list .item .size {
-  width: 25%;
 }
 
 #listing .item.header {

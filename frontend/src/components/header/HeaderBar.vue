@@ -1,6 +1,30 @@
 <template>
   <header>
-    <img v-if="showLogo" :src="logoURL" alt="File Browser" />
+    <div
+      v-if="showLogo"
+      class="header-brand-wrap"
+      @click="toRoot"
+      role="button"
+      tabindex="0"
+    >
+      <div class="header-logo-badge">
+        <img :src="logoURL" alt="File Browser" class="header-logo-img" />
+        <span class="header-logo-star">★</span>
+      </div>
+      <div class="header-brand-text">
+        <div class="header-brand-main">
+          <span class="header-brand-title">{{ name }}</span>
+          <span class="skew-badge header-brand-pill">
+            <span>{{ t("interface.fileManager") }}</span>
+          </span>
+        </div>
+        <div class="header-brand-sub">
+          <span>{{ t("interface.libraryTitle") }}</span>
+          <span class="sub-dot">●</span>
+          <span class="sub-ver">{{ version }}</span>
+        </div>
+      </div>
+    </div>
     <Action
       v-if="showMenu"
       class="menu-button"
@@ -37,11 +61,12 @@
 <script setup lang="ts">
 import { useLayoutStore } from "@/stores/layout";
 
-import { logoURL } from "@/utils/constants";
+import { logoURL, version, name } from "@/utils/constants";
 
 import Action from "@/components/header/Action.vue";
 import { computed, useSlots } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 defineProps<{
   showLogo?: boolean;
@@ -50,10 +75,15 @@ defineProps<{
 
 const layoutStore = useLayoutStore();
 const slots = useSlots();
+const router = useRouter();
 
 const { t } = useI18n();
 
 const ifActionsSlot = computed(() => (slots.actions ? true : false));
+
+const toRoot = () => {
+  router.push({ path: "/files/" });
+};
 </script>
 
 <style></style>

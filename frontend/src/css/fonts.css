@@ -1,5 +1,22 @@
 @import "material-icons/iconfont/filled.css";
 
+/* Local signature face keeps Latin extensions consistent across interface locales. */
+@font-face {
+  font-family: "FileSignature";
+  src: url(../assets/fonts/dancing-script.ttf) format("truetype");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CuteRound";
+  src: url(../assets/fonts/cute-round.woff2) format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Roboto";
   font-style: normal;

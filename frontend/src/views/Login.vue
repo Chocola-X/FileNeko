@@ -1,18 +1,28 @@
 <template>
   <div id="login" :class="{ recaptcha: recaptcha }">
     <form @submit="submit">
+      <div class="login-pass-heading" aria-hidden="true">
+        <span class="login-pass-tag">{{ t("interface.signIn") }}</span>
+        <span>MAGIC LIBRARY <b>✦</b></span>
+      </div>
       <img :src="logoURL" alt="File Browser" />
       <h1>{{ name }}</h1>
+      <p class="login-pass-subtitle">
+        {{ t("login.submit") }}
+        <span> / {{ t("interface.libraryTitle") }}</span>
+      </p>
       <p v-if="reason != null" class="logout-message">
         {{ t(`login.logout_reasons.${reason}`) }}
       </p>
-      <div v-if="error !== ''" class="wrong">{{ error }}</div>
+      <div v-if="error !== ''" class="wrong" role="alert">{{ error }}</div>
 
       <input
         autofocus
         class="input input--block"
         type="text"
         autocapitalize="off"
+        autocomplete="username"
+        :aria-label="t('login.username')"
         v-model="username"
         :placeholder="t('login.username')"
       />
@@ -20,6 +30,8 @@
         class="input input--block"
         type="password"
         v-model="password"
+        :autocomplete="createMode ? 'new-password' : 'current-password'"
+        :aria-label="t('login.password')"
         :placeholder="t('login.password')"
       />
       <input
@@ -27,6 +39,8 @@
         v-if="createMode"
         type="password"
         v-model="passwordConfirm"
+        autocomplete="new-password"
+        :aria-label="t('login.passwordConfirm')"
         :placeholder="t('login.passwordConfirm')"
       />
 
@@ -40,6 +54,11 @@
       <p @click="toggleMode" v-if="signup">
         {{ createMode ? t("login.loginInstead") : t("login.createAnAccount") }}
       </p>
+      <div class="login-pass-footer" aria-hidden="true">
+        <div class="css-barcode"></div>
+        <span class="font-signature">{{ t("interface.archiveTagline") }}</span>
+        <span>★</span>
+      </div>
     </form>
   </div>
 </template>

@@ -1,6 +1,14 @@
 <template>
   <div v-show="active" @click="closeHovers" class="overlay"></div>
-  <nav :class="{ active }">
+  <nav id="sidebar" :class="{ active }">
+    <!-- File navigation -->
+    <div class="sidebar-badge-banner">
+      <div class="sidebar-badge-pill">
+        <span class="badge-tag">{{ $t("interface.navigation") }}</span>
+        <span class="badge-title">{{ $t("sidebar.myFiles") }}</span>
+      </div>
+    </div>
+
     <template v-if="isLoggedIn">
       <button @click="toAccountSettings" class="action">
         <i class="material-icons">person</i>
@@ -8,6 +16,7 @@
       </button>
       <button
         class="action"
+        :class="{ active: $route.path.startsWith('/files') }"
         @click="toRoot"
         :aria-label="$t('sidebar.myFiles')"
         :title="$t('sidebar.myFiles')"
@@ -41,6 +50,7 @@
       <div v-if="user.perm.admin">
         <button
           class="action"
+          :class="{ active: $route.path.startsWith('/settings') }"
           @click="toGlobalSettings"
           :aria-label="$t('sidebar.settings')"
           :title="$t('sidebar.settings')"
@@ -85,14 +95,42 @@
       </router-link>
     </template>
 
-    <div
-      class="credits"
-      v-if="isFiles && !disableUsedPercentage"
-      style="width: 90%; margin: 2em 2.5em 3em 2.5em"
-    >
-      <progress-bar :val="usage.usedPercentage" size="small"></progress-bar>
-      <br />
-      {{ $t("sidebar.diskUsed", { used: usage.used, total: usage.total }) }}
+    <!-- Bottom Storage Quota Card (Authentic refer2.html student ID style) -->
+    <div class="quota-card" v-if="isFiles && !disableUsedPercentage">
+      <div class="quota-header">
+        <span class="quota-title">
+          <i class="material-icons">cloud_queue</i>
+          {{ $t("interface.storage") }}
+        </span>
+        <span class="quota-percent">{{ usage.usedPercentage }}%</span>
+      </div>
+
+      <!-- Hard-edged Segmented Progress Bar -->
+      <div
+        class="quota-track"
+        role="progressbar"
+        :aria-label="$t('interface.storage')"
+        :aria-valuenow="usage.usedPercentage"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        <div
+          class="quota-bar"
+          :style="{
+            width: Math.min(Math.max(usage.usedPercentage, 0), 100) + '%',
+          }"
+        ></div>
+      </div>
+
+      <div class="quota-info">
+        <span>{{
+          $t("sidebar.diskUsed", { used: usage.used, total: usage.total })
+        }}</span>
+      </div>
+      <div class="quota-barcode-row">
+        <div class="css-barcode"></div>
+        <span class="quota-id">File Browser</span>
+      </div>
     </div>
 
     <p class="credits">
@@ -133,7 +171,6 @@ import {
   loginPage,
 } from "@/utils/constants";
 import { files as api } from "@/api";
-import ProgressBar from "@/components/ProgressBar.vue";
 import prettyBytes from "pretty-bytes";
 
 const USAGE_DEFAULT = { used: "0 B", total: "0 B", usedPercentage: 0 };
@@ -143,9 +180,6 @@ export default {
   setup() {
     const usage = reactive(USAGE_DEFAULT);
     return { usage, usageAbortController: new AbortController() };
-  },
-  components: {
-    ProgressBar,
   },
   inject: ["$showError"],
   computed: {
@@ -182,7 +216,16 @@ export default {
         usageStats = {
           used: prettyBytes(usage.used, { binary: true }),
           total: prettyBytes(usage.total, { binary: true }),
-          usedPercentage: Math.round((usage.used / usage.total) * 100),
+          usedPercentage:
+            usage.total > 0
+              ? Math.min(
+                  100,
+                  Math.max(
+                    0,
+                    Math.round((usage.used / usage.total) * 1000) / 10
+                  )
+                )
+              : 0,
         };
       } finally {
         return Object.assign(this.usage, usageStats);

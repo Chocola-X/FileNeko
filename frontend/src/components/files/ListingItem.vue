@@ -1,6 +1,6 @@
 <template>
   <div
-    class="item"
+    class="item fb-sticker-item"
     role="button"
     tabindex="0"
     :draggable="isDraggable"
@@ -17,34 +17,201 @@
     @touchmove="handleTouchMove"
     :data-dir="isDir"
     :data-type="type"
+    :data-theme="itemTheme"
     :aria-label="name"
     :aria-selected="isSelected"
     :data-ext="getExtension(name).toLowerCase()"
     @contextmenu="contextMenu"
   >
-    <div>
-      <img
-        v-if="!readOnly && type === 'image' && isThumbsEnabled"
-        v-lazy="thumbnailUrl"
-        :alt="name"
-      />
-      <i v-else class="material-icons"></i>
+    <!-- Top-Right Chamfered Folder Tab (Reference Card Header) -->
+    <div class="card-folder-tab" v-if="isDir"></div>
+
+    <!-- Bottom-Left Geometric Triangle Corner Slash -->
+    <div class="card-corner-slash"></div>
+
+    <!-- Top-Left Selection Check Box Badge -->
+    <div class="select-check-badge" @click.stop="toggleSelect">
+      <span class="select-check-icon">✓</span>
     </div>
 
-    <div>
-      <p class="name">{{ name }}</p>
+    <!-- Inner Dashed Frame (Exact Student ID / Polaroid Sticker Card Layout) -->
+    <div class="card-inner-dashed">
+      <!-- Image Preview Banner (when image in mosaic/gallery) -->
+      <div
+        v-if="
+          !isDir &&
+          !readOnly &&
+          type === 'image' &&
+          isThumbsEnabled &&
+          isWebImage
+        "
+        class="card-media-banner"
+      >
+        <img
+          :src="thumbnailUrl"
+          :alt="name"
+          class="card-thumb-img"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="card-media-overlay">
+          <div class="dot-matrix"></div>
+          <!-- Cat Postmark SVG inside corner -->
+          <svg class="cat-postmark-svg" viewBox="0 0 56 48" fill="none">
+            <circle
+              cx="22"
+              cy="24"
+              r="17"
+              fill="#FFFFFF"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <circle
+              cx="22"
+              cy="24"
+              r="14"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-dasharray="2 2"
+            />
+            <path
+              d="M14 20L15.5 14L20 17.5H24L28.5 14L30 20C31 22.5 30.5 27.5 28 29.5C25.5 31.5 18.5 31.5 16 29.5C13.5 27.5 13 22.5 14 20Z"
+              fill="#FFFFFF"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+            <circle cx="19" cy="24" r="1.3" fill="currentColor" />
+            <circle cx="25" cy="24" r="1.3" fill="currentColor" />
+            <path
+              d="M21 26Q22 27.2 23 26"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+            />
+            <path
+              d="M36 18Q41 15 46 18T55 18"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+            <path
+              d="M36 24Q41 21 46 24T55 24"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+            <path
+              d="M36 30Q41 27 46 30T55 30"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+        <div class="card-pill-row">
+          <span class="skew-badge">
+            <span>{{ badgeText }}</span>
+          </span>
+        </div>
+      </div>
 
-      <p v-if="isDir" class="size" data-order="-1">&mdash;</p>
-      <p v-else class="size" :data-order="humanSize()">{{ humanSize() }}</p>
+      <!-- Non-image top row (Avatar/Icon + Postmark + Skew Tag) -->
+      <div v-else class="card-top-row">
+        <div class="card-icon-box">
+          <i class="material-icons">{{ iconName }}</i>
+          <span class="card-icon-badge" v-if="isDir">DIR</span>
+          <span class="card-icon-star" v-else>★</span>
+        </div>
 
-      <p class="modified">
-        <time :datetime="modified">{{ humanTime() }}</time>
-      </p>
+        <div class="card-meta-col">
+          <div class="card-stamp-row">
+            <div class="dot-matrix"></div>
+            <!-- Cat Postmark SVG -->
+            <svg class="cat-postmark-svg" viewBox="0 0 56 48" fill="none">
+              <circle
+                cx="22"
+                cy="24"
+                r="17"
+                fill="#FFFFFF"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <circle
+                cx="22"
+                cy="24"
+                r="14"
+                stroke="currentColor"
+                stroke-width="1.2"
+                stroke-dasharray="2 2"
+              />
+              <path
+                d="M14 20L15.5 14L20 17.5H24L28.5 14L30 20C31 22.5 30.5 27.5 28 29.5C25.5 31.5 18.5 31.5 16 29.5C13.5 27.5 13 22.5 14 20Z"
+                fill="#FFFFFF"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+              <circle cx="19" cy="24" r="1.3" fill="currentColor" />
+              <circle cx="25" cy="24" r="1.3" fill="currentColor" />
+              <path
+                d="M21 26Q22 27.2 23 26"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+              />
+              <path
+                d="M36 18Q41 15 46 18T55 18"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+              <path
+                d="M36 24Q41 21 46 24T55 24"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+              <path
+                d="M36 30Q41 27 46 30T55 30"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+
+          <div class="card-badge-row">
+            <span class="skew-badge">
+              <span>{{ badgeText }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- File/Folder Title and Details -->
+      <div class="card-info-row">
+        <p class="name" :title="name">{{ name }}</p>
+        <div class="card-details-row">
+          <p v-if="isDir" class="size" data-order="-1">&mdash;</p>
+          <p v-else class="size" :data-order="humanSize()">{{ humanSize() }}</p>
+          <p class="modified">
+            <time :datetime="modified">{{ humanTime() }}</time>
+          </p>
+        </div>
+      </div>
+
+      <!-- Barcode + Signature Row -->
+      <div class="card-barcode-row">
+        <div class="css-barcode"></div>
+        <span class="font-signature" lang="en">{{ signatureText }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";
@@ -80,9 +247,57 @@ const props = defineProps<{
   path?: string;
 }>();
 
+const { t } = useI18n();
 const authStore = useAuthStore();
 const fileStore = useFileStore();
 const layoutStore = useLayoutStore();
+
+const itemTheme = computed(() => {
+  if (props.isDir) return "cobalt";
+  if (props.type === "image") return "pink";
+  if (props.type === "audio" || props.type === "video") return "cyan";
+  return "purple";
+});
+
+const badgeText = computed(() => {
+  if (props.isDir) return t("interface.folder");
+  const type = ["image", "audio", "video", "archive"].includes(props.type)
+    ? props.type
+    : ["pdf", "text", "textImmutable"].includes(props.type)
+      ? "document"
+      : "file";
+  return t(`interface.${type}`);
+});
+
+const signatureText = computed(() =>
+  props.isDir
+    ? "Folder"
+    : getExtension(props.name).replace(/^\./, "").toUpperCase() ||
+      t("interface.file")
+);
+
+const iconName = computed(() => {
+  if (props.isDir) return "folder";
+  const iconMap: Record<string, string> = {
+    image: "insert_photo",
+    audio: "volume_up",
+    video: "movie",
+    archive: "inventory_2",
+    pdf: "picture_as_pdf",
+    text: "description",
+    blob: "code",
+  };
+  return iconMap[props.type] || "insert_drive_file";
+});
+
+const toggleSelect = (event: MouseEvent) => {
+  event.stopPropagation();
+  if (isSelected.value) {
+    fileStore.removeSelected(props.index);
+  } else {
+    fileStore.selected.push(props.index);
+  }
+};
 
 const singleClick = computed(
   () => !props.readOnly && authStore.user?.singleClick
@@ -112,11 +327,17 @@ const thumbnailUrl = computed(() => {
     modified: props.modified,
   };
 
-  return api.getPreviewURL(file as Resource, "thumb");
+  const size = authStore.user?.viewMode === "mosaic gallery" ? "big" : "thumb";
+  return api.getPreviewURL(file as Resource, size);
 });
 
 const isThumbsEnabled = computed(() => {
   return enableThumbs;
+});
+
+const isWebImage = computed(() => {
+  const ext = getExtension(props.name).toLowerCase();
+  return [".png", ".jpg", ".jpeg", ".svg", ".gif", ".webp"].includes(ext);
 });
 
 const humanSize = () => {

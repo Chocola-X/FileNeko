@@ -2,7 +2,7 @@
   <select
     name="selectAceEditorTheme"
     v-on:change="change"
-    :value="aceEditorTheme"
+    :value="getEditorTheme(aceEditorTheme)"
   >
     <option v-for="theme in themes" :value="theme.theme" :key="theme.theme">
       {{ theme.name }}
@@ -11,8 +11,11 @@
 </template>
 
 <script setup lang="ts">
+import { getEditorTheme } from "@/utils/theme";
 import { type SelectHTMLAttributes } from "vue";
-import { themes } from "ace-builds/src-noconflict/ext-themelist";
+import { themes as allThemes } from "ace-builds/src-noconflict/ext-themelist";
+
+const themes = allThemes.filter((theme) => !theme.isDark);
 
 defineProps<{
   aceEditorTheme: string;
