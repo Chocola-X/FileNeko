@@ -77,6 +77,7 @@ func TestProxyAuthCreateUserRestrictsDefaults(t *testing.T) {
 
 	auth := ProxyAuth{Header: "X-Remote-User"}
 	req, _ := http.NewRequest(http.MethodGet, "/", http.NoBody)
+	req.RemoteAddr = "127.0.0.1:1234"
 	req.Header.Set("X-Remote-User", "newproxyuser")
 
 	user, err := auth.Auth(req, store, s, srv)
@@ -119,6 +120,7 @@ func TestProxyAuthCreateUserDirIsolatesScope(t *testing.T) {
 	auth := ProxyAuth{Header: "X-Remote-User"}
 	provision := func(name string) *users.User {
 		req, _ := http.NewRequest(http.MethodGet, "/", http.NoBody)
+		req.RemoteAddr = "127.0.0.1:1234"
 		req.Header.Set("X-Remote-User", name)
 		u, err := auth.Auth(req, store, s, srv)
 		if err != nil {
@@ -138,5 +140,43 @@ func TestProxyAuthCreateUserDirIsolatesScope(t *testing.T) {
 	}
 	if alice.Scope != "/users/alice" {
 		t.Errorf("expected /users/alice, got %q", alice.Scope)
+	}
+}
+
+// GHSA-xqp3-jq6g-x3qm: spoofed identity and forwarded headers do not establish
+// trust when the TCP peer is not an explicitly trusted proxy.
+func TestProxyAuthRejectsUntrustedPeers(t *testing.T) {
+	store := &mockUserStore{users: map[string]*users.User{"admin": {Username: "admin", Perm: users.Permissions{Admin: true}}}}
+	a := ProxyAuth{Header: "X-Remote-User", TrustedProxies: []string{"10.0.0.4/32", "2001:db8::1"}}
+	for _, peer := range []string{"192.0.2.4:4567", "127.0.0.1:4567", "", "garbage"} {
+		req, _ := http.NewRequest("GET", "/", nil)
+		req.RemoteAddr = peer
+		req.Header.Set("X-Remote-User", "admin")
+		req.Header.Set("X-Forwarded-For", "10.0.0.4")
+		req.Header.Set("X-Real-IP", "10.0.0.4")
+		if user, err := a.Auth(req, store, &settings.Settings{}, &settings.Server{}); err == nil || user != nil {
+			t.Errorf("untrusted %q impersonated admin", peer)
+		}
+		req.Header.Set("X-Remote-User", "new-user")
+		if _, err := a.Auth(req, store, &settings.Settings{}, &settings.Server{}); err == nil {
+			t.Errorf("untrusted %q provisioned a user", peer)
+		}
+	}
+	if len(store.users) != 1 {
+		t.Fatal("untrusted request changed user store")
+	}
+	for _, peer := range []string{"10.0.0.4:1234", "[2001:db8::1]:1234"} {
+		req, _ := http.NewRequest("GET", "/", nil)
+		req.RemoteAddr = peer
+		req.Header.Set("X-Remote-User", "admin")
+		if user, err := a.Auth(req, store, &settings.Settings{}, &settings.Server{}); err != nil || !user.Perm.Admin {
+			t.Fatalf("trusted peer %s: %v", peer, err)
+		}
+	}
+	if !(ProxyAuth{}).TrustedPeer("127.0.0.1:1") || (ProxyAuth{}).TrustedPeer("192.0.2.1:1") {
+		t.Fatal("unsafe defaults")
+	}
+	if err := (ProxyAuth{TrustedProxies: []string{"invalid"}}).ValidateTrustedProxies(); err == nil {
+		t.Fatal("invalid CIDR accepted")
 	}
 }

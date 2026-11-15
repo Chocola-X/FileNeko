@@ -44,6 +44,7 @@ func addConfigFlags(flags *pflag.FlagSet) {
 
 	flags.String("auth.method", string(auth.MethodJSONAuth), "authentication type")
 	flags.String("auth.header", "", "HTTP header for auth.method=proxy")
+	flags.StringSlice("auth.trustedProxies", nil, "trusted proxy IPs or CIDRs (default: loopback only)")
 	flags.String("auth.command", "", "command for auth.method=hook")
 	flags.String("auth.logoutPage", "", "url of custom logout page")
 
@@ -99,15 +100,32 @@ func getProxyAuth(flags *pflag.FlagSet, defaultAuther map[string]interface{}) (a
 		return nil, err
 	}
 
-	if header == "" && defaultAuther != nil {
-		header = defaultAuther["header"].(string)
+	a := &auth.ProxyAuth{}
+	if defaultAuther != nil {
+		raw, err := json.Marshal(defaultAuther)
+		if err != nil {
+			return nil, err
+		}
+		if err := json.Unmarshal(raw, a); err != nil {
+			return nil, err
+		}
 	}
-
-	if header == "" {
+	if header != "" {
+		a.Header = header
+	}
+	if flags.Changed("auth.trustedProxies") {
+		a.TrustedProxies, err = flags.GetStringSlice("auth.trustedProxies")
+		if err != nil {
+			return nil, err
+		}
+	}
+	if a.Header == "" {
 		return nil, errors.New("you must set the flag 'auth.header' for method 'proxy'")
 	}
-
-	return &auth.ProxyAuth{Header: header}, nil
+	if err := a.ValidateTrustedProxies(); err != nil {
+		return nil, err
+	}
+	return a, nil
 }
 
 func getNoAuth() auth.Auther {

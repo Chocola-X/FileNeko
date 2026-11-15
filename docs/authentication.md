@@ -165,3 +165,19 @@ We also provide a no authentication mechanism for users that want to use File Br
 ```sh
 filebrowser config set --auth.method=noauth
 ```
+
+### Trusted proxy peers (local fork)
+
+Proxy identity headers are accepted only from trusted connection peers. The
+backward-compatible configuration without a trust list now trusts loopback only.
+For a proxy on another machine or container, configure its exact address:
+
+```sh
+filebrowser config set --auth.method=proxy --auth.header=X-Remote-User --auth.trustedProxies=10.0.0.4/32
+```
+
+The list also accepts IPv6 addresses and CIDRs and can be imported using the
+`trustedProxies` array in the proxy auth configuration. Forwarded headers do not
+establish trust. The proxy must replace, rather than preserve, client-supplied
+identity headers and authenticate every forwarded request. Restrict the backend
+port to that proxy; avoid trusting an entire client network or `0.0.0.0/0`.
