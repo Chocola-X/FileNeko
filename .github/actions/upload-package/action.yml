@@ -1,0 +1,17 @@
+name: Upload test package
+description: Upload one original archive or checksum file as a separate downloadable artifact.
+
+inputs:
+  path:
+    description: Path or glob matching exactly one package or checksum file.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/upload-artifact@v7
+      with:
+        path: ${{ inputs.path }}
+        archive: false
+        if-no-files-found: error
+        retention-days: 30

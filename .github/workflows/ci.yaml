@@ -117,17 +117,94 @@ jobs:
               exit 1
             fi
           done
-      - name: Upload test binaries
-        uses: actions/upload-artifact@v7
+      - name: Upload linux amd64
+        uses: ./.github/actions/upload-package
         with:
-          name: filebrowser-ci-${{ github.sha }}
-          path: |
-            dist/*.tar.gz
-            dist/*.zip
-            dist/*checksums.txt
-          if-no-files-found: error
-          compression-level: 0
-          retention-days: 30
+          path: dist/linux-amd64-filebrowser.tar.gz
+      - name: Upload linux 386
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/linux-386-filebrowser.tar.gz
+      - name: Upload linux armv5
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/linux-armv5-filebrowser.tar.gz
+      - name: Upload linux armv6
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/linux-armv6-filebrowser.tar.gz
+      - name: Upload linux armv7
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/linux-armv7-filebrowser.tar.gz
+      - name: Upload linux arm64
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/linux-arm64-filebrowser.tar.gz
+      - name: Upload linux riscv64
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/linux-riscv64-filebrowser.tar.gz
+      - name: Upload windows amd64
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/windows-amd64-filebrowser.zip
+      - name: Upload windows 386
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/windows-386-filebrowser.zip
+      - name: Upload windows arm64
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/windows-arm64-filebrowser.zip
+      - name: Upload darwin amd64
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/darwin-amd64-filebrowser.tar.gz
+      - name: Upload darwin arm64
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/darwin-arm64-filebrowser.tar.gz
+      - name: Upload freebsd amd64
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/freebsd-amd64-filebrowser.tar.gz
+      - name: Upload freebsd 386
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/freebsd-386-filebrowser.tar.gz
+      - name: Upload freebsd arm64
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/freebsd-arm64-filebrowser.tar.gz
+      - name: Upload openbsd amd64
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/openbsd-amd64-filebrowser.tar.gz
+      - name: Upload openbsd 386
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/openbsd-386-filebrowser.tar.gz
+      - name: Upload openbsd armv5
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/openbsd-armv5-filebrowser.tar.gz
+      - name: Upload openbsd armv6
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/openbsd-armv6-filebrowser.tar.gz
+      - name: Upload openbsd armv7
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/openbsd-armv7-filebrowser.tar.gz
+      - name: Upload openbsd arm64
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/openbsd-arm64-filebrowser.tar.gz
+      - name: Upload package checksums
+        uses: ./.github/actions/upload-package
+        with:
+          path: dist/*checksums.txt
 
   release:
     name: Release

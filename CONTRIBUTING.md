@@ -35,9 +35,11 @@ Every branch/tag push and pull request runs the CI checks. You can also start
 **Continuous Integration** manually from the repository's **Actions** page.
 The **Build and Package** job uses the same GoReleaser configuration as releases,
 in snapshot mode, and uploads the original `linux-amd64-filebrowser.tar.gz` /
-`windows-amd64-filebrowser.zip` style packages and checksums as a
-`filebrowser-ci-<commit>` artifact. Download it from the completed workflow run's
-**Artifacts** section within 30 days. Snapshot builds do not publish releases,
+`windows-amd64-filebrowser.zip` style packages as individual artifacts. Each
+platform archive is listed separately by its filename, alongside the checksum
+file, in the completed workflow run's **Artifacts** section for 30 days. Download
+only the platform you need; the original archives are uploaded directly without
+another ZIP wrapper. Snapshot builds do not publish releases,
 Docker images or Homebrew changes. The other CI checks must also pass before a
 build is considered validated.
 
