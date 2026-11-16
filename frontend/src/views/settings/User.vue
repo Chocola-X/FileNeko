@@ -16,6 +16,7 @@
           <user-form
             v-model:user="user"
             v-model:createUserDir="createUserDir"
+            :homeBasePath="homeBasePath"
             :isDefault="false"
             :isNew="isNew"
           />
@@ -63,13 +64,13 @@ import { computed, inject, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { StatusError } from "@/api/utils";
-import { authMethod } from "@/utils/constants";
 import { logout } from "@/utils/auth";
 
 const error = ref<StatusError>();
 const originalUser = ref<IUser>();
 const user = ref<IUser>();
-const createUserDir = ref<boolean>(false);
+const createUserDir = ref<boolean>(true);
+const homeBasePath = ref("/users");
 const isCurrentPasswordRequired = ref<boolean>(false);
 
 const $showError = inject<IToastError>("$showError")!;
@@ -98,11 +99,13 @@ const fetchData = async () => {
 
   try {
     if (isNew.value) {
-      const { defaults, createUserDir: _createUserDir } = await settings.get();
+      const { defaults, userHomeBasePath, authMethod } = await settings.get();
       isCurrentPasswordRequired.value = authMethod == "json";
-      createUserDir.value = _createUserDir;
+      createUserDir.value = true;
+      homeBasePath.value = userHomeBasePath || "/users";
       user.value = {
         ...defaults,
+        scope: "",
         username: "",
         password: "",
         rules: [],

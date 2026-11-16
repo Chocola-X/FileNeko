@@ -160,17 +160,23 @@ var userPostHandler = withAdmin(func(w http.ResponseWriter, r *http.Request, d *
 		return http.StatusBadRequest, fberrors.ErrShareRequiresDownload
 	}
 
-	userHome, err := d.settings.MakeUserDir(req.Data.Username, req.Data.Scope, d.server.Root)
-	if err != nil {
-		log.Printf("create user: failed to mkdir user home dir: [%s]", userHome)
-		return http.StatusInternalServerError, err
+	// An omitted scope always gets a fresh, private home, irrespective of the
+	// legacy CreateUserDir/default-scope settings. Admins can still explicitly
+	// assign an existing or shared directory.
+	derivedScope := strings.TrimSpace(req.Data.Scope) == ""
+	if derivedScope {
+		err = d.settings.CreateSignupHome(req.Data, d.server.Root)
+	} else {
+		req.Data.Scope, err = d.settings.MakeUserDir(req.Data.Username, req.Data.Scope, d.server.Root)
 	}
-	req.Data.Scope = userHome
-	log.Printf("user: %s, home dir: [%s].", req.Data.Username, userHome)
-
-	err = d.store.Users.Save(req.Data)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return errToStatus(err), err
+	}
+	log.Printf("user: %s, home dir: [%s].", req.Data.Username, req.Data.Scope)
+
+	err = d.store.Users.SaveProvisioned(req.Data, derivedScope)
+	if err != nil {
+		return errToStatus(err), err
 	}
 
 	w.Header().Set("Location", "/settings/users/"+strconv.FormatUint(uint64(req.Data.ID), 10))
