@@ -4,7 +4,7 @@ Initialize a new database
 
 ## Synopsis
 
-Initialize a new database to use with File Browser. All of
+Initialize a new database to use with FileNeko. All of
 this options can be changed in the future with the command
 'filebrowser config set'. The user related flags apply
 to the defaults when creating new users and you don't
@@ -28,7 +28,7 @@ filebrowser config init [flags]
       --branding.disableExternal         disable external links such as GitHub links
       --branding.disableUsedPercentage   disable used disk percentage graph
       --branding.files string            path to directory with images and custom styles
-      --branding.name string             replace 'File Browser' by this name
+      --branding.name string             replace 'FileNeko' by this name
       --branding.theme string            set the theme
   -t, --cert string                      tls certificate
       --commands strings                 a list of the commands a user can execute

@@ -141,19 +141,19 @@
         </div>
         <div class="quota-barcode-row">
           <div class="css-barcode"></div>
-          <span class="quota-id">File Browser</span>
+          <span class="quota-id">{{ name }}</span>
         </div>
       </div>
 
       <p class="credits">
         <span>
-          <span v-if="disableExternal">File Browser</span>
+          <span v-if="disableExternal">{{ name }}</span>
           <a
             v-else
             rel="noopener noreferrer"
             target="_blank"
-            href="https://github.com/filebrowser/filebrowser"
-            >File Browser</a
+            href="https://github.com/Chocola-X/Neko-Filebrowser"
+            >{{ name }}</a
           >
           <span> {{ " " }} {{ version }}</span>
         </span>
@@ -175,6 +175,7 @@ import { useLayoutStore } from "@/stores/layout";
 import * as auth from "@/utils/auth";
 import {
   version,
+  name,
   signup,
   hideLoginButton,
   disableExternal,
@@ -205,6 +206,7 @@ export default {
     signup: () => signup,
     hideLoginButton: () => hideLoginButton,
     version: () => version,
+    name: () => name,
     disableExternal: () => disableExternal,
     disableUsedPercentage: () => disableUsedPercentage,
     canLogout: () => !noAuth && (loginPage || logoutPage !== "/login"),

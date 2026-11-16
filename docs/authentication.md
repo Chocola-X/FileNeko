@@ -1,6 +1,6 @@
 # Authentication
 
-There are three possible authentication methods. Each one of them has its own capabilities and specification. Adding another authentication method is described in [Building File Browser](../CONTRIBUTING.md#authentication-provider).
+There are three possible authentication methods. Each one of them has its own capabilities and specification. Adding another authentication method is described in [Building FileNeko](../CONTRIBUTING.md#authentication-provider).
 
 ## JSON Auth (default)
 
@@ -42,13 +42,13 @@ Where `X-My-Header` is the HTTP header provided by your proxy with the username.
 
 ## Hook Authentication
 
-The Hook Authentication method in FileBrowser allows developers to delegate user authentication to an external script or program. Instead of validating credentials internally, FileBrowser sends the username and password to a custom command defined by the administrator. This command receives the credentials through environment variables and returns key‑value pairs indicating whether the user should be authenticated, blocked, or passed through.
+The Hook Authentication method in FileNeko allows developers to delegate user authentication to an external script or program. Instead of validating credentials internally, FileNeko sends the username and password to a custom command defined by the administrator. This command receives the credentials through environment variables and returns key‑value pairs indicating whether the user should be authenticated, blocked, or passed through.
 
 The hook’s output controls user permissions, scope, locale, and other attributes, making it a powerful and extensible authentication mechanism.
 
 > [!WARNING]
 >
-> The submitted username and password are attacker-controlled and are handed to your hook command as the `USERNAME` and `PASSWORD` environment variables. File Browser runs the command directly, without a shell, so the values themselves are inert. However, your script must treat them as untrusted: always quote them (`"$USERNAME"`, `"$PASSWORD"`) and never pass them unquoted to a shell, `eval`, `bash -c`, command substitution, or backticks. A hook script that shell-evaluates these values turns any login request into remote code execution.
+> The submitted username and password are attacker-controlled and are handed to your hook command as the `USERNAME` and `PASSWORD` environment variables. FileNeko runs the command directly, without a shell, so the values themselves are inert. However, your script must treat them as untrusted: always quote them (`"$USERNAME"`, `"$PASSWORD"`) and never pass them unquoted to a shell, `eval`, `bash -c`, command substitution, or backticks. A hook script that shell-evaluates these values turns any login request into remote code execution.
 
 For example, the following code delegates filebrowser authentication to a PowerShell script on Windows. You can configure any command (for example, a script in Python, Node.js, etc.).
 
@@ -61,7 +61,7 @@ This is the code for the auth.ps1 script
 ```sh
 param()
 
-# Get FileBrowser credentials from environment variables
+# Get FileNeko credentials from environment variables
 $username = $env:USERNAME
 $password = $env:PASSWORD
 
@@ -89,7 +89,7 @@ if ($users.ContainsKey($username) -and $users[$username] -eq $password) {
 
     Write-Output "user.locale=es"          # Set language
     Write-Output "user.viewMode=list"      # Set view mode
-    Write-Output "user.scope=/"            # Set FileBrowser scope
+    Write-Output "user.scope=/"            # Set FileNeko scope
     Write-Output "user.singleClick=true"   # Set single click user configuration
     Write-Output "user.hideDotfiles=false" # Set hide dot files user configuration
 
@@ -108,7 +108,7 @@ A hook authentication script must output a series of key–value pairs, one per 
 key=value
 ```
 
-FileBrowser reads these lines and applies the corresponding authentication action and user configuration.
+FileNeko reads these lines and applies the corresponding authentication action and user configuration.
 
 #### Required Fields
 
@@ -116,9 +116,9 @@ The hook must output one of the following actions:
 
 | Key    | Description |
 |--------|------------ |
-| hook.action=auth | Authenticates the user. FileBrowser will create or update the user if needed. |
+| hook.action=auth | Authenticates the user. FileNeko will create or update the user if needed. |
 | hook.action=block | Rejects authentication. The login attempt fails. |
-| hook.action=pass | Delegates authentication to FileBrowser’s internal password validation. |
+| hook.action=pass | Delegates authentication to FileNeko’s internal password validation. |
 
 For most custom authentication flows, auth or block are used.
 
@@ -130,7 +130,7 @@ hook.action=auth
 
 #### Optional User Fields
 
-When `hook.action=auth` is returned, the hook may also define additional user attributes. These fields override FileBrowser defaults and allow full customization of the authenticated user.
+When `hook.action=auth` is returned, the hook may also define additional user attributes. These fields override FileNeko defaults and allow full customization of the authenticated user.
 
 1. Permissions
 ```
@@ -160,7 +160,7 @@ user.scope=/
 
 ## No Authentication
 
-We also provide a no authentication mechanism for users that want to use File Browser privately such in a home network. By setting this authentication method, the user with **id 1** will be used as the default users. Creating more users won't have any effect.
+We also provide a no authentication mechanism for users that want to use FileNeko privately such in a home network. By setting this authentication method, the user with **id 1** will be used as the default users. Creating more users won't have any effect.
 
 ```sh
 filebrowser config set --auth.method=noauth

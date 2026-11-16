@@ -35,6 +35,7 @@ func (s *Storage) Get() (*Settings, error) {
 	if set.UserHomeBasePath == "" {
 		set.UserHomeBasePath = DefaultUsersHomeBasePath
 	}
+	set.Branding.Name = set.Branding.DisplayName()
 
 	if set.LogoutPage == "" {
 		set.LogoutPage = DefaultLogoutPage

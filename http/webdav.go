@@ -114,7 +114,7 @@ func newWebDAVHandler(cache FileCache) handleFunc {
 		if r.Header.Get("X-Auth") != "" {
 			return withUser(serve)(w, r, d)
 		}
-		w.Header().Set("WWW-Authenticate", `Basic realm="File Browser WebDAV", charset="UTF-8"`)
+		w.Header().Set("WWW-Authenticate", `Basic realm="FileNeko WebDAV", charset="UTF-8"`)
 		username, password, ok := r.BasicAuth()
 		if !ok || d.settings.AuthMethod != fbAuth.MethodJSONAuth {
 			return http.StatusUnauthorized, nil

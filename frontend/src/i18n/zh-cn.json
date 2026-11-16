@@ -291,9 +291,6 @@
     "shareManagement": "分享管理",
     "shareDeleted": "分享已删除！",
     "singleClick": "单击打开文件/文件夹",
-    "sunsetBody": "This project is being wound down. It is archived on 2026-09-01, after which there will be no further releases, bug fixes, or security fixes. Existing releases and Docker images stay online. Do not expose this instance directly to the internet without authentication in front of it.",
-    "sunsetLink": "Read the project status, known unfixed security issues, and hardening guidance",
-    "sunsetTitle": "File Browser is being archived",
     "themes": {
       "default": "系统默认",
       "dark": "深色",
@@ -313,7 +310,7 @@
     "currentPassword": "当前密码",
     "fail2ban": {
       "title": "Fail2Ban · 登录保护",
-      "description": "File Browser 登录与 WebDAV 共用密码失败计数。在统计时间内达到阈值后，临时封禁该来源；成功请求不计入失败，IPv6 按 /64 统计。部署在 Nginx 后时，请通过 trustedProxies 配置受信代理以识别真实客户端 IP，否则客户端共用代理地址的计数。",
+      "description": "FileNeko 登录与 WebDAV 共用密码失败计数。在统计时间内达到阈值后，临时封禁该来源；成功请求不计入失败，IPv6 按 /64 统计。部署在 Nginx 后时，请通过 trustedProxies 配置受信代理以识别真实客户端 IP，否则客户端共用代理地址的计数。",
       "enabled": "启用临时封禁",
       "maxAttempts": "触发封禁的失败次数",
       "windowMinutes": "失败统计时间（分钟）",
@@ -321,7 +318,7 @@
     },
     "webdav": {
       "enabled": "启用 WebDAV",
-      "description": "保存后立即生效，无需重启。通过 HTTPS 连接，使用 File Browser 的用户名和密码，并遵循用户权限与 Fail2Ban 设置。启用验证码、代理、钩子或无认证模式时，不支持 Basic 密码登录。",
+      "description": "保存后立即生效，无需重启。通过 HTTPS 连接，使用 FileNeko 的用户名和密码，并遵循用户权限与 Fail2Ban 设置。启用验证码、代理、钩子或无认证模式时，不支持 Basic 密码登录。",
       "address": "WebDAV 连接地址"
     }
   },

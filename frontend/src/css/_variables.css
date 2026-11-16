@@ -15,7 +15,7 @@
     var(--font-ui), cursive;
 
   /* ============================================================================
-     Filebrowser Anime Pop-Cute Hard-Shadow Theme Tokens (refer/refer2.html)
+     FileNeko Anime Pop-Cute Hard-Shadow Theme Tokens (refer/refer2.html)
      ============================================================================ */
   /* Sky & Pastel Backgrounds */
   --bg-sky-top: #B8E1FF;
@@ -71,7 +71,7 @@
   --shadow-purple: 4px 4px 0px var(--purple-dark);
   --shadow-navy: 4px 4px 0px var(--ink-navy);
 
-  /* FileBrowser Default Variable Mapping */
+  /* FileNeko Default Variable Mapping */
   --blue: var(--cobalt-main);
   --dark-blue: var(--cobalt-dark);
   --red: var(--pink-main);

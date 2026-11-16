@@ -34,7 +34,7 @@ Or you can use the web interface to manage them via **Settings** → **Global Se
 
 ## Interactive Shell
 
-Within File Browser you can toggle the shell (`< >` icon at the top right) and this will open a shell command window at the bottom of the screen. This functionality can be turned on using the environment variable `FB_DISABLE_EXEC=false` or the flag `--disable-exec=false`.
+Within FileNeko you can toggle the shell (`< >` icon at the top right) and this will open a shell command window at the bottom of the screen. This functionality can be turned on using the environment variable `FB_DISABLE_EXEC=false` or the flag `--disable-exec=false`.
 
 By default no commands are available as the command list is empty. To enable commands these need to either be done on a per-user basis (including for the Admin user).
 
@@ -42,7 +42,7 @@ You can do this by adding them in Settings > User Management > (edit user) > Com
 
 > [!NOTE]
 > 
-> If using a proxy manager then remember to enable websockets support for the File Browser proxy
+> If using a proxy manager then remember to enable websockets support for the FileNeko proxy
 
 > [!NOTE]
 > 

@@ -1,5 +1,5 @@
 /* ============================================================================
-   Filebrowser Anime Pop-Cute Hard-Shadow Theme (refer/refer2.html)
+   FileNeko Anime Pop-Cute Hard-Shadow Theme (refer/refer2.html)
    Extracted Anime Palette: Cobalt Blue (#4E8DF5), Berry Pink (#FF6B9D),
    Cerulean Cyan (#2EA9DF), Orchid Purple (#9B7EDE), Sunshine Star Yellow (#FFE270)
    Strict Zero-Blur Rule: All shadows use solid 0px blur hard-offset
@@ -91,6 +91,20 @@ header {
 }
 
 /* Authentic Brand Logo & Title from refer/refer2.html */
+.brand-wordmark {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.brand-wordmark--default {
+  color: var(--cobalt-main);
+  white-space: nowrap;
+}
+
+.brand-wordmark-tail {
+  color: var(--pink-main);
+}
+
 .header-brand-wrap {
   display: flex;
   align-items: center;
@@ -792,7 +806,7 @@ main {
 }
 
 /* ----------------------------------------------------------------------------
-   5. FILEBROWSER LISTING (ANIME STUDENT ID / POLAROID STICKER CARDS)
+   5. FILENEKO LISTING (ANIME STUDENT ID / POLAROID STICKER CARDS)
    ---------------------------------------------------------------------------- */
 #listing {
   padding: 0 0.2em 3em;

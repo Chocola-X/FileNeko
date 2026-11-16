@@ -1,9 +1,9 @@
 # Nginx 反向代理与真实客户端 IP
 
-File Browser 支持由 Nginx 终止 TLS、管理域名，再通过 HTTP 转发到后端。
+FileNeko 支持由 Nginx 终止 TLS、管理域名，再通过 HTTP 转发到后端。
 配置受信代理后，网页登录、WebDAV Basic、Fail2Ban、短期密码限流和错误日志统一使用真实客户端 IP；登录、续期、退出及密码分享 Cookie 会根据可信的外部 HTTPS 信息设置 `Secure`。
 
-## File Browser 配置
+## FileNeko 配置
 
 默认不信任任何代理，不接受客户端 IP 或协议转发头。本机 Nginx 通过 `127.0.0.1` 连接后端时：
 

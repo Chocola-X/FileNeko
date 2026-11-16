@@ -4,7 +4,7 @@
 
     <div class="settings-heading">
       <div>
-        <span class="settings-eyebrow">FILE BROWSER / SETTINGS</span>
+        <span class="settings-eyebrow">FileNeko / SETTINGS</span>
         <h1>{{ t("sidebar.settings") }}<span aria-hidden="true">✦</span></h1>
       </div>
       <span class="settings-pass-tag" aria-hidden="true">{{

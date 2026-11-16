@@ -5,8 +5,8 @@
         <span class="login-pass-tag">{{ t("interface.signIn") }}</span>
         <span>MAGIC LIBRARY <b>✦</b></span>
       </div>
-      <img :src="logoURL" alt="File Browser" />
-      <h1>{{ name }}</h1>
+      <img :src="logoURL" :alt="name" />
+      <h1><brand-name /></h1>
       <p class="login-pass-subtitle">
         {{ t("login.submit") }}
         <span> / {{ t("interface.libraryTitle") }}</span>
@@ -65,6 +65,7 @@
 
 <script setup lang="ts">
 import { StatusError } from "@/api/utils";
+import BrandName from "@/components/BrandName.vue";
 import * as auth from "@/utils/auth";
 import {
   name,

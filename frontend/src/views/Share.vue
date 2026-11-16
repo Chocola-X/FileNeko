@@ -88,7 +88,7 @@
     </div>
     <div v-else-if="req !== null" class="public-share-content">
       <div class="public-share-heading">
-        <span aria-hidden="true">FILE BROWSER / PUBLIC SHARE</span>
+        <span aria-hidden="true">FileNeko / PUBLIC SHARE</span>
         <h1>{{ t("buttons.share") }}<span aria-hidden="true">✦</span></h1>
       </div>
       <div class="public-share-layout" :class="{ 'is-single': !req.isDir }">

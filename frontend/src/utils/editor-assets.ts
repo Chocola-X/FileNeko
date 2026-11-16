@@ -1,7 +1,7 @@
 import ace from "ace-builds";
 
 // Keep modes, workers, themes and snippets lazy at runtime, but include their
-// URLs in the build so Vite applies the configured File Browser static prefix.
+// URLs in the build so Vite applies the configured FileNeko static prefix.
 const assets = import.meta.glob<string>(
   "/node_modules/ace-builds/src-min-noconflict/**/*.js",
   { eager: true, query: "?url&no-inline", import: "default" }

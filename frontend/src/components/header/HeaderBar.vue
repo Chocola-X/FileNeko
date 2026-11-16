@@ -7,10 +7,10 @@
       role="button"
       tabindex="0"
     >
-      <img :src="logoURL" alt="File Browser" class="header-logo-img" />
+      <img :src="logoURL" :alt="name" class="header-logo-img" />
       <div class="header-brand-text">
         <div class="header-brand-main">
-          <span class="header-brand-title">{{ name }}</span>
+          <span class="header-brand-title"><brand-name /></span>
           <span class="skew-badge header-brand-pill">
             <span>{{ t("interface.fileManager") }}</span>
           </span>
@@ -61,6 +61,7 @@ import { useLayoutStore } from "@/stores/layout";
 import { logoURL, version, name } from "@/utils/constants";
 
 import Action from "@/components/header/Action.vue";
+import BrandName from "@/components/BrandName.vue";
 import { computed, useSlots } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";

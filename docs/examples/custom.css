@@ -1,5 +1,5 @@
 /* Copy this file to branding.files/custom.css and provide the referenced img
-   assets. Relative paths also work when File Browser uses a base URL. */
+   assets. Relative paths also work when FileNeko uses a base URL. */
 @font-face {
   font-family: "PersonalCute";
   src: url("./img/JCuYuan.woff2") format("woff2");

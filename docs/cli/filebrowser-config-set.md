@@ -25,7 +25,7 @@ filebrowser config set [flags]
       --branding.disableExternal         disable external links such as GitHub links
       --branding.disableUsedPercentage   disable used disk percentage graph
       --branding.files string            path to directory with images and custom styles
-      --branding.name string             replace 'File Browser' by this name
+      --branding.name string             replace 'FileNeko' by this name
       --branding.theme string            set the theme
   -t, --cert string                      tls certificate
       --commands strings                 a list of the commands a user can execute
