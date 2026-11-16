@@ -11,6 +11,7 @@ import router from "@/router";
 import i18n, { isRtl } from "@/i18n";
 import App from "@/App.vue";
 import CustomToast from "@/components/CustomToast.vue";
+import ToastCloseButton from "@/components/ToastCloseButton.vue";
 
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -65,7 +66,7 @@ const toastConfig = {
   draggablePercent: 0.6,
   showCloseButtonOnHover: false,
   hideProgressBar: false,
-  closeButton: "button",
+  closeButton: ToastCloseButton,
   icon: true,
 } satisfies ToastOptions;
 
