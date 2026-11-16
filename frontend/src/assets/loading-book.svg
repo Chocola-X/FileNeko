@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="112" viewBox="0 0 128 112" fill="none" aria-hidden="true">
+  <circle cx="64" cy="56" r="43" fill="var(--cobalt-surface, #f0f7ff)" stroke="var(--cobalt-light, #ddf0ff)" stroke-width="2" stroke-dasharray="3 6"/>
+  <g stroke="var(--cobalt-dark, #1e4eb8)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M25 46c15-5 27-2 39 6 12-8 24-11 39-6v42c-15-5-27-2-39 5-12-7-24-10-39-5Z" fill="var(--cobalt-main, #4e8df5)"/>
+    <path d="M29 40c13-4 25-1 35 6v40c-10-7-22-10-35-6Z" fill="var(--surface-white, #fff)"/>
+    <path d="M64 46c10-7 22-10 35-6v40c-13-4-25-1-35 6Z" fill="var(--pink-light, #ffe4ee)"/>
+    <path d="M37 51c6-1 12 1 18 4m-18 7c6-1 12 1 18 4m-18 7c6-1 12 1 18 4" stroke="var(--cobalt-main, #4e8df5)"/>
+    <path d="m83 49 2.5 5.5 6 .8-4.4 4.2 1 6-5.1-2.8-5.1 2.8 1-6-4.4-4.2 6-.8Z" fill="var(--star-yellow, #ffe270)" stroke="var(--pink-dark, #c93b6b)" stroke-width="2"/>
+    <path d="m73 72 6-1m5 0 6 1" stroke="var(--pink-main, #ff6b9d)"/>
+  </g>
+  <g class="loading-star" fill="var(--star-yellow, #ffe270)" stroke="var(--star-gold-dark, #c99718)" stroke-width="2" stroke-linejoin="round">
+    <path d="m62 8 3.5 9.5L75 21l-9.5 3.5L62 34l-3.5-9.5L49 21l9.5-3.5Z"/>
+  </g>
+  <g class="loading-star loading-star--small" stroke="var(--pink-main, #ff6b9d)" stroke-width="2.5" stroke-linecap="round">
+    <path d="M108 26v10m-5-5h10M15 64v8m-4-4h8"/>
+  </g>
+</svg>

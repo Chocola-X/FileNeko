@@ -36,16 +36,7 @@
       <selection-notice />
     </div>
 
-    <div v-if="layoutStore.loading">
-      <h2 class="message delayed">
-        <div class="spinner">
-          <div class="bounce1"></div>
-          <div class="bounce2"></div>
-          <div class="bounce3"></div>
-        </div>
-        <span>{{ t("files.loading") }}</span>
-      </h2>
-    </div>
+    <loading-indicator v-if="layoutStore.loading" />
     <div v-else-if="error">
       <form
         v-if="error.status === 401"
@@ -263,6 +254,7 @@
 </template>
 
 <script setup lang="ts">
+import LoadingIndicator from "@/components/LoadingIndicator.vue";
 import { pub as api } from "@/api";
 import { filesize } from "@/utils";
 import dayjs from "dayjs";

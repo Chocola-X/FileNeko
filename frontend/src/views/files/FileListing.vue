@@ -132,16 +132,7 @@
       <selection-notice v-if="fileStore.multiple" />
     </div>
 
-    <div v-if="layoutStore.loading">
-      <h2 class="message delayed">
-        <div class="spinner">
-          <div class="bounce1"></div>
-          <div class="bounce2"></div>
-          <div class="bounce3"></div>
-        </div>
-        <span>{{ t("files.loading") }}</span>
-      </h2>
-    </div>
+    <loading-indicator v-if="layoutStore.loading" />
     <template v-else>
       <div
         v-if="
@@ -342,6 +333,7 @@
 </template>
 
 <script setup lang="ts">
+import LoadingIndicator from "@/components/LoadingIndicator.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useClipboardStore } from "@/stores/clipboard";
 import { useFileStore } from "@/stores/file";

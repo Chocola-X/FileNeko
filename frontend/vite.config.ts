@@ -1,4 +1,5 @@
 import path from "node:path";
+import { readFileSync } from "node:fs";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
@@ -6,6 +7,24 @@ import legacy from "@vitejs/plugin-legacy";
 import { compression } from "vite-plugin-compression2";
 
 const plugins = [
+  {
+    name: "fileneko-loading-screen",
+    transformIndexHtml(html: string) {
+      // The first loading frame must work before the app's JS, CSS or fonts arrive.
+      return html
+        .replace(
+          "<!-- fileneko-loading-style -->",
+          () =>
+            `<style>${readFileSync(path.resolve(__dirname, "src/css/loading.css"), "utf8")}</style>`
+        )
+        .replace("<!-- fileneko-loading-artwork -->", () =>
+          readFileSync(
+            path.resolve(__dirname, "src/assets/loading-book.svg"),
+            "utf8"
+          )
+        );
+    },
+  },
   vue(),
   VueI18nPlugin({
     include: [path.resolve(__dirname, "./src/i18n/**/*.json")],
