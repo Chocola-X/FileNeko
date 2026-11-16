@@ -8,13 +8,13 @@ WebDAV 在同一个 HTTP 服务上提供 `/dav/` 文件访问入口，默认关�
 启动时开启：
 
 ```sh
-filebrowser --enableWebDAV
+fileneko --enableWebDAV
 ```
 
 也可以保存到现有数据库配置中，然后重启服务：
 
 ```sh
-filebrowser config set --enableWebDAV
+fileneko config set --enableWebDAV
 ```
 
 命令行可用 `--enableWebDAV=false` 关闭。显式启动参数、环境变量及配置文件中的 `enableWebDAV` 在启动时覆盖数据库值；运行期间仍可以从设置页更改。如果始终设置启动参数，下次启动将再次采用该参数。未显式配置时兼容原有数据库中的 WebDAV 开关。

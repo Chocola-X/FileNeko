@@ -1,4 +1,4 @@
-# filebrowser rules rm
+# fileneko rules rm
 
 Remove a global rule or user rule
 
@@ -15,7 +15,7 @@ you can remove all commands from 'index' to 'index_end',
 including 'index_end'.
 
 ```
-filebrowser rules rm <index> [index_end] [flags]
+fileneko rules rm <index> [index_end] [flags]
 ```
 
 ## Options
@@ -36,5 +36,5 @@ filebrowser rules rm <index> [index_end] [flags]
 
 ## See Also
 
-* [filebrowser rules](filebrowser-rules.md)	 - Rules management utility
+* [fileneko rules](fileneko-rules.md)	 - Rules management utility
 

@@ -1,6 +1,6 @@
 version: 2
 
-project_name: filebrowser
+project_name: fileneko
 
 release:
   github:
@@ -16,7 +16,7 @@ builds:
     ldflags:
       - -s -w -X github.com/filebrowser/filebrowser/v2/version.Version={{ .Version }} -X github.com/filebrowser/filebrowser/v2/version.CommitSHA={{ .ShortCommit }} -X github.com/filebrowser/filebrowser/v2/version.SourceURL=https://github.com/Chocola-X/FileNeko/archive/{{ .FullCommit }}.tar.gz
     main: main.go
-    binary: filebrowser
+    binary: fileneko
     goos:
       - darwin
       - linux

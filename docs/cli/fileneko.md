@@ -1,6 +1,6 @@
-# filebrowser
+# fileneko
 
-A stylish web-based file browser
+FileNeko: a stylish web-based file manager
 
 ## Synopsis
 
@@ -44,7 +44,7 @@ the quick setup mode and a new database will be bootstrapped and a new
 user created with the credentials from options "username" and "password".
 
 ```
-filebrowser [flags]
+fileneko [flags]
 ```
 
 ## Options
@@ -61,8 +61,9 @@ filebrowser [flags]
       --disablePreviewResize           disable resize of image previews
       --disableThumbnails              disable image thumbnails
       --disableTypeDetectionByHeader   disables type detection by reading file headers
+      --enableWebDAV                   enable WebDAV at /dav/
       --followExternalSymlinks         follow symlinks whose target is outside the user scope (unsafe)
-  -h, --help                           help for filebrowser
+  -h, --help                           help for fileneko
       --imageProcessors int            image processors count (default 4)
   -k, --key string                     tls key
   -l, --log string                     log output (default "stdout")
@@ -74,16 +75,17 @@ filebrowser [flags]
       --socket string                  socket to listen to (cannot be used with address, port, cert nor key flags)
       --socketPerm uint32              unix socket file permissions (default 438)
       --tokenExpirationTime string     user session timeout (default "2h")
+      --trustedProxies strings         trusted reverse proxy IPs or CIDRs for client IP and HTTPS headers (default: none)
       --username string                username for the first user when using quick setup (default "admin")
 ```
 
 ## See Also
 
-* [filebrowser cmds](filebrowser-cmds.md)	 - Command runner management utility
-* [filebrowser completion](filebrowser-completion.md)	 - Generate the autocompletion script for the specified shell
-* [filebrowser config](filebrowser-config.md)	 - Configuration management utility
-* [filebrowser hash](filebrowser-hash.md)	 - Hashes a password
-* [filebrowser rules](filebrowser-rules.md)	 - Rules management utility
-* [filebrowser users](filebrowser-users.md)	 - Users management utility
-* [filebrowser version](filebrowser-version.md)	 - Print the version number
+* [fileneko cmds](fileneko-cmds.md)	 - Command runner management utility
+* [fileneko completion](fileneko-completion.md)	 - Generate the autocompletion script for the specified shell
+* [fileneko config](fileneko-config.md)	 - Configuration management utility
+* [fileneko hash](fileneko-hash.md)	 - Hashes a password
+* [fileneko rules](fileneko-rules.md)	 - Rules management utility
+* [fileneko users](fileneko-users.md)	 - Users management utility
+* [fileneko version](fileneko-version.md)	 - Print the version number
 

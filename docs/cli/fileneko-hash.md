@@ -1,19 +1,19 @@
-# filebrowser config cat
+# fileneko hash
 
-Prints the configuration
+Hashes a password
 
 ## Synopsis
 
-Prints the configuration.
+Hashes a password using bcrypt algorithm.
 
 ```
-filebrowser config cat [flags]
+fileneko hash <password> [flags]
 ```
 
 ## Options
 
 ```
-  -h, --help   help for cat
+  -h, --help   help for hash
 ```
 
 ## Options inherited from parent commands
@@ -25,5 +25,5 @@ filebrowser config cat [flags]
 
 ## See Also
 
-* [filebrowser config](filebrowser-config.md)	 - Configuration management utility
+* [fileneko](fileneko.md)	 - FileNeko: a stylish web-based file manager
 

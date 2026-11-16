@@ -1,15 +1,15 @@
-# filebrowser users ls
+# fileneko version
 
-List all users.
+Print the version number
 
 ```
-filebrowser users ls [flags]
+fileneko version [flags]
 ```
 
 ## Options
 
 ```
-  -h, --help   help for ls
+  -h, --help   help for version
 ```
 
 ## Options inherited from parent commands
@@ -21,5 +21,5 @@ filebrowser users ls [flags]
 
 ## See Also
 
-* [filebrowser users](filebrowser-users.md)	 - Users management utility
+* [fileneko](fileneko.md)	 - FileNeko: a stylish web-based file manager
 

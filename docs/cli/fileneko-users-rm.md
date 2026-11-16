@@ -1,4 +1,4 @@
-# filebrowser users rm
+# fileneko users rm
 
 Delete a user by username or id
 
@@ -7,7 +7,7 @@ Delete a user by username or id
 Delete a user by username or id
 
 ```
-filebrowser users rm <id|username> [flags]
+fileneko users rm <id|username> [flags]
 ```
 
 ## Options
@@ -25,5 +25,5 @@ filebrowser users rm <id|username> [flags]
 
 ## See Also
 
-* [filebrowser users](filebrowser-users.md)	 - Users management utility
+* [fileneko users](fileneko-users.md)	 - Users management utility
 

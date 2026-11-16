@@ -15,7 +15,7 @@ tasks:
       GOAMD64: v1
       GOARM64: v8.0
     cmds:
-      - go build -ldflags='-s -w -X "github.com/filebrowser/filebrowser/v2/version.Version={{.VERSION}}" -X "github.com/filebrowser/filebrowser/v2/version.CommitSHA={{.GIT_COMMIT}}" -X "github.com/filebrowser/filebrowser/v2/version.SourceURL=https://github.com/Chocola-X/FileNeko/archive/{{.GIT_FULL_COMMIT}}.tar.gz"' -o filebrowser .
+      - go build -ldflags='-s -w -X "github.com/filebrowser/filebrowser/v2/version.Version={{.VERSION}}" -X "github.com/filebrowser/filebrowser/v2/version.CommitSHA={{.GIT_COMMIT}}" -X "github.com/filebrowser/filebrowser/v2/version.SourceURL=https://github.com/Chocola-X/FileNeko/archive/{{.GIT_FULL_COMMIT}}.tar.gz"' -o fileneko .
     vars:
       GIT_COMMIT:
         sh: git log -n 1 --format=%h

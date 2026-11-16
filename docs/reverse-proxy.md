@@ -8,13 +8,13 @@ FileNeko 支持由 Nginx 终止 TLS、管理域名，再通过 HTTP 转发到后
 默认不信任任何代理，不接受客户端 IP 或协议转发头。本机 Nginx 通过 `127.0.0.1` 连接后端时：
 
 ```sh
-filebrowser --address 127.0.0.1 --port 8080 --trustedProxies=127.0.0.1/32
+fileneko --address 127.0.0.1 --port 8080 --trustedProxies=127.0.0.1/32
 ```
 
 也可在启动前保存到数据库（请使用实际数据库路径，停止占用它的服务后修改）：
 
 ```sh
-filebrowser -d /path/to/filebrowser.db config set --trustedProxies=127.0.0.1/32
+fileneko -d /path/to/filebrowser.db config set --trustedProxies=127.0.0.1/32
 ```
 
 启动参数、环境变量和配置文件可覆盖数据库配置。清空配置可用 `config set --trustedProxies=`，或本次启动传入 `--trustedProxies=`。

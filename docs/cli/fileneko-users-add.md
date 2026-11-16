@@ -1,14 +1,13 @@
-# filebrowser users update
+# fileneko users add
 
-Updates an existing user
+Create a new user
 
 ## Synopsis
 
-Updates an existing user. Set the flags for the
-options you want to change.
+Create a new user and add it to the database.
 
 ```
-filebrowser users update <id|username> [flags]
+fileneko users add <username> <password> [flags]
 ```
 
 ## Options
@@ -17,11 +16,10 @@ filebrowser users update <id|username> [flags]
       --aceEditorTheme string   ace editor's syntax highlighting theme for users
       --commands strings        a list of the commands a user can execute
       --dateFormat              use date format (true for absolute time, false for relative)
-  -h, --help                    help for update
+  -h, --help                    help for add
       --hideDotfiles            hide dotfiles in file listings
       --locale string           locale for users (default "en")
       --lockPassword            lock password
-  -p, --password string         new password
       --perm.admin              admin perm for users
       --perm.create             create perm for users (default true)
       --perm.delete             delete perm for users (default true)
@@ -35,7 +33,6 @@ filebrowser users update <id|username> [flags]
       --singleClick             use single clicks only
       --sorting.asc             sorting by ascending order
       --sorting.by string       sorting mode (name, size or modified) (default "name")
-  -u, --username string         new username
       --viewMode string         view mode for users (default "list")
 ```
 
@@ -48,5 +45,5 @@ filebrowser users update <id|username> [flags]
 
 ## See Also
 
-* [filebrowser users](filebrowser-users.md)	 - Users management utility
+* [fileneko users](fileneko-users.md)	 - Users management utility
 

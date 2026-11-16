@@ -19,7 +19,7 @@ FileNeko provides a file managing interface within a specified directory and it 
 - [Command Execution](command-execution.md)
 - [Deployment](deployment.md)
 - [Troubleshooting](troubleshooting.md)
-- [Command Line Usage](cli/filebrowser.md)
+- [Command Line Usage](cli/fileneko.md)
 
 Project-level documents live in the repository root: [README](../README.md), [Building FileNeko](../CONTRIBUTING.md), [Security Policy](../SECURITY.md), [Code of Conduct](../CODE-OF-CONDUCT.md), [Changelog](../CHANGELOG.md) [License](../LICENSE) and [licensing details](licensing.md).
 

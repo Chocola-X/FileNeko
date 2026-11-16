@@ -1,4 +1,4 @@
-# filebrowser users import
+# fileneko users import
 
 Import users from a file
 
@@ -10,7 +10,7 @@ installation. For that, just don't place their ID on the files
 list or set it to 0.
 
 ```
-filebrowser users import <path> [flags]
+fileneko users import <path> [flags]
 ```
 
 ## Options
@@ -30,5 +30,5 @@ filebrowser users import <path> [flags]
 
 ## See Also
 
-* [filebrowser users](filebrowser-users.md)	 - Users management utility
+* [fileneko users](fileneko-users.md)	 - Users management utility
 

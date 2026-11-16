@@ -1,19 +1,21 @@
-# filebrowser rules ls
+# fileneko rules add
 
-List global rules or user specific rules
+Add a global rule or user rule
 
 ## Synopsis
 
-List global rules or user specific rules.
+Add a global rule or user rule.
 
 ```
-filebrowser rules ls [flags]
+fileneko rules add <path|expression> [flags]
 ```
 
 ## Options
 
 ```
-  -h, --help   help for ls
+  -a, --allow   indicates this is an allow rule
+  -h, --help    help for add
+  -r, --regex   indicates this is a regex rule
 ```
 
 ## Options inherited from parent commands
@@ -27,5 +29,5 @@ filebrowser rules ls [flags]
 
 ## See Also
 
-* [filebrowser rules](filebrowser-rules.md)	 - Rules management utility
+* [fileneko rules](fileneko-rules.md)	 - Rules management utility
 

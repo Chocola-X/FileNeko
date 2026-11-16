@@ -1,4 +1,4 @@
-# filebrowser completion bash
+# fileneko completion bash
 
 Generate the autocompletion script for bash
 
@@ -11,23 +11,23 @@ If it is not installed already, you can install it via your OS's package manager
 
 To load completions in your current shell session:
 
-	source <(filebrowser completion bash)
+	source <(fileneko completion bash)
 
 To load completions for every new session, execute once:
 
 ### Linux:
 
-	filebrowser completion bash > /etc/bash_completion.d/filebrowser
+	fileneko completion bash > /etc/bash_completion.d/fileneko
 
 ### macOS:
 
-	filebrowser completion bash > $(brew --prefix)/etc/bash_completion.d/filebrowser
+	fileneko completion bash > $(brew --prefix)/etc/bash_completion.d/fileneko
 
 You will need to start a new shell for this setup to take effect.
 
 
 ```
-filebrowser completion bash
+fileneko completion bash
 ```
 
 ## Options
@@ -46,5 +46,5 @@ filebrowser completion bash
 
 ## See Also
 
-* [filebrowser completion](filebrowser-completion.md)	 - Generate the autocompletion script for the specified shell
+* [fileneko completion](fileneko-completion.md)	 - Generate the autocompletion script for the specified shell
 

@@ -25,9 +25,9 @@ Also, during the execution of the commands set for those hooks, there will be so
 At this moment, you can edit the commands via the command line interface, using the following commands \(please check the flag `--help` to know more about them\):
 
 ```bash
-filebrowser cmds add before_copy "echo $FILE"
-filebrowser cmds rm before_copy 0
-filebrowser cmds ls
+fileneko cmds add before_copy "echo $FILE"
+fileneko cmds rm before_copy 0
+fileneko cmds ls
 ```
 
 Or you can use the web interface to manage them via **Settings** → **Global Settings**.
@@ -46,10 +46,10 @@ You can do this by adding them in Settings > User Management > (edit user) > Com
 
 > [!NOTE]
 > 
-> If using Docker and you want to add a new command that is not in the base image then you will need to build a custom Docker image using `filebrowser/filebrowser` as a base image.  For example to add 7z:
+> If using Docker and you want to add a new command that is not in the base image then you will need to build a custom Docker image using `ghcr.io/chocola-x/fileneko` as a base image.  For example to add 7z:
 > 
 > ```docker
-> FROM filebrowser/filebrowser
+> FROM ghcr.io/chocola-x/fileneko
 > RUN sudo apt install p7zip-full
 > ```
 

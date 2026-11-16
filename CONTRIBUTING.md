@@ -34,13 +34,19 @@ The backend task disables CGO and uses baseline CPU targets (`GOAMD64=v1`,
 `GOARM64=v8.0`). On Linux this produces a static executable without a glibc or
 musl dependency. Running a plain `go build` follows your environment instead.
 
+The executable is now `fileneko` (`fileneko.exe` on Windows). Existing flags,
+`FB_` environment variables, `filebrowser.db` databases and `.filebrowser.*`
+configuration paths still work. Update service definitions or scripts that
+refer to the old executable name; you do not need to recreate the database.
+Container images retain `/bin/filebrowser` as a compatibility symlink.
+
 ## CI builds and downloads
 
 Every branch/tag push and pull request runs the CI checks. You can also start
 **Continuous Integration** manually from the repository's **Actions** page.
 The **Build and Package** job uses the same GoReleaser configuration as releases,
-in snapshot mode, and uploads the original `linux-amd64-filebrowser.tar.gz` /
-`windows-amd64-filebrowser.zip` style packages as individual artifacts. Each
+in snapshot mode, and uploads the original `linux-amd64-fileneko.tar.gz` /
+`windows-amd64-fileneko.zip` style packages as individual artifacts. Each
 platform archive is listed separately by its filename, alongside the checksum
 file, in the completed workflow run's **Artifacts** section for 30 days. Download
 only the platform you need; the original archives are uploaded directly without
@@ -113,7 +119,7 @@ You can now build or run FileNeko as any other Go project:
 
 ```bash
 # Build
-go build
+go build -o fileneko .
 
 # Run
 go run .

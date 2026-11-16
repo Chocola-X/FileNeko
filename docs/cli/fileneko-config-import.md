@@ -1,4 +1,4 @@
-# filebrowser config import
+# fileneko config import
 
 Import a configuration file
 
@@ -14,7 +14,7 @@ database.
 The path must be for a json or yaml file.
 
 ```
-filebrowser config import <path> [flags]
+fileneko config import <path> [flags]
 ```
 
 ## Options
@@ -32,5 +32,5 @@ filebrowser config import <path> [flags]
 
 ## See Also
 
-* [filebrowser config](filebrowser-config.md)	 - Configuration management utility
+* [fileneko config](fileneko-config.md)	 - Configuration management utility
 

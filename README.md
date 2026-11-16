@@ -25,7 +25,7 @@ When deploying FileNeko:
 
 Documentation on how to install, configure, and build this project lives in [`docs`](docs) in this repository.
 
-[CONTRIBUTING.md](CONTRIBUTING.md) documents how to build and develop FileNeko. Executable names, configuration paths and Go module imports retain their upstream identifiers for compatibility.
+[CONTRIBUTING.md](CONTRIBUTING.md) documents how to build and develop FileNeko. Executables are named `fileneko` / `fileneko.exe`. Existing configuration paths, database names and Go module imports retain their upstream identifiers for compatibility.
 
 ## License
 

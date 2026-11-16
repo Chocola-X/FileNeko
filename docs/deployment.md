@@ -1,6 +1,6 @@
 ## Self-Registration (Signup)
 
-File Browser allows you to enable user self-registration (signup). This can be enabled via **Settings → Global Settings**, or with `filebrowser config set --signup`. Self-registered users inherit the configured **user defaults**, including the scope.
+File Browser allows you to enable user self-registration (signup). This can be enabled via **Settings → Global Settings**, or with `fileneko config set --signup`. Self-registered users inherit the configured **user defaults**, including the scope.
 
 > [!WARNING]
 >

@@ -1,4 +1,4 @@
-# filebrowser users find
+# fileneko users find
 
 Find a user by username or id
 
@@ -7,7 +7,7 @@ Find a user by username or id
 Find a user by username or id. If no flag is set, all users will be printed.
 
 ```
-filebrowser users find <id|username> [flags]
+fileneko users find <id|username> [flags]
 ```
 
 ## Options
@@ -25,5 +25,5 @@ filebrowser users find <id|username> [flags]
 
 ## See Also
 
-* [filebrowser users](filebrowser-users.md)	 - Users management utility
+* [fileneko users](fileneko-users.md)	 - Users management utility
 

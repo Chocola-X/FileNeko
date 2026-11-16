@@ -102,9 +102,9 @@ jobs:
         working-directory: dist
         run: |
           sha256sum --check *checksums.txt
-          mkdir -p "$RUNNER_TEMP/filebrowser-ci"
-          tar -xzf linux-amd64-filebrowser.tar.gz -C "$RUNNER_TEMP/filebrowser-ci" filebrowser
-          for ci_binary in ../filebrowser "$RUNNER_TEMP/filebrowser-ci/filebrowser"; do
+          mkdir -p "$RUNNER_TEMP/fileneko-ci"
+          tar -xzf linux-amd64-fileneko.tar.gz -C "$RUNNER_TEMP/fileneko-ci" fileneko
+          for ci_binary in ../fileneko "$RUNNER_TEMP/fileneko-ci/fileneko"; do
             test -x "$ci_binary"
             "$ci_binary" version
             file "$ci_binary"
@@ -120,87 +120,87 @@ jobs:
       - name: Upload linux amd64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/linux-amd64-filebrowser.tar.gz
+          path: dist/linux-amd64-fileneko.tar.gz
       - name: Upload linux 386
         uses: ./.github/actions/upload-package
         with:
-          path: dist/linux-386-filebrowser.tar.gz
+          path: dist/linux-386-fileneko.tar.gz
       - name: Upload linux armv5
         uses: ./.github/actions/upload-package
         with:
-          path: dist/linux-armv5-filebrowser.tar.gz
+          path: dist/linux-armv5-fileneko.tar.gz
       - name: Upload linux armv6
         uses: ./.github/actions/upload-package
         with:
-          path: dist/linux-armv6-filebrowser.tar.gz
+          path: dist/linux-armv6-fileneko.tar.gz
       - name: Upload linux armv7
         uses: ./.github/actions/upload-package
         with:
-          path: dist/linux-armv7-filebrowser.tar.gz
+          path: dist/linux-armv7-fileneko.tar.gz
       - name: Upload linux arm64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/linux-arm64-filebrowser.tar.gz
+          path: dist/linux-arm64-fileneko.tar.gz
       - name: Upload linux riscv64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/linux-riscv64-filebrowser.tar.gz
+          path: dist/linux-riscv64-fileneko.tar.gz
       - name: Upload windows amd64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/windows-amd64-filebrowser.zip
+          path: dist/windows-amd64-fileneko.zip
       - name: Upload windows 386
         uses: ./.github/actions/upload-package
         with:
-          path: dist/windows-386-filebrowser.zip
+          path: dist/windows-386-fileneko.zip
       - name: Upload windows arm64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/windows-arm64-filebrowser.zip
+          path: dist/windows-arm64-fileneko.zip
       - name: Upload darwin amd64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/darwin-amd64-filebrowser.tar.gz
+          path: dist/darwin-amd64-fileneko.tar.gz
       - name: Upload darwin arm64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/darwin-arm64-filebrowser.tar.gz
+          path: dist/darwin-arm64-fileneko.tar.gz
       - name: Upload freebsd amd64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/freebsd-amd64-filebrowser.tar.gz
+          path: dist/freebsd-amd64-fileneko.tar.gz
       - name: Upload freebsd 386
         uses: ./.github/actions/upload-package
         with:
-          path: dist/freebsd-386-filebrowser.tar.gz
+          path: dist/freebsd-386-fileneko.tar.gz
       - name: Upload freebsd arm64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/freebsd-arm64-filebrowser.tar.gz
+          path: dist/freebsd-arm64-fileneko.tar.gz
       - name: Upload openbsd amd64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/openbsd-amd64-filebrowser.tar.gz
+          path: dist/openbsd-amd64-fileneko.tar.gz
       - name: Upload openbsd 386
         uses: ./.github/actions/upload-package
         with:
-          path: dist/openbsd-386-filebrowser.tar.gz
+          path: dist/openbsd-386-fileneko.tar.gz
       - name: Upload openbsd armv5
         uses: ./.github/actions/upload-package
         with:
-          path: dist/openbsd-armv5-filebrowser.tar.gz
+          path: dist/openbsd-armv5-fileneko.tar.gz
       - name: Upload openbsd armv6
         uses: ./.github/actions/upload-package
         with:
-          path: dist/openbsd-armv6-filebrowser.tar.gz
+          path: dist/openbsd-armv6-fileneko.tar.gz
       - name: Upload openbsd armv7
         uses: ./.github/actions/upload-package
         with:
-          path: dist/openbsd-armv7-filebrowser.tar.gz
+          path: dist/openbsd-armv7-fileneko.tar.gz
       - name: Upload openbsd arm64
         uses: ./.github/actions/upload-package
         with:
-          path: dist/openbsd-arm64-filebrowser.tar.gz
+          path: dist/openbsd-arm64-fileneko.tar.gz
       - name: Upload package checksums
         uses: ./.github/actions/upload-package
         with:

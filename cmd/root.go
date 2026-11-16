@@ -119,7 +119,7 @@ func addServerFlags(flags *pflag.FlagSet) {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "filebrowser",
+	Use:   "fileneko",
 	Short: "FileNeko: a stylish web-based file manager",
 	Long: `FileNeko CLI lets you create the database to use with FileNeko,
 manage your users and all the configurations without accessing the

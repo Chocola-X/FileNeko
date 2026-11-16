@@ -1,17 +1,14 @@
-# filebrowser config init
+# fileneko config set
 
-Initialize a new database
+Updates the configuration
 
 ## Synopsis
 
-Initialize a new database to use with FileNeko. All of
-this options can be changed in the future with the command
-'filebrowser config set'. The user related flags apply
-to the defaults when creating new users and you don't
-override the options.
+Updates the configuration. Set the flags for the options
+you want to change. Other options will remain unchanged.
 
 ```
-filebrowser config init [flags]
+fileneko config set [flags]
 ```
 
 ## Options
@@ -23,6 +20,7 @@ filebrowser config init [flags]
       --auth.header string               HTTP header for auth.method=proxy
       --auth.logoutPage string           url of custom logout page
       --auth.method string               authentication type (default "json")
+      --auth.trustedProxies strings      trusted proxy IPs or CIDRs (default: loopback only)
   -b, --baseURL string                   base url
       --branding.color string            set the theme color
       --branding.disableExternal         disable external links such as GitHub links
@@ -40,9 +38,10 @@ filebrowser config init [flags]
       --disablePreviewResize             disable resize of image previews
       --disableThumbnails                disable image thumbnails
       --disableTypeDetectionByHeader     disables type detection by reading file headers
+      --enableWebDAV                     enable WebDAV at /dav/
       --fileMode string                  mode bits that new files are created with (default "0o640")
       --followExternalSymlinks           follow symlinks whose target is outside the user scope (unsafe)
-  -h, --help                             help for init
+  -h, --help                             help for set
       --hideDotfiles                     hide dotfiles in file listings
       --hideLoginButton                  hide login button from public pages
   -k, --key string                       tls key
@@ -72,6 +71,7 @@ filebrowser config init [flags]
       --sorting.asc                      sorting by ascending order
       --sorting.by string                sorting mode (name, size or modified) (default "name")
       --tokenExpirationTime string       user session timeout (default "2h")
+      --trustedProxies strings           trusted reverse proxy IPs or CIDRs for client IP and HTTPS headers (default: none)
       --tus.chunkSize uint               the tus chunk size (default 10485760)
       --tus.retryCount uint16            the tus retry count (default 5)
       --viewMode string                  view mode for users (default "list")
@@ -86,5 +86,5 @@ filebrowser config init [flags]
 
 ## See Also
 
-* [filebrowser config](filebrowser-config.md)	 - Configuration management utility
+* [fileneko config](fileneko-config.md)	 - Configuration management utility
 

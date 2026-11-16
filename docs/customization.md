@@ -13,10 +13,10 @@ You can customize FileNeko to use your own branding. This includes the following
   - `custom.css`, containing a global stylesheet to apply to all users.
   - `img`, a directory which can replace all the [default logotypes](https://github.com/filebrowser/filebrowser/tree/master/frontend/public/img) from the application.
 
-This can be configured by the administrator user, under **Settings → Global Settings**. You can also update the configuration directly using the [CLI](cli/filebrowser-config-set.md):
+This can be configured by the administrator user, under **Settings → Global Settings**. You can also update the configuration directly using the [CLI](cli/fileneko-config-set.md):
 
 ```sh
-filebrowser config set --branding.name "My Name" \
+fileneko config set --branding.name "My Name" \
   --branding.files "/abs/path/to/my/dir" \
   --branding.disableExternal
 ```

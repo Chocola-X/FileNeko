@@ -1,4 +1,4 @@
-# filebrowser users export
+# fileneko users export
 
 Export all users to a file.
 
@@ -8,7 +8,7 @@ Export all users to a json or yaml file. Please indicate the
 path to the file where you want to write the users.
 
 ```
-filebrowser users export <path> [flags]
+fileneko users export <path> [flags]
 ```
 
 ## Options
@@ -26,5 +26,5 @@ filebrowser users export <path> [flags]
 
 ## See Also
 
-* [filebrowser users](filebrowser-users.md)	 - Users management utility
+* [fileneko users](fileneko-users.md)	 - Users management utility
 

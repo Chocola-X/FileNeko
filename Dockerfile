@@ -23,7 +23,8 @@ RUN addgroup -g $GID user && \
     adduser -D -u $UID -G user user
 
 # Copy binary, scripts, and configurations into image with proper ownership
-COPY --chown=user:user filebrowser /bin/filebrowser
+COPY --chown=user:user fileneko /bin/fileneko
+RUN ln -s fileneko /bin/filebrowser
 COPY LICENSE NOTICE /usr/share/licenses/fileneko/
 COPY LICENSES/ /usr/share/licenses/fileneko/LICENSES/
 COPY frontend/src/assets/fonts/*-OFL.txt /usr/share/licenses/fileneko/LICENSES/fonts/

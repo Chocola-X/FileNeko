@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Capture theme states using a disposable database and local Chromium.
 
-Usage: python3 theme-regression.py /absolute/path/to/filebrowser /tmp/screenshots
+Usage: python3 theme-regression.py /absolute/path/to/fileneko /tmp/screenshots
 Requires Chromium, FFmpeg and Python websocket-client; never uses an existing database.
 """
 import base64

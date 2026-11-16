@@ -1,4 +1,4 @@
-# filebrowser cmds add
+# fileneko cmds add
 
 Add a command to run on a specific event
 
@@ -7,7 +7,7 @@ Add a command to run on a specific event
 Add a command to run on a specific event.
 
 ```
-filebrowser cmds add <event> <command> [flags]
+fileneko cmds add <event> <command> [flags]
 ```
 
 ## Options
@@ -25,5 +25,5 @@ filebrowser cmds add <event> <command> [flags]
 
 ## See Also
 
-* [filebrowser cmds](filebrowser-cmds.md)	 - Command runner management utility
+* [fileneko cmds](fileneko-cmds.md)	 - Command runner management utility
 

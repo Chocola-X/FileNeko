@@ -1,4 +1,4 @@
-# filebrowser completion powershell
+# fileneko completion powershell
 
 Generate the autocompletion script for powershell
 
@@ -8,14 +8,14 @@ Generate the autocompletion script for powershell.
 
 To load completions in your current shell session:
 
-	filebrowser completion powershell | Out-String | Invoke-Expression
+	fileneko completion powershell | Out-String | Invoke-Expression
 
 To load completions for every new session, add the output of the above command
 to your powershell profile.
 
 
 ```
-filebrowser completion powershell [flags]
+fileneko completion powershell [flags]
 ```
 
 ## Options
@@ -34,5 +34,5 @@ filebrowser completion powershell [flags]
 
 ## See Also
 
-* [filebrowser completion](filebrowser-completion.md)	 - Generate the autocompletion script for the specified shell
+* [fileneko completion](fileneko-completion.md)	 - Generate the autocompletion script for the specified shell
 

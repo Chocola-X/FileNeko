@@ -1,4 +1,4 @@
-# filebrowser completion zsh
+# fileneko completion zsh
 
 Generate the autocompletion script for zsh
 
@@ -13,23 +13,23 @@ to enable it.  You can execute the following once:
 
 To load completions in your current shell session:
 
-	source <(filebrowser completion zsh)
+	source <(fileneko completion zsh)
 
 To load completions for every new session, execute once:
 
 ### Linux:
 
-	filebrowser completion zsh > "${fpath[1]}/_filebrowser"
+	fileneko completion zsh > "${fpath[1]}/_fileneko"
 
 ### macOS:
 
-	filebrowser completion zsh > $(brew --prefix)/share/zsh/site-functions/_filebrowser
+	fileneko completion zsh > $(brew --prefix)/share/zsh/site-functions/_fileneko
 
 You will need to start a new shell for this setup to take effect.
 
 
 ```
-filebrowser completion zsh [flags]
+fileneko completion zsh [flags]
 ```
 
 ## Options
@@ -48,5 +48,5 @@ filebrowser completion zsh [flags]
 
 ## See Also
 
-* [filebrowser completion](filebrowser-completion.md)	 - Generate the autocompletion script for the specified shell
+* [fileneko completion](fileneko-completion.md)	 - Generate the autocompletion script for the specified shell
 

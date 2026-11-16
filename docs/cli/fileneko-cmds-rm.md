@@ -1,4 +1,4 @@
-# filebrowser cmds rm
+# fileneko cmds rm
 
 Removes a command from an event hooker
 
@@ -15,7 +15,7 @@ you can remove all commands from 'index' to 'index_end',
 including 'index_end'.
 
 ```
-filebrowser cmds rm <event> <index> [index_end] [flags]
+fileneko cmds rm <event> <index> [index_end] [flags]
 ```
 
 ## Options
@@ -33,5 +33,5 @@ filebrowser cmds rm <event> <index> [index_end] [flags]
 
 ## See Also
 
-* [filebrowser cmds](filebrowser-cmds.md)	 - Command runner management utility
+* [fileneko cmds](fileneko-cmds.md)	 - Command runner management utility
 

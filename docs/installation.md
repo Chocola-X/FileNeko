@@ -11,10 +11,10 @@ Download the archive for your system from a completed **Actions** run's
 when a release is available. Each platform is listed separately, along with a
 checksum file. Extract the archive and keep its `LICENSE`, `NOTICE` and
 `LICENSES/` files when redistributing it. The executable name remains
-`filebrowser` (`filebrowser.exe` on Windows).
+`fileneko` (`fileneko.exe` on Windows).
 
 ```sh
-./filebrowser -r /path/to/your/files
+./fileneko -r /path/to/your/files
 ```
 
 To build from source, follow [CONTRIBUTING.md](../CONTRIBUTING.md). Operating system
@@ -77,8 +77,8 @@ Your instance is now up and running. FileNeko will automatically bootstrap a dat
 
 > [!WARNING]
 >
-> The automatically generated password for the user `admin` is only displayed once. If you lose it, reset the password using the `filebrowser users update` CLI after stopping the server; keep your existing database.
+> The automatically generated password for the user `admin` is only displayed once. If you lose it, reset the password using the `fileneko users update` CLI after stopping the server; keep your existing database.
 
-Although this is the fastest way to bootstrap an instance, we recommend you to take a look at other possible options, by checking [`config init`](cli/filebrowser-config-init.md) and [`config set`](cli/filebrowser-config-set.md), to make the installation as safe and customized as it can be.
+Although this is the fastest way to bootstrap an instance, we recommend you to take a look at other possible options, by checking [`config init`](cli/fileneko-config-init.md) and [`config set`](cli/fileneko-config-set.md), to make the installation as safe and customized as it can be.
 
 If your goal is to have a public-facing deployment, we recommend taking a look at the [deployment](deployment.md) page for more information on how you can secure your installation.

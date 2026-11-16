@@ -1,4 +1,4 @@
-# filebrowser rules
+# fileneko rules
 
 Rules management utility
 
@@ -27,8 +27,8 @@ rules.
 
 ## See Also
 
-* [filebrowser](filebrowser.md)	 - A stylish web-based file browser
-* [filebrowser rules add](filebrowser-rules-add.md)	 - Add a global rule or user rule
-* [filebrowser rules ls](filebrowser-rules-ls.md)	 - List global rules or user specific rules
-* [filebrowser rules rm](filebrowser-rules-rm.md)	 - Remove a global rule or user rule
+* [fileneko](fileneko.md)	 - FileNeko: a stylish web-based file manager
+* [fileneko rules add](fileneko-rules-add.md)	 - Add a global rule or user rule
+* [fileneko rules ls](fileneko-rules-ls.md)	 - List global rules or user specific rules
+* [fileneko rules rm](fileneko-rules-rm.md)	 - Remove a global rule or user rule
 

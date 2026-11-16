@@ -1,4 +1,4 @@
-# filebrowser config export
+# fileneko config export
 
 Export the configuration to a file
 
@@ -9,7 +9,7 @@ json or yaml file. This exported configuration can be changed,
 and imported again with 'config import' command.
 
 ```
-filebrowser config export <path> [flags]
+fileneko config export <path> [flags]
 ```
 
 ## Options
@@ -27,5 +27,5 @@ filebrowser config export <path> [flags]
 
 ## See Also
 
-* [filebrowser config](filebrowser-config.md)	 - Configuration management utility
+* [fileneko config](fileneko-config.md)	 - Configuration management utility
 
