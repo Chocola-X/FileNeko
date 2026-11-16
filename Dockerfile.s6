@@ -1,5 +1,10 @@
 FROM ghcr.io/linuxserver/baseimage-alpine:3.23
 
+LABEL org.opencontainers.image.title="FileNeko" \
+      org.opencontainers.image.authors="Chocola-X" \
+      org.opencontainers.image.source="https://github.com/Chocola-X/FileNeko" \
+      org.opencontainers.image.licenses="AGPL-3.0-only"
+
 RUN apk update && \
   apk --no-cache add ca-certificates mailcap jq libcap
 
@@ -9,6 +14,9 @@ RUN mkdir -p /config /database /srv && \
 
 # Copy files and set permissions
 COPY filebrowser /bin/filebrowser
+COPY LICENSE NOTICE /usr/share/licenses/fileneko/
+COPY LICENSES/ /usr/share/licenses/fileneko/LICENSES/
+COPY frontend/src/assets/fonts/*-OFL.txt /usr/share/licenses/fileneko/LICENSES/fonts/
 COPY docker/common/ /
 COPY docker/s6/ /
 

@@ -152,7 +152,7 @@
             v-else
             rel="noopener noreferrer"
             target="_blank"
-            href="https://github.com/Chocola-X/Neko-Filebrowser"
+            href="https://github.com/Chocola-X/FileNeko"
             >{{ name }}</a
           >
           <span> {{ " " }} {{ version }}</span>
@@ -160,6 +160,7 @@
         <span>
           <a @click="help">{{ $t("sidebar.help") }}</a>
         </span>
+        <project-credits />
       </p>
     </div>
   </nav>
@@ -173,6 +174,7 @@ import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";
 
 import * as auth from "@/utils/auth";
+import ProjectCredits from "@/components/ProjectCredits.vue";
 import {
   version,
   name,
@@ -191,6 +193,7 @@ const USAGE_DEFAULT = { used: "0 B", total: "0 B", usedPercentage: 0 };
 
 export default {
   name: "sidebar",
+  components: { ProjectCredits },
   setup() {
     const usage = reactive(USAGE_DEFAULT);
     return { usage, usageAbortController: new AbortController() };

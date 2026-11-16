@@ -148,7 +148,7 @@
             <a
               class="link"
               target="_blank"
-              href="https://github.com/Chocola-X/Neko-Filebrowser/blob/master/docs/customization.md#custom-branding"
+              href="https://github.com/Chocola-X/FileNeko/blob/master/docs/customization.md#custom-branding"
               >{{ t("settings.documentation") }}</a
             >
           </i18n-t>
@@ -291,7 +291,7 @@
             <a
               class="link"
               target="_blank"
-              href="https://github.com/Chocola-X/Neko-Filebrowser/blob/master/docs/command-execution.md#hook-runner"
+              href="https://github.com/Chocola-X/FileNeko/blob/master/docs/command-execution.md#hook-runner"
               >{{ t("settings.documentation") }}</a
             >
           </i18n-t>

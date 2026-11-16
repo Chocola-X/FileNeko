@@ -1,0 +1,25 @@
+FileNeko
+Copyright (C) 2026 Chocola-X
+Maintainer: Chocola-X
+Source: https://github.com/Chocola-X/FileNeko
+
+FileNeko is a personal derivative project of File Browser.
+
+Upstream attribution:
+  File Browser
+  Copyright File Browser Contributors
+  https://github.com/filebrowser/filebrowser
+  Licensed under the Apache License, Version 2.0.
+  The original license text is preserved in LICENSES/Apache-2.0.txt.
+
+FileNeko includes changes to the interface, branding, authentication/session
+handling, security checks, WebDAV, proxy handling and directory statistics.
+The Git history records the individual changes and their authors.
+
+FileNeko modifications and the derivative work as a whole are distributed
+under the GNU Affero General Public License, version 3 only
+(SPDX-License-Identifier: AGPL-3.0-only). See LICENSE.
+
+This does not remove the upstream copyright, attribution or Apache-2.0
+permissions for the original File Browser portions. Third-party components
+and fonts retain their own licenses and notices; see docs/licensing.md.

@@ -6,11 +6,14 @@
 
 FileNeko provides a file managing interface within a specified directory, with a bright anime theme inspired by a magical library. Upload, delete, preview and edit your files through a self-hosted web interface, with user management and configurable WebDAV access.
 
+FileNeko is a personal project maintained by [Chocola-X](https://github.com/Chocola-X).
+Project and source code: [Chocola-X/FileNeko](https://github.com/Chocola-X/FileNeko).
+
 This fork is based on File Browser, whose upstream repository was archived on 2026-09-01. Upstream releases and images do not include the changes in FileNeko.
 
 ## Security
 
-Published upstream advisories are listed under [security advisories](https://github.com/filebrowser/filebrowser/security/advisories). The [local security audit](docs/security-audit-2026-11-15.md) records the fixes and checks made in this fork, including session revocation and command handling. This audit does not guarantee the absence of other vulnerabilities. [SECURITY.md](SECURITY.md) retains the upstream reporting policy for historical reference.
+Published upstream advisories are listed under [security advisories](https://github.com/filebrowser/filebrowser/security/advisories). The [local security audit](docs/security-audit-2026-11-15.md) records the fixes and checks made in this fork, including session revocation and command handling. This audit does not guarantee the absence of other vulnerabilities. See [SECURITY.md](SECURITY.md) for FileNeko reporting guidance.
 
 When deploying FileNeko:
 
@@ -26,4 +29,10 @@ Documentation on how to install, configure, and build this project lives in [`do
 
 ## License
 
-[Apache License 2.0](LICENSE) © File Browser Contributors
+FileNeko modifications and the derivative work as a whole are licensed under
+[GNU AGPLv3 only](LICENSE) (`AGPL-3.0-only`). Copyright (C) 2026 Chocola-X.
+
+File Browser portions retain their original copyright and
+[Apache License 2.0](LICENSES/Apache-2.0.txt) terms. See [NOTICE](NOTICE) for upstream
+attribution and [licensing details](docs/licensing.md) for scope, third-party
+licenses and corresponding-source requirements.

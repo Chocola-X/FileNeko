@@ -1,4 +1,7 @@
 {
+  "legal": {
+    "sourceCode": "源代码"
+  },
   "interface": {
     "archiveTagline": "灵感入藏，随时召回",
     "libraryTitle": "异世界魔法书库",

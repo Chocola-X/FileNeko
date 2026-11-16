@@ -15,10 +15,12 @@ tasks:
       GOAMD64: v1
       GOARM64: v8.0
     cmds:
-      - go build -ldflags='-s -w -X "github.com/filebrowser/filebrowser/v2/version.Version={{.VERSION}}" -X "github.com/filebrowser/filebrowser/v2/version.CommitSHA={{.GIT_COMMIT}}"' -o filebrowser .
+      - go build -ldflags='-s -w -X "github.com/filebrowser/filebrowser/v2/version.Version={{.VERSION}}" -X "github.com/filebrowser/filebrowser/v2/version.CommitSHA={{.GIT_COMMIT}}" -X "github.com/filebrowser/filebrowser/v2/version.SourceURL=https://github.com/Chocola-X/FileNeko/archive/{{.GIT_FULL_COMMIT}}.tar.gz"' -o filebrowser .
     vars:
       GIT_COMMIT:
         sh: git log -n 1 --format=%h
+      GIT_FULL_COMMIT:
+        sh: git rev-parse HEAD
       VERSION:
         sh: |
           if task_version=$(git describe --tags --abbrev=0 --match='v*' 2>/dev/null); then

@@ -2,6 +2,13 @@
   "name": "fileneko-frontend",
   "version": "3.0.0",
   "private": true,
+  "license": "AGPL-3.0-only",
+  "author": "Chocola-X",
+  "homepage": "https://github.com/Chocola-X/FileNeko",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chocola-X/FileNeko.git"
+  },
   "type": "module",
   "engines": {
     "node": ">=24.0.0",

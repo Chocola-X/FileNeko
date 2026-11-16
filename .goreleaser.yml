@@ -2,6 +2,11 @@ version: 2
 
 project_name: filebrowser
 
+release:
+  github:
+    owner: Chocola-X
+    name: FileNeko
+
 env:
   - GO111MODULE=on
 
@@ -9,7 +14,7 @@ builds:
   - env:
       - CGO_ENABLED=0
     ldflags:
-      - -s -w -X github.com/filebrowser/filebrowser/v2/version.Version={{ .Version }} -X github.com/filebrowser/filebrowser/v2/version.CommitSHA={{ .ShortCommit }}
+      - -s -w -X github.com/filebrowser/filebrowser/v2/version.Version={{ .Version }} -X github.com/filebrowser/filebrowser/v2/version.CommitSHA={{ .ShortCommit }} -X github.com/filebrowser/filebrowser/v2/version.SourceURL=https://github.com/Chocola-X/FileNeko/archive/{{ .FullCommit }}.tar.gz
     main: main.go
     binary: filebrowser
     goos:
@@ -53,6 +58,18 @@ archives:
     format_overrides:
       - goos: windows
         formats: ["zip"]
+    files:
+      - README.md
+      - CHANGELOG.md
+      - LICENSE
+      - NOTICE
+      - LICENSES/**
+      - src: frontend/src/assets/fonts/*-OFL.txt
+        dst: LICENSES/fonts
+        strip_parent: true
+      - src: docs/licensing.md
+        dst: LICENSES
+        strip_parent: true
 
 dockers:
   # Alpine docker images
@@ -64,15 +81,19 @@ dockers:
       - "--label=org.opencontainers.image.name={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--label=org.opencontainers.image.source=https://github.com/Chocola-X/FileNeko"
       - "--platform=linux/amd64"
     goos: linux
     goarch: amd64
     image_templates:
-      - "filebrowser/filebrowser:{{ .Tag }}-amd64"
-      - "filebrowser/filebrowser:v{{ .Major }}-amd64"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-amd64"
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-amd64"
     extra_files:
       - docker
+      - LICENSE
+      - NOTICE
+      - LICENSES
+      - frontend/src/assets/fonts
   - dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
@@ -81,15 +102,19 @@ dockers:
       - "--label=org.opencontainers.image.name={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--label=org.opencontainers.image.source=https://github.com/Chocola-X/FileNeko"
       - "--platform=linux/arm64"
     goos: linux
     goarch: arm64
     image_templates:
-      - "filebrowser/filebrowser:{{ .Tag }}-arm64"
-      - "filebrowser/filebrowser:v{{ .Major }}-arm64"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-arm64"
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-arm64"
     extra_files:
       - docker
+      - LICENSE
+      - NOTICE
+      - LICENSES
+      - frontend/src/assets/fonts
   - dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
@@ -98,16 +123,20 @@ dockers:
       - "--label=org.opencontainers.image.name={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--label=org.opencontainers.image.source=https://github.com/Chocola-X/FileNeko"
       - "--platform=linux/arm/v6"
     goos: linux
     goarch: arm
     goarm: "6"
     image_templates:
-      - "filebrowser/filebrowser:{{ .Tag }}-armv6"
-      - "filebrowser/filebrowser:v{{ .Major }}-armv6"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-armv6"
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-armv6"
     extra_files:
       - docker
+      - LICENSE
+      - NOTICE
+      - LICENSES
+      - frontend/src/assets/fonts
   - dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
@@ -116,16 +145,20 @@ dockers:
       - "--label=org.opencontainers.image.name={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--label=org.opencontainers.image.source=https://github.com/Chocola-X/FileNeko"
       - "--platform=linux/arm/v7"
     goos: linux
     goarch: arm
     goarm: "7"
     image_templates:
-      - "filebrowser/filebrowser:{{ .Tag }}-armv7"
-      - "filebrowser/filebrowser:v{{ .Major }}-armv7"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-armv7"
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-armv7"
     extra_files:
       - docker
+      - LICENSE
+      - NOTICE
+      - LICENSES
+      - frontend/src/assets/fonts
 
   ## s6-overlay docker images
   - dockerfile: Dockerfile.s6
@@ -136,15 +169,19 @@ dockers:
       - "--label=org.opencontainers.image.name={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--label=org.opencontainers.image.source=https://github.com/Chocola-X/FileNeko"
       - "--platform=linux/amd64"
     goos: linux
     goarch: amd64
     image_templates:
-      - "filebrowser/filebrowser:{{ .Tag }}-amd64-s6"
-      - "filebrowser/filebrowser:v{{ .Major }}-amd64-s6"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-amd64-s6"
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-amd64-s6"
     extra_files:
       - docker
+      - LICENSE
+      - NOTICE
+      - LICENSES
+      - frontend/src/assets/fonts
   - dockerfile: Dockerfile.s6
     use: buildx
     build_flag_templates:
@@ -153,59 +190,46 @@ dockers:
       - "--label=org.opencontainers.image.name={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--label=org.opencontainers.image.source=https://github.com/Chocola-X/FileNeko"
       - "--platform=linux/arm64"
     goos: linux
     goarch: arm64
     image_templates:
-      - "filebrowser/filebrowser:{{ .Tag }}-arm64-s6"
-      - "filebrowser/filebrowser:v{{ .Major }}-arm64-s6"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-arm64-s6"
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-arm64-s6"
     extra_files:
       - docker
+      - LICENSE
+      - NOTICE
+      - LICENSES
+      - frontend/src/assets/fonts
 
 docker_manifests:
-  - name_template: "filebrowser/filebrowser:latest"
+  - name_template: "ghcr.io/chocola-x/fileneko:latest"
     image_templates:
-      - "filebrowser/filebrowser:{{ .Tag }}-amd64"
-      - "filebrowser/filebrowser:{{ .Tag }}-arm64"
-      - "filebrowser/filebrowser:{{ .Tag }}-armv7"
-  - name_template: "filebrowser/filebrowser:{{ .Tag }}"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-amd64"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-arm64"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-armv7"
+  - name_template: "ghcr.io/chocola-x/fileneko:{{ .Tag }}"
     image_templates:
-      - "filebrowser/filebrowser:{{ .Tag }}-amd64"
-      - "filebrowser/filebrowser:{{ .Tag }}-arm64"
-      - "filebrowser/filebrowser:{{ .Tag }}-armv7"
-  - name_template: "filebrowser/filebrowser:v{{ .Major }}"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-amd64"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-arm64"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-armv7"
+  - name_template: "ghcr.io/chocola-x/fileneko:v{{ .Major }}"
     image_templates:
-      - "filebrowser/filebrowser:v{{ .Major }}-amd64"
-      - "filebrowser/filebrowser:v{{ .Major }}-arm64"
-      - "filebrowser/filebrowser:v{{ .Major }}-armv7"
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-amd64"
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-arm64"
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-armv7"
   ## s6 image manifests
-  - name_template: "filebrowser/filebrowser:s6"
+  - name_template: "ghcr.io/chocola-x/fileneko:s6"
     image_templates:
-      - "filebrowser/filebrowser:{{ .Tag }}-amd64-s6"
-      - "filebrowser/filebrowser:{{ .Tag }}-arm64-s6"
-  - name_template: "filebrowser/filebrowser:{{ .Tag }}-s6"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-amd64-s6"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-arm64-s6"
+  - name_template: "ghcr.io/chocola-x/fileneko:{{ .Tag }}-s6"
     image_templates:
-      - "filebrowser/filebrowser:{{ .Tag }}-amd64-s6"
-      - "filebrowser/filebrowser:{{ .Tag }}-arm64-s6"
-  - name_template: "filebrowser/filebrowser:v{{ .Major }}-s6"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-amd64-s6"
+      - "ghcr.io/chocola-x/fileneko:{{ .Tag }}-arm64-s6"
+  - name_template: "ghcr.io/chocola-x/fileneko:v{{ .Major }}-s6"
     image_templates:
-      - "filebrowser/filebrowser:v{{ .Major }}-amd64-s6"
-      - "filebrowser/filebrowser:v{{ .Major }}-arm64-s6"
-
-homebrew_casks:
-  - name: filebrowser
-    repository:
-      owner: filebrowser
-      name: homebrew-tap
-    commit_author:
-      name: FileBrowser Robot
-      email: robot@filebrowser.org
-    homepage: https://github.com/filebrowser/filebrowser
-    description: File Browser is a create-your-own-cloud-kind of software where you can install it on a server, direct it to a path and then access your files through a nice web interface
-    hooks:
-      post:
-        install: |
-          if system_command("/usr/bin/xattr", args: ["-h"]).exit_status == 0
-            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/filebrowser"]
-          end
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-amd64-s6"
+      - "ghcr.io/chocola-x/fileneko:v{{ .Major }}-arm64-s6"

@@ -59,6 +59,7 @@
         <span class="font-signature">{{ t("interface.archiveTagline") }}</span>
         <span>★</span>
       </div>
+      <project-credits />
     </form>
   </div>
 </template>
@@ -66,6 +67,7 @@
 <script setup lang="ts">
 import { StatusError } from "@/api/utils";
 import BrandName from "@/components/BrandName.vue";
+import ProjectCredits from "@/components/ProjectCredits.vue";
 import * as auth from "@/utils/auth";
 import {
   name,

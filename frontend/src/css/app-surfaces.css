@@ -633,6 +633,44 @@ button.button:disabled,
   font-size: clamp(20px, 2.4vw, 28px);
   line-height: 1.5;
 }
+.project-legal {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+  color: var(--ink-slate);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.project-legal-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.project-legal-links a {
+  color: var(--cobalt-dark);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.project-legal-links a:hover {
+  color: var(--pink-dark);
+}
+.project-legal-links a:focus-visible {
+  border-radius: 3px;
+  outline: 2px dashed var(--pink-dark);
+  outline-offset: 3px;
+}
+#login .project-legal,
+.error-page--standalone > .project-legal {
+  align-items: center;
+  text-align: center;
+}
+.error-page--standalone > .project-legal {
+  margin-top: 24px;
+}
+
 /* Standalone errors have no sidebar; embedded errors stay inside their host. */
 .error-page--standalone {
   box-sizing: border-box;

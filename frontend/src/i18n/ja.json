@@ -1,4 +1,7 @@
 {
+  "legal": {
+    "sourceCode": "ソースコード"
+  },
   "buttons": {
     "cancel": "キャンセル",
     "clear": "クリアー",

@@ -2,6 +2,11 @@
 
 FileNeko is a fork of the archived File Browser project. This document describes building and developing FileNeko from source.
 
+FileNeko is a personal project maintained by Chocola-X. Contributions are made
+under the project's AGPL-3.0-only terms while preserving upstream and third-party
+notices. See [licensing details](docs/licensing.md). Build scripts and source
+needed to reproduce a distributed version are part of its corresponding source.
+
 ## Project Structure
 
 The backend side of the application is written in [Go](https://golang.org/), while the frontend (located on a subdirectory of the same name) is written in [Vue.js](https://vuejs.org/). Due to the tight coupling required by some features, basic knowledge of both Go and Vue.js is recommended.
@@ -12,7 +17,7 @@ The backend side of the application is written in [Go](https://golang.org/), whi
 We encourage you to use git to manage your fork. To clone the main repository, just run:
 
 ```bash
-git clone https://github.com/Chocola-X/Neko-Filebrowser
+git clone https://github.com/Chocola-X/FileNeko
 ```
 
 We use [Taskfile](https://taskfile.dev/) to manage the different processes (building, releasing, etc) automatically.
@@ -130,13 +135,22 @@ To make a release, just run:
 task release
 ```
 
+Version tags publish to `Chocola-X/FileNeko` and the container registry
+`ghcr.io/chocola-x/fileneko`, using the repository token. No upstream Docker Hub
+or Homebrew repository is updated. On the first publication, check package
+visibility in GitHub if anonymous container downloads are intended.
+
+Release archives include both project and upstream license notices. The source
+link embedded in a build points to the full Git commit used by that build; keep
+the corresponding source available as described in [licensing](docs/licensing.md).
+
 ## Translations
 
 The Transifex integration stopped on 2026-09-01 and translations submitted there no longer reach this repository. Locale files live in [`frontend/src/i18n`](frontend/src/i18n) and can be edited directly.
 
 ## Authentication Provider
 
-To build a new authentication provider, you need to implement the [Auther interface](https://github.com/filebrowser/filebrowser/blob/master/auth/auth.go), whose method will be called on the login page after the user has submitted their login data.
+To build a new authentication provider, you need to implement the [Auther interface](https://github.com/Chocola-X/FileNeko/blob/master/auth/auth.go), whose method will be called on the login page after the user has submitted their login data.
 
 ```go
 // Auther is the authentication interface.
@@ -148,9 +162,9 @@ type Auther interface {
 
 After implementing the interface you should:
 
-1. Add it to [`auth` directory](https://github.com/filebrowser/filebrowser/blob/master/auth).
-2. Add it to the [configuration parser](https://github.com/filebrowser/filebrowser/blob/master/cmd/config.go) for the CLI.
-3. Add it to the [`authBackend.Get`](https://github.com/filebrowser/filebrowser/blob/master/storage/bolt/auth.go).
+1. Add it to [`auth` directory](https://github.com/Chocola-X/FileNeko/blob/master/auth).
+2. Add it to the [configuration parser](https://github.com/Chocola-X/FileNeko/blob/master/cmd/config.go) for the CLI.
+3. Add it to the [`authBackend.Get`](https://github.com/Chocola-X/FileNeko/blob/master/storage/bolt/auth.go).
 
 If you need to add more flags, please update the function `addConfigFlags`.
 

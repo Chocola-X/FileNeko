@@ -1,30 +1,21 @@
-# Security Policy
+# FileNeko Security Policy
 
-## Supported Versions
+FileNeko is a personal project maintained by
+[Chocola-X](https://github.com/Chocola-X), based on the archived File Browser
+project. The upstream archive status does not describe FileNeko's maintenance.
+Maintenance is best effort; no response or fix deadline is guaranteed.
 
-No version receives security fixes. The last planned release has already shipped and no further changes will be merged.
+Before reporting, check the current FileNeko source and the
+[local security audit](docs/security-audit-2026-11-15.md). Include the commit or
+version, affected configuration, reproduction steps and expected impact.
 
-| Version | Supported |
-| ------- | --------- |
-| 2.x     | ❌        |
-| < 2.0   | ❌        |
+If private vulnerability reporting is enabled, use
+[FileNeko's security page](https://github.com/Chocola-X/FileNeko/security).
+Otherwise, contact the maintainer through their GitHub profile to arrange a
+private reporting channel. Do not post credentials or unpatched exploit details
+in a public issue. Report FileNeko-specific problems to this project rather than
+the archived upstream repository.
 
-## Before Reporting
-
-This project is being wound down. To avoid duplicates, first check the [existing advisories](https://github.com/filebrowser/filebrowser/security/advisories) and open issues, and confirm:
-
-- **It concerns this project, not a fork.** Reports about code, features, or endpoints that don't exist here belong to the relevant fork.
-- **It isn't an already-known class** that remains unaddressed. Those are listed under [Security](README.md#security) in the README; reports covering them are likely to be closed as duplicates.
-
-## Reporting a Vulnerability
-
-Until 2026-09-01, report privately via the [Security](https://github.com/filebrowser/filebrowser/security) page. After that date this repository is read-only and reports can no longer be submitted.
-
-Please include, where possible:
-
-- The commit the issue was found at
-- A plaintext proof of concept (no binaries)
-- Steps to reproduce
-- Recommended remediation, if any
-
-No fix will ship for any report: the last planned release has already shipped and no further changes will be merged. Reports may still be published as advisories so that people running File Browser can assess their exposure.
+The [upstream advisories](https://github.com/filebrowser/filebrowser/security/advisories)
+remain useful background. They do not by themselves establish whether a specific
+FileNeko revision is affected.

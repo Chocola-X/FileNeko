@@ -36,7 +36,7 @@ This Code of Conduct applies both within project spaces and in public spaces whe
 
 ### Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at hacdias@gmail.com. The project team will review and investigate all complaints, and will respond in a way that it deems appropriate to the circumstances. The project team is obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.
+Instances of abusive, harassing, or otherwise unacceptable behavior in FileNeko may be reported to its maintainer, [Chocola-X](https://github.com/Chocola-X). The maintainer will review reports and respond as appropriate, respecting the reporter's privacy. Do not send FileNeko reports to the upstream File Browser maintainers.
 
 Project maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.
 

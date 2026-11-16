@@ -1,4 +1,7 @@
 {
+  "legal": {
+    "sourceCode": "原始碼"
+  },
   "buttons": {
     "stopScan": "停止統計",
     "cancel": "取消",

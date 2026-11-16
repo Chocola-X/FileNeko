@@ -9,6 +9,11 @@ RUN apk update && \
 ## Second stage: Use lightweight BusyBox image for final runtime environment
 FROM busybox:1.37.0-musl
 
+LABEL org.opencontainers.image.title="FileNeko" \
+      org.opencontainers.image.authors="Chocola-X" \
+      org.opencontainers.image.source="https://github.com/Chocola-X/FileNeko" \
+      org.opencontainers.image.licenses="AGPL-3.0-only"
+
 # Define non-root user UID and GID
 ENV UID=1000
 ENV GID=1000
@@ -19,6 +24,9 @@ RUN addgroup -g $GID user && \
 
 # Copy binary, scripts, and configurations into image with proper ownership
 COPY --chown=user:user filebrowser /bin/filebrowser
+COPY LICENSE NOTICE /usr/share/licenses/fileneko/
+COPY LICENSES/ /usr/share/licenses/fileneko/LICENSES/
+COPY frontend/src/assets/fonts/*-OFL.txt /usr/share/licenses/fileneko/LICENSES/fonts/
 COPY --chown=user:user docker/common/ /
 COPY --chown=user:user docker/alpine/ /
 COPY --chown=user:user --from=fetcher /sbin/tini-static /bin/tini
