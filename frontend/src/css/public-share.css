@@ -1,0 +1,330 @@
+/* Public shares reuse the app's bright stationery, tone tokens and file rows. */
+.public-share-content {
+  min-width: 0;
+  container-type: inline-size;
+}
+.public-share-heading {
+  margin: 24px 0;
+}
+.public-share-heading > span {
+  color: var(--ink-slate);
+  font: 700 10px var(--font-mono);
+  letter-spacing: 2px;
+}
+.public-share-heading h1 {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0 0;
+  color: var(--cobalt-main);
+  font-size: 30px;
+  text-shadow:
+    2px 2px 0 white,
+    3px 3px 0 var(--cobalt-dark);
+}
+.public-share-heading h1 > span {
+  color: var(--pink-main);
+}
+.public-share-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+.public-share-layout.is-single {
+  grid-template-columns: minmax(0, 680px);
+  justify-content: center;
+}
+.public-share-card {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  border: 2px solid var(--accent-dark);
+  border-radius: 20px;
+  background: var(--card-background, white);
+  box-shadow: 5px 5px 0 var(--accent-dark);
+}
+.public-share-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 8px;
+  border: 1px dashed var(--accent-main);
+  border-radius: 12px;
+  pointer-events: none;
+}
+.public-share-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 18px;
+  border-bottom: 2px solid var(--accent-dark);
+  border-radius: 18px 18px 0 0;
+  background: var(--accent-light);
+  color: var(--accent-dark);
+}
+.public-share-title > i {
+  flex-shrink: 0;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--accent-main);
+  color: white;
+  box-shadow: 2px 2px 0 var(--accent-dark);
+  font-size: 24px;
+}
+.public-share-title h2 {
+  min-width: 0;
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.public-share-body {
+  min-width: 0;
+  padding: 22px;
+}
+.share-metadata {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+}
+.share-metadata > div {
+  min-width: 0;
+}
+.share-metadata dt {
+  margin-bottom: 6px;
+  color: var(--ink-slate);
+  font-size: 12px;
+  font-weight: 700;
+}
+.share-metadata dd {
+  margin: 0;
+  color: var(--accent-dark);
+  font-weight: 800;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.share-metadata .share-resource-name {
+  font-size: 18px;
+}
+.share-download-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+.share-download-actions .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.public-share .button[data-tone] {
+  --button-bg: var(--accent-main);
+  --button-hover: var(--accent-dark);
+  --button-border: var(--accent-dark);
+  --button-ink: white;
+}
+.share-download-actions .button i {
+  flex-shrink: 0;
+  font-size: 22px;
+}
+.share-qr {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--accent-main);
+}
+.share-qr summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-dark);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+.share-qr summary::-webkit-details-marker {
+  display: none;
+}
+.share-qr summary:focus-visible {
+  outline: 3px solid var(--star-gold-dark);
+  outline-offset: 4px;
+}
+.share-qr summary > i {
+  flex-shrink: 0;
+  font-size: 22px;
+}
+.share-qr .share-qr-chevron {
+  margin-inline-start: auto;
+}
+.share-qr[open] .share-qr-chevron {
+  transform: rotate(180deg);
+}
+.share-qr-image {
+  width: fit-content;
+  max-width: 100%;
+  margin: 16px auto 0;
+  padding: 12px;
+  border: 2px solid var(--accent-dark);
+  border-radius: 12px;
+  background: white;
+  box-shadow: 3px 3px 0 var(--accent-dark);
+}
+.share-qr-image canvas {
+  display: block;
+  max-width: 100%;
+}
+.share-preview {
+  margin-top: 22px;
+  padding: 14px;
+  border: 1px dashed var(--accent-main);
+  border-radius: 12px;
+  background: var(--accent-surface);
+}
+.share-preview h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: var(--accent-dark);
+  font-size: 14px;
+}
+.share-preview h3 > i {
+  font-size: 20px;
+}
+.share-preview-name {
+  margin: 0 0 12px;
+  color: var(--ink-slate);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.share-preview-image {
+  display: block;
+  border-radius: 8px;
+  background: white;
+}
+.share-preview img,
+.share-preview video {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+.share-preview audio {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.share-count {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  padding: 3px 9px;
+  border: 2px solid var(--accent-dark);
+  border-radius: 999px;
+  background: white;
+  font: 700 12px var(--font-mono);
+}
+.public-share #listing {
+  min-width: 0;
+  padding: 18px;
+}
+.public-share #listing > .public-share-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+.public-share #listing.list .item {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 10px;
+}
+.public-share #listing.list .item[aria-selected="true"] {
+  background: var(--card-light);
+  box-shadow:
+    0 0 0 2px var(--star-yellow),
+    3px 3px 0 var(--card-dark);
+}
+.public-share #listing.list .card-info-row {
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.public-share #listing.list .card-info-row .name {
+  display: block;
+  width: 100%;
+  padding: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  line-height: 1.5;
+}
+.public-share #listing.list .card-details-row {
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 6px 12px;
+}
+.public-share #listing.list .card-details-row .size,
+.public-share #listing.list .card-details-row .modified {
+  display: block;
+  width: auto;
+  text-align: start;
+  white-space: normal;
+}
+.public-share .share-load-more {
+  display: block;
+  margin: 18px auto 0;
+  max-width: 100%;
+  white-space: normal;
+}
+.share-files .status-card {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+}
+.share-files .status-card::before,
+.share-files .status-card::after {
+  content: none;
+}
+.share-password {
+  box-sizing: border-box;
+  width: min(100%, 480px);
+  margin: 32px auto;
+}
+.share-password label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--accent-dark);
+  font-weight: 800;
+}
+.share-password-error {
+  margin: 0 0 18px;
+  padding: 12px;
+  border: 2px solid var(--pink-dark);
+  border-radius: 10px;
+  background: var(--pink-light);
+  color: var(--pink-dark);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+@container (max-width: 780px) {
+  .public-share-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

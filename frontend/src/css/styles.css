@@ -23,6 +23,7 @@
    ordinary selectors of equal specificity there, without forced priority. */
 @import "./anime-theme.css";
 @import "./app-surfaces.css";
+@import "./public-share.css";
 @import "./theme-details.css";
 
 @layer base {

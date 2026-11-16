@@ -74,6 +74,7 @@
     "singleDecision": "逐个处理冲突文件"
   },
   "download": {
+    "scanToDownload": "扫码下载",
     "downloadFile": "下载文件",
     "downloadFolder": "下载文件夹",
     "downloadSelected": "下载选中项"

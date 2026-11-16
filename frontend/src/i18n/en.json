@@ -74,6 +74,7 @@
     "singleDecision": "Decide for each conflicting file"
   },
   "download": {
+    "scanToDownload": "Scan to download",
     "downloadFile": "Download File",
     "downloadFolder": "Download Folder",
     "downloadSelected": "Download Selected"
