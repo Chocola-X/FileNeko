@@ -544,8 +544,8 @@ button.button:disabled,
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 var(--accent-dark);
 }
-/* Empty directories use the same framed stationery in private and public views. */
-.folder-empty {
+/* Shared stationery for directory and error states. */
+.status-card {
   position: relative;
   isolation: isolate;
   display: flex;
@@ -560,22 +560,22 @@ button.button:disabled,
   min-height: 280px;
   margin: clamp(20px, 4vw, 48px) auto;
   padding: 44px 24px;
-  border: 2px solid var(--cobalt-dark);
+  border: 2px solid var(--accent-dark);
   border-radius: 20px;
   background: var(--card-background, #fff);
-  box-shadow: 5px 5px 0 var(--cobalt-dark);
+  box-shadow: 5px 5px 0 var(--accent-dark);
   text-align: center;
 }
-.folder-empty::before {
+.status-card::before {
   content: "";
   position: absolute;
   z-index: -1;
   inset: 10px;
-  border: 1px dashed var(--cobalt-main);
+  border: 1px dashed var(--accent-main);
   border-radius: 12px;
   pointer-events: none;
 }
-.folder-empty::after {
+.status-card::after {
   content: "";
   position: absolute;
   top: -2px;
@@ -589,21 +589,21 @@ button.button:disabled,
   transform: skewX(-20deg);
   pointer-events: none;
 }
-.folder-empty-emblem {
+.status-card-emblem {
   position: relative;
   display: inline-flex;
   padding: 16px;
-  border: 2px solid var(--cobalt-dark);
+  border: 2px solid var(--accent-dark);
   border-radius: 20px;
-  background: var(--cobalt-light);
-  color: var(--cobalt-main);
-  box-shadow: 4px 4px 0 var(--cobalt-dark);
+  background: var(--accent-light);
+  color: var(--accent-main);
+  box-shadow: 4px 4px 0 var(--accent-dark);
   transform: rotate(-6deg);
 }
-.folder-empty-emblem > i {
+.status-card-emblem > i {
   font-size: 56px;
 }
-.folder-empty-emblem .folder-empty-sparkle {
+.status-card-emblem .status-card-sparkle {
   position: absolute;
   right: -12px;
   bottom: -8px;
@@ -615,23 +615,41 @@ button.button:disabled,
   font-size: 22px;
   transform: rotate(12deg);
 }
-.folder-empty-caption {
+.status-card-caption {
   min-width: 0;
   max-width: 100%;
   overflow-wrap: anywhere;
 }
-.folder-empty-label {
+.status-card-label {
   color: var(--pink-dark);
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 2px;
 }
-.folder-empty h2 {
+.status-card h2 {
   margin: 10px 0 0;
   color: var(--purple-dark);
   font-size: clamp(20px, 2.4vw, 28px);
   line-height: 1.5;
+}
+/* Standalone errors have no sidebar; embedded errors stay inside their host. */
+.error-page--standalone {
+  box-sizing: border-box;
+  padding: clamp(24px, 6vw, 72px) 20px 32px;
+}
+.error-card .status-card-label {
+  display: block;
+  font-size: clamp(40px, 8vw, 64px);
+  line-height: 1;
+  letter-spacing: 4px;
+}
+.error-card .status-card-actions .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
 }
 .share-empty {
   display: flex;

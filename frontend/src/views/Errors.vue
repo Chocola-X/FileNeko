@@ -1,16 +1,27 @@
 <template>
-  <div>
-    <header-bar v-if="showHeader" showMenu showLogo />
-
-    <h2 class="message">
-      <i class="material-icons">{{ info.icon }}</i>
-      <span>{{ t(info.message) }}</span>
-    </h2>
+  <div class="error-page" :class="{ 'error-page--standalone': showHeader }">
+    <header-bar v-if="showHeader" showLogo />
+    <status-card
+      class="error-card"
+      data-tone="pink"
+      :icon="info.icon"
+      :badge="errorCode === 403 ? 'lock' : 'priority_high'"
+      :label="String(errorCode)"
+    >
+      {{ t(info.message) }}
+      <template v-if="showHeader" #actions>
+        <router-link class="button" to="/files/">
+          <i class="material-icons" aria-hidden="true">home</i>
+          {{ t("files.home") }}
+        </router-link>
+      </template>
+    </status-card>
   </div>
 </template>
 
 <script setup lang="ts">
 import HeaderBar from "@/components/header/HeaderBar.vue";
+import StatusCard from "@/components/StatusCard.vue";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -27,7 +38,7 @@ const errors: {
     message: "errors.connection",
   },
   403: {
-    icon: "error",
+    icon: "gpp_bad",
     message: "errors.forbidden",
   },
   404: {
