@@ -2338,7 +2338,7 @@ header .action:focus-visible {
   margin: 0 0 16px;
 }
 .dashboard .card-content .small,
-.dashboard p label {
+.dashboard p label:not(.checkbox-label) {
   color: var(--ink-slate);
   font-weight: 600;
 }

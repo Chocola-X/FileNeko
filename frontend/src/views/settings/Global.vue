@@ -49,7 +49,7 @@
           <h3>{{ t("settings.fail2ban.title") }}</h3>
           <p class="small">{{ t("settings.fail2ban.description") }}</p>
           <p>
-            <label for="fail2ban-enabled">
+            <label for="fail2ban-enabled" class="checkbox-label">
               <input
                 id="fail2ban-enabled"
                 type="checkbox"
@@ -99,7 +99,7 @@
 
           <h3>WebDAV</h3>
           <p>
-            <label for="webdav-enabled">
+            <label for="webdav-enabled" class="checkbox-label">
               <input
                 id="webdav-enabled"
                 type="checkbox"
@@ -163,7 +163,7 @@
           </p>
 
           <p>
-            <label for="branding-hide-version">
+            <label for="branding-hide-version" class="checkbox-label">
               <input
                 type="checkbox"
                 v-model="settings.branding.hideVersion"

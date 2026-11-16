@@ -33,7 +33,7 @@ a {
   color: inherit;
 }
 
-.dashboard p label {
+.dashboard p label:not(.checkbox-label) {
   margin-bottom: 0.2em;
   display: block;
   font-size: 0.8em;
