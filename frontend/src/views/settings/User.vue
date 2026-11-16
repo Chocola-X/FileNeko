@@ -4,8 +4,12 @@
     <div class="column">
       <form @submit="save" class="card">
         <div class="card-title">
-          <h2 v-if="user?.id === 0">{{ $t("settings.newUser") }}</h2>
-          <h2 v-else>{{ $t("settings.user") }} {{ user?.username }}</h2>
+          <settings-card-title v-if="user?.id === 0" icon="person_add">{{
+            $t("settings.newUser")
+          }}</settings-card-title>
+          <settings-card-title v-else icon="manage_accounts"
+            >{{ $t("settings.user") }} {{ user?.username }}</settings-card-title
+          >
         </div>
 
         <div class="card-content" v-if="user">
@@ -49,6 +53,7 @@
 </template>
 
 <script setup lang="ts">
+import SettingsCardTitle from "@/components/settings/SettingsCardTitle.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useLayoutStore } from "@/stores/layout";
 import { users as api, settings } from "@/api";

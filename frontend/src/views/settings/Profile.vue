@@ -3,7 +3,9 @@
     <div class="column">
       <form class="card" @submit="updateSettings">
         <div class="card-title">
-          <h2>{{ t("settings.profileSettings") }}</h2>
+          <settings-card-title icon="tune">{{
+            t("settings.profileSettings")
+          }}</settings-card-title>
         </div>
 
         <div class="card-content">
@@ -59,7 +61,9 @@
         @submit="updatePassword"
       >
         <div class="card-title">
-          <h2>{{ t("settings.changePassword") }}</h2>
+          <settings-card-title icon="key">{{
+            t("settings.changePassword")
+          }}</settings-card-title>
         </div>
 
         <div class="card-content">
@@ -102,6 +106,7 @@
 </template>
 
 <script setup lang="ts">
+import SettingsCardTitle from "@/components/settings/SettingsCardTitle.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useLayoutStore } from "@/stores/layout";
 import { users as api } from "@/api";

@@ -1,19 +1,22 @@
 <template>
   <errors v-if="error" :errorCode="error.status" />
-  <div class="row share-management-page" v-else-if="!layoutStore.loading">
+  <div
+    class="row share-management-page management-page"
+    v-else-if="!layoutStore.loading"
+  >
     <div class="column">
-      <div class="card share-manager">
+      <div class="card share-manager management-card">
         <div class="card-title">
-          <h2>
-            <i class="material-icons share-heading-icon" aria-hidden="true"
-              >share</i
-            >
-            {{ t("settings.shareManagement") }}
-          </h2>
+          <settings-card-title icon="share">{{
+            t("settings.shareManagement")
+          }}</settings-card-title>
         </div>
 
-        <div class="card-content share-list-content" v-if="links.length > 0">
-          <table class="shares-table">
+        <div
+          class="card-content share-list-content management-list-content"
+          v-if="links.length > 0"
+        >
+          <table class="shares-table management-table">
             <thead>
               <tr>
                 <th>{{ t("settings.path") }}</th>
@@ -40,7 +43,7 @@
                   </a>
                 </td>
                 <td class="share-duration-cell">
-                  <span class="share-cell-label">{{
+                  <span class="share-cell-label management-cell-label">{{
                     t("settings.shareDuration")
                   }}</span>
                   <span class="share-duration">
@@ -51,16 +54,16 @@
                   </span>
                 </td>
                 <td class="share-user-cell" v-if="authStore.user?.perm.admin">
-                  <span class="share-cell-label">{{
+                  <span class="share-cell-label management-cell-label">{{
                     t("settings.username")
                   }}</span>
                   <span>{{ link.username }}</span>
                 </td>
                 <td class="share-actions-cell">
-                  <div class="share-actions">
+                  <div class="share-actions management-actions">
                     <button
                       type="button"
-                      class="action share-action"
+                      class="action share-action management-action"
                       data-tone="pink"
                       @click="deleteLink($event, link)"
                       :aria-label="t('buttons.delete')"
@@ -70,7 +73,7 @@
                     </button>
                     <button
                       type="button"
-                      class="action share-action copy-clipboard"
+                      class="action share-action management-action copy-clipboard"
                       data-tone="cyan"
                       :aria-label="t('buttons.copyToClipboard')"
                       :title="t('buttons.copyToClipboard')"
@@ -99,6 +102,7 @@
 </template>
 
 <script setup lang="ts">
+import SettingsCardTitle from "@/components/settings/SettingsCardTitle.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useLayoutStore } from "@/stores/layout";
 import { share as api, users } from "@/api";

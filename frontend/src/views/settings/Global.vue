@@ -4,7 +4,9 @@
     <div class="column">
       <form class="card" @submit.prevent="save">
         <div class="card-title">
-          <h2>{{ t("settings.globalSettings") }}</h2>
+          <settings-card-title icon="settings">{{
+            t("settings.globalSettings")
+          }}</settings-card-title>
         </div>
 
         <div class="card-content">
@@ -244,7 +246,9 @@
     <div class="column">
       <form class="card" @submit.prevent="save">
         <div class="card-title">
-          <h2>{{ t("settings.userDefaults") }}</h2>
+          <settings-card-title icon="assignment_ind">{{
+            t("settings.userDefaults")
+          }}</settings-card-title>
         </div>
 
         <div class="card-content">
@@ -270,7 +274,9 @@
     <div class="column">
       <form v-if="enableExec" class="card" @submit.prevent="save">
         <div class="card-title">
-          <h2>{{ t("settings.commandRunner") }}</h2>
+          <settings-card-title icon="terminal">{{
+            t("settings.commandRunner")
+          }}</settings-card-title>
         </div>
 
         <div class="card-content">
@@ -322,6 +328,7 @@
 </template>
 
 <script setup lang="ts">
+import SettingsCardTitle from "@/components/settings/SettingsCardTitle.vue";
 import { settings as api } from "@/api";
 import { StatusError } from "@/api/utils";
 import Rules from "@/components/settings/Rules.vue";

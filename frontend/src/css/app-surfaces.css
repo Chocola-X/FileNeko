@@ -406,60 +406,67 @@ button.button:disabled,
   white-space: normal;
 }
 
-/* Share management uses the same pastel stationery and semantic action colors. */
-.share-management-page .column {
-  width: 100%;
-}
-.share-manager {
-  container-type: inline-size;
-}
-.share-manager .card-title h2 {
+/* Settings headings inherit each card's stationery palette. */
+.dashboard .card-title .settings-card-title {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
-.share-manager .share-heading-icon {
+.settings-card-title > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.settings-card-title .settings-card-icon {
+  flex-shrink: 0;
   padding: 8px;
   border-radius: 10px;
-  background: var(--cobalt-main);
+  background: var(--panel-main);
   color: white;
   font-size: 24px;
-  box-shadow: 2px 2px 0 var(--cobalt-dark);
+  box-shadow: 2px 2px 0 var(--panel-dark);
 }
-.share-manager .share-list-content {
+/* Management lists share gutters, responsive rows and semantic action colors. */
+.management-page .column {
+  width: 100%;
+}
+.management-card {
+  container-type: inline-size;
+}
+.management-card .management-list-content {
   min-width: 0;
   padding: 18px;
 }
-.share-manager .shares-table {
+.management-card .management-table {
   /* Legacy card tables extend into the gutter with negative margins. */
   margin: 0;
   width: 100%;
   max-width: 100%;
   table-layout: fixed;
 }
-.share-manager .shares-table th,
-.share-manager .shares-table td {
+.management-card .management-table th,
+.management-card .management-table td {
   padding: 14px 12px;
   overflow-wrap: anywhere;
 }
-.shares-table td {
+.management-table td {
   color: var(--ink-slate);
 }
-.shares-table th {
+.management-table th {
   background: var(--cobalt-light);
   color: var(--cobalt-dark);
   font-weight: 700;
 }
-.shares-table tr {
+.management-table tr {
   border-bottom: 1px dashed var(--cobalt-main);
 }
-.shares-table tbody tr:hover {
+.management-table tbody tr:hover {
   background: var(--cobalt-surface);
 }
-.shares-table th:first-child {
+.management-table th:first-child {
   width: 55%;
 }
-.shares-table th:last-child {
+.management-table th:last-child {
   width: 120px;
 }
 .share-path {
@@ -484,7 +491,7 @@ button.button:disabled,
   text-underline-offset: 4px;
 }
 .share-path:focus-visible,
-.share-manager .share-action:focus-visible {
+.management-card .management-action:focus-visible {
   outline: 3px solid var(--star-gold-dark);
   outline-offset: 3px;
 }
@@ -497,19 +504,21 @@ button.button:disabled,
   color: var(--purple-dark);
   font-weight: 600;
 }
-.shares-table .share-user-cell {
+.management-table .share-user-cell,
+.management-table .user-admin-cell,
+.management-table .user-scope-cell {
   color: var(--cyan-dark);
   font-weight: 600;
 }
-.share-cell-label {
+.management-cell-label {
   display: none;
 }
-.share-actions {
+.management-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
 }
-.share-manager .share-action {
+.management-card .management-action {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -523,15 +532,15 @@ button.button:disabled,
   color: var(--accent-dark);
   box-shadow: 2px 2px 0 var(--accent-dark);
 }
-.share-manager .share-action i {
+.management-card .management-action i {
   padding: 0;
   color: inherit;
   font-size: 22px;
 }
-.share-manager .share-action:hover {
+.management-card .management-action:hover {
   background: var(--accent-light);
 }
-.share-manager .share-action:active {
+.management-card .management-action:active {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 var(--accent-dark);
 }
@@ -577,26 +586,26 @@ button.button:disabled,
   font-weight: 700;
 }
 @container (max-width: 640px) {
-  .shares-table thead {
+  .management-table thead {
     position: absolute;
     width: 1px;
     height: 1px;
     overflow: hidden;
     clip-path: inset(50%);
   }
-  .shares-table,
-  .shares-table tbody {
+  .management-table,
+  .management-table tbody {
     display: block;
     width: 100%;
   }
-  .share-manager .shares-table {
+  .management-card .management-table {
     border: 0;
     overflow: visible;
   }
-  .shares-table tbody {
+  .management-table tbody {
     padding: 0;
   }
-  .shares-table tbody tr {
+  .management-table tbody tr {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px 8px;
@@ -606,29 +615,33 @@ button.button:disabled,
     border-radius: 12px;
     background: var(--cobalt-surface);
   }
-  .shares-table tbody tr:last-child {
+  .management-table tbody tr:last-child {
     margin-bottom: 0;
     border: 1px solid var(--cobalt-main);
   }
-  .share-manager .shares-table td {
+  .management-card .management-table td {
     display: block;
     min-width: 0;
     padding: 0;
     border: 0;
   }
-  .shares-table .share-path-cell {
+  .management-table .share-path-cell,
+  .management-table .user-name-cell {
     grid-column: 1 / -1;
   }
-  .shares-table .share-duration-cell,
-  .shares-table .share-user-cell {
+  .management-table .share-duration-cell,
+  .management-table .share-user-cell,
+  .management-table .user-admin-cell,
+  .management-table .user-scope-cell {
     grid-column: 1;
   }
-  .shares-table .share-actions-cell {
+  .management-table .share-actions-cell,
+  .management-table .user-actions-cell {
     grid-column: 2;
     grid-row: 2 / span 2;
     align-self: center;
   }
-  .share-cell-label {
+  .management-cell-label {
     display: block;
     margin-bottom: 4px;
     color: var(--ink-slate);
@@ -1099,4 +1112,76 @@ button.button:disabled,
 #app .vue-number-input--inline {
   display: inline-flex;
   width: 200px;
+}
+
+.management-card .management-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 18px 18px;
+  padding: 16px 0 0;
+  border-top: 1px dashed var(--panel-main);
+}
+.management-footer .user-create {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.user-create i {
+  font-size: 22px;
+}
+.users-table th:first-child {
+  width: 25%;
+}
+.users-table th:nth-child(2) {
+  width: 110px;
+}
+.users-table th:last-child {
+  width: 72px;
+}
+.user-name {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--purple-dark);
+}
+.user-name > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.user-name > i {
+  flex-shrink: 0;
+  padding: 4px;
+  border-radius: 8px;
+  color: var(--purple-main);
+  background: var(--purple-light);
+  font-size: 22px;
+}
+.user-role {
+  display: inline-flex;
+  padding: 5px;
+  border: 1px solid var(--cobalt-main);
+  border-radius: 8px;
+  background: var(--cobalt-surface);
+  color: var(--ink-slate);
+}
+.user-role.is-admin {
+  background: #e8faf5;
+  border-color: var(--mint-dark);
+  color: var(--mint-dark);
+}
+.user-role i {
+  font-size: 22px;
+}
+.user-scope-cell code {
+  display: inline-block;
+  max-width: 100%;
+  padding: 4px 8px;
+  border: 1px dashed var(--cobalt-main);
+  border-radius: 8px;
+  background: var(--cobalt-surface);
+  color: var(--cobalt-dark);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
