@@ -25,6 +25,45 @@ You can fully build the project in order to produce a binary by running:
 task build
 ```
 
+The backend task disables CGO and uses baseline CPU targets (`GOAMD64=v1`,
+`GOARM64=v8.0`). On Linux this produces a static executable without a glibc or
+musl dependency. Running a plain `go build` follows your environment instead.
+
+## CI builds and downloads
+
+Every branch/tag push and pull request runs the CI checks. You can also start
+**Continuous Integration** manually from the repository's **Actions** page.
+The **Build and Package** job uses the same GoReleaser configuration as releases,
+in snapshot mode, and uploads the original `linux-amd64-filebrowser.tar.gz` /
+`windows-amd64-filebrowser.zip` style packages and checksums as a
+`filebrowser-ci-<commit>` artifact. Download it from the completed workflow run's
+**Artifacts** section within 30 days. Snapshot builds do not publish releases,
+Docker images or Homebrew changes. The other CI checks must also pass before a
+build is considered validated.
+
+The embedded frontend is already included in each executable. Extract the
+appropriate archive; Linux packages preserve executable permissions inside the
+tarball. Node.js and Go are needed to build the application, not to run it.
+
+### Older operating systems
+
+- **CentOS 7 x86-64:** the static Linux amd64 build avoids its old glibc 2.17.
+  Its standard 3.10 kernel meets Go's Linux runtime minimum (3.2 for these
+  targets). This is a compatibility target, not a claim of testing on a CentOS 7
+  VM; a container still shares its host's kernel.
+- **Windows 7/8:** unsupported by the current build. Go 1.21 and later require
+  Windows 10 / Windows Server 2016 or newer; disabling CGO does not remove the
+  runtime's Windows API requirements. Go 1.20 was the last release supporting
+  Windows 7, but this project and dependencies such as bbolt and `golang.org/x`
+  require Go 1.25, and the source uses newer standard library APIs. A Windows 7
+  port needs a separate source/dependency/runtime compatibility effort, rather
+  than simply changing the CI Go version.
+- **macOS:** the Go 1.26 builds require macOS 12 or newer.
+
+References: [Go minimum requirements](https://go.dev/wiki/MinimumRequirements),
+[Go 1.21 Windows requirements](https://go.dev/doc/go1.21#windows), and
+[Go 1.26 ports](https://go.dev/doc/go1.26#ports).
+
 ## Development
 
 For development, there are a few things to have in mind.

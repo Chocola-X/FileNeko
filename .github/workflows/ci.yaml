@@ -2,16 +2,20 @@ name: Continuous Integration
 
 on:
   push:
-    branches:
-      - "master"
-    tags:
-      - "v*"
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
 
 jobs:
   lint-frontend:
     name: Lint Frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
@@ -29,7 +33,7 @@ jobs:
 
   test-frontend:
     name: Test Frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
@@ -47,7 +51,7 @@ jobs:
 
   lint-backend:
     name: Lint Backend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
@@ -59,7 +63,7 @@ jobs:
 
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
@@ -68,8 +72,9 @@ jobs:
       - run: go test --race ./...
 
   build:
-    name: Build
-    runs-on: ubuntu-latest
+    name: Build and Package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v6
         with:
@@ -88,12 +93,47 @@ jobs:
       - name: Install Task
         uses: go-task/setup-task@v2
       - run: task build
+      - name: Package test binaries
+        uses: goreleaser/goreleaser-action@v7
+        with:
+          version: v2.20.2
+          args: release --snapshot --clean --skip=publish,docker,homebrew
+      - name: Verify binaries and packages
+        working-directory: dist
+        run: |
+          sha256sum --check *checksums.txt
+          mkdir -p "$RUNNER_TEMP/filebrowser-ci"
+          tar -xzf linux-amd64-filebrowser.tar.gz -C "$RUNNER_TEMP/filebrowser-ci" filebrowser
+          for ci_binary in ../filebrowser "$RUNNER_TEMP/filebrowser-ci/filebrowser"; do
+            test -x "$ci_binary"
+            "$ci_binary" version
+            file "$ci_binary"
+            if readelf -l "$ci_binary" | grep -q INTERP; then
+              echo "Unexpected dynamic interpreter in Linux binary"
+              exit 1
+            fi
+            if readelf -d "$ci_binary" | grep -q NEEDED; then
+              echo "Unexpected shared library dependency in Linux binary"
+              exit 1
+            fi
+          done
+      - name: Upload test binaries
+        uses: actions/upload-artifact@v7
+        with:
+          name: filebrowser-ci-${{ github.sha }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/*checksums.txt
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
 
   release:
     name: Release
-    needs: ["lint-frontend", "lint-backend", "test", "build"]
+    needs: ["lint-frontend", "test-frontend", "lint-backend", "test", "build"]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
         with:
@@ -124,7 +164,7 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v7
         with:
-          version: latest
+          version: v2.20.2
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}

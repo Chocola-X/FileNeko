@@ -10,13 +10,22 @@ tasks:
 
   build:backend:
     desc: Build backend binary
+    env:
+      CGO_ENABLED: '0'
+      GOAMD64: v1
+      GOARM64: v8.0
     cmds:
       - go build -ldflags='-s -w -X "github.com/filebrowser/filebrowser/v2/version.Version={{.VERSION}}" -X "github.com/filebrowser/filebrowser/v2/version.CommitSHA={{.GIT_COMMIT}}"' -o filebrowser .
     vars:
       GIT_COMMIT:
         sh: git log -n 1 --format=%h
       VERSION:
-        sh: git describe --tags --abbrev=0 --match=v* | cut -c 2-
+        sh: |
+          if task_version=$(git describe --tags --abbrev=0 --match='v*' 2>/dev/null); then
+            printf '%s\n' "${task_version#v}"
+          else
+            printf '%s\n' '0.0.0-dev'
+          fi
 
   build:
     desc: Build both frontend and backend

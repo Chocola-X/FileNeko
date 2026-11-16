@@ -28,6 +28,10 @@ builds:
       - "5"
       - "6"
       - "7"
+    goamd64:
+      - v1
+    goarm64:
+      - v8.0
     ignore:
       - goos: darwin
         goarch: "386"
@@ -39,6 +43,9 @@ builds:
         goarch: arm
       - goos: freebsd
         goarch: arm
+      # Marked broken by Go 1.26.
+      - goos: freebsd
+        goarch: riscv64
 
 archives:
   - name_template: "{{.Os}}-{{.Arch}}{{if .Arm}}v{{.Arm}}{{end}}-{{ .ProjectName }}"
