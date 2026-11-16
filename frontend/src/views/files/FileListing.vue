@@ -148,10 +148,7 @@
           (fileStore.req?.numDirs ?? 0) + (fileStore.req?.numFiles ?? 0) == 0
         "
       >
-        <h2 class="message">
-          <i class="material-icons">sentiment_dissatisfied</i>
-          <span>{{ t("files.lonely") }}</span>
-        </h2>
+        <empty-folder />
         <input
           style="display: none"
           type="file"
@@ -361,6 +358,7 @@ import HeaderBar from "@/components/header/HeaderBar.vue";
 import Action from "@/components/header/Action.vue";
 import Search from "@/components/Search.vue";
 import Item from "@/components/files/ListingItem.vue";
+import EmptyFolder from "@/components/files/EmptyFolder.vue";
 import SelectionNotice from "@/components/files/SelectionNotice.vue";
 import ContextMenu from "@/components/ContextMenu.vue";
 import {

@@ -277,15 +277,7 @@
             </div>
           </div>
         </div>
-        <div
-          v-else-if="req.isDir && req.items.length === 0"
-          class="share__box share__box__items"
-        >
-          <h2 class="message">
-            <i class="material-icons">sentiment_dissatisfied</i>
-            <span>{{ t("files.lonely") }}</span>
-          </h2>
-        </div>
+        <empty-folder v-else-if="req.isDir && req.items.length === 0" />
       </div>
     </div>
   </div>
@@ -303,6 +295,7 @@ import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import Errors from "@/views/Errors.vue";
 import QrcodeVue from "qrcode.vue";
 import Item from "@/components/files/ListingItem.vue";
+import EmptyFolder from "@/components/files/EmptyFolder.vue";
 import SelectionNotice from "@/components/files/SelectionNotice.vue";
 import { useElementSize } from "@vueuse/core";
 import { useFileStore } from "@/stores/file";
