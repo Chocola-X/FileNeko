@@ -151,11 +151,12 @@ func TestShareExpiryFiltersWithoutMutatingIteration(t *testing.T) {
 		store := share.NewStorage(back)
 		var links []*share.Link
 		var err error
-		if kind == "path" {
+		switch kind {
+		case "path":
 			links, err = store.Gets("/shared", 1)
-		} else if kind == "user" {
+		case "user":
 			links, err = store.FindByUserID(1)
-		} else {
+		default:
 			links, err = store.All()
 		}
 		if err != nil || len(links) != 1 || links[0].Hash != "c-live" {

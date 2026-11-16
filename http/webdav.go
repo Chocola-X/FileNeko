@@ -156,7 +156,7 @@ func (f *davFS) invalidate(ctx context.Context, name string, recursive bool) err
 	if f.cache == nil {
 		return nil
 	}
-	clear := func(name string, info os.FileInfo, err error) error {
+	invalidateFile := func(name string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -170,13 +170,13 @@ func (f *davFS) invalidate(ctx context.Context, name string, recursive bool) err
 		return delThumbs(ctx, f.cache, file)
 	}
 	if recursive {
-		return afero.Walk(f.d.user.Fs, name, clear)
+		return afero.Walk(f.d.user.Fs, name, invalidateFile)
 	}
 	info, err := f.d.user.Fs.Stat(name)
 	if os.IsNotExist(err) {
 		return nil
 	}
-	return clear(name, info, err)
+	return invalidateFile(name, info, err)
 }
 
 func (f *davFS) Stat(_ context.Context, name string) (os.FileInfo, error) {

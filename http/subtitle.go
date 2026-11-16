@@ -86,9 +86,10 @@ func subtitleFileHandler(w http.ResponseWriter, r *http.Request, file *files.Fil
 
 	// load subtitle for conversion to vtt
 	var sub *astisub.Subtitles
-	if ext == ".srt" {
+	switch ext {
+	case ".srt":
 		sub, err = astisub.ReadFromSRT(bytes.NewReader(normalizeSRTLineBreaks(content)))
-	} else if ext == ".ass" || ext == ".ssa" {
+	case ".ass", ".ssa":
 		sub, err = astisub.ReadFromSSA(bytes.NewReader(content))
 	}
 	if err != nil {
