@@ -155,7 +155,7 @@
             href="https://github.com/Chocola-X/FileNeko"
             >{{ name }}</a
           >
-          <span> {{ " " }} {{ version }}</span>
+          <span v-if="version"> {{ " " }} {{ version }}</span>
         </span>
         <span>
           <a @click="help">{{ $t("sidebar.help") }}</a>

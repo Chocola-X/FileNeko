@@ -7,6 +7,7 @@ const recaptcha: string = window.FileBrowser.ReCaptcha;
 const recaptchaKey: string = window.FileBrowser.ReCaptchaKey;
 const signup: boolean = window.FileBrowser.Signup;
 const version: string = window.FileBrowser.Version;
+const hideVersion: boolean = window.FileBrowser.HideVersion ?? false;
 const sourceURL: string =
   window.FileBrowser.SourceURL || "https://github.com/Chocola-X/FileNeko";
 const logoURL = `${staticURL}/img/logo.svg`;
@@ -33,6 +34,7 @@ export {
   recaptchaKey,
   signup,
   version,
+  hideVersion,
   sourceURL,
   noAuth,
   authMethod,

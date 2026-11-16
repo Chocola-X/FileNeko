@@ -17,8 +17,10 @@
         </div>
         <div class="header-brand-sub">
           <span>{{ t("interface.libraryTitle") }}</span>
-          <span class="sub-dot">●</span>
-          <span class="sub-ver">{{ version }}</span>
+          <template v-if="version">
+            <span class="sub-dot">●</span>
+            <span class="sub-ver">{{ version }}</span>
+          </template>
         </div>
       </div>
     </div>

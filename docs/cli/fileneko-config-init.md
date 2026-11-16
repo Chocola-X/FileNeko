@@ -29,6 +29,7 @@ fileneko config init [flags]
       --branding.disableExternal         disable external links such as GitHub links
       --branding.disableUsedPercentage   disable used disk percentage graph
       --branding.files string            path to directory with images and custom styles
+      --branding.hideVersion             hide the software version from all web pages
       --branding.name string             replace 'FileNeko' by this name
       --branding.theme string            set the theme
   -t, --cert string                      tls certificate

@@ -18,6 +18,7 @@ func (b Branding) DisplayName() string {
 type Branding struct {
 	Name                  string `json:"name"`
 	DisableExternal       bool   `json:"disableExternal"`
+	HideVersion           bool   `json:"hideVersion"`
 	DisableUsedPercentage bool   `json:"disableUsedPercentage"`
 	Files                 string `json:"files"`
 	Theme                 string `json:"theme"`

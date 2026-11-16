@@ -39,6 +39,7 @@ interface SettingsDefaults {
 interface SettingsBranding {
   name: string;
   disableExternal: boolean;
+  hideVersion: boolean;
   disableUsedPercentage: boolean;
   files: string;
   theme: UserTheme;

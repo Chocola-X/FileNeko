@@ -251,6 +251,7 @@
     "customStylesheet": "自定义样式表",
     "defaultUserDescription": "以下为新用户的默认配置",
     "disableExternalLinks": "禁止外部链接（帮助文档除外）",
+    "hideVersion": "隐藏版本号（所有页面）",
     "disableUsedDiskPercentage": "禁用磁盘已用空间展示",
     "documentation": "帮助文档",
     "examples": "示例",

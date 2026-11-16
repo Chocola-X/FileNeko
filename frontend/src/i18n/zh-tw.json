@@ -232,6 +232,7 @@
     "customStylesheet": "自定義樣式表（CSS）",
     "defaultUserDescription": "這些是新使用者的預設設定。",
     "disableExternalLinks": "禁止外部連結（幫助文件除外）",
+    "hideVersion": "隱藏版本號（所有頁面）",
     "disableUsedDiskPercentage": "停用已使用磁碟空間百分比圖",
     "documentation": "幫助文件",
     "examples": "範例",

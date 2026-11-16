@@ -163,6 +163,17 @@
           </p>
 
           <p>
+            <label for="branding-hide-version">
+              <input
+                type="checkbox"
+                v-model="settings.branding.hideVersion"
+                id="branding-hide-version"
+              />
+              {{ t("settings.hideVersion") }}
+            </label>
+          </p>
+
+          <p>
             <input
               type="checkbox"
               v-model="settings.branding.disableUsedPercentage"
@@ -335,7 +346,12 @@ import Rules from "@/components/settings/Rules.vue";
 import Themes from "@/components/settings/Themes.vue";
 import UserForm from "@/components/settings/UserForm.vue";
 import { useLayoutStore } from "@/stores/layout";
-import { enableExec, authMethod, baseURL } from "@/utils/constants";
+import {
+  enableExec,
+  authMethod,
+  baseURL,
+  hideVersion,
+} from "@/utils/constants";
 import { getTheme, setTheme } from "@/utils/theme";
 import Errors from "@/views/Errors.vue";
 import { computed, inject, onBeforeUnmount, onMounted, ref } from "vue";
@@ -467,6 +483,10 @@ const performSave = async (currentPassword: string | null = null) => {
 
   try {
     await api.update(newSettings, currentPassword);
+    if (newSettings.branding.hideVersion !== hideVersion) {
+      window.location.reload();
+      return true;
+    }
     $showSuccess(t("settings.settingsUpdated"));
   } catch (e: any) {
     $showError(e);

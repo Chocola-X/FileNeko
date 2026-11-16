@@ -29,13 +29,19 @@ func handleWithStaticData(w http.ResponseWriter, _ *http.Request, d *data, fSys 
 		return http.StatusInternalServerError, err
 	}
 
+	displayVersion := version.Version
+	if d.settings.Branding.HideVersion {
+		displayVersion = ""
+	}
+
 	data := map[string]interface{}{
 		"Name":                  d.settings.Branding.Name,
 		"DisableExternal":       d.settings.Branding.DisableExternal,
+		"HideVersion":           d.settings.Branding.HideVersion,
 		"DisableUsedPercentage": d.settings.Branding.DisableUsedPercentage,
 		"Color":                 d.settings.Branding.Color,
 		"BaseURL":               d.server.BaseURL,
-		"Version":               version.Version,
+		"Version":               displayVersion,
 		"SourceURL":             version.SourceURL,
 		"StaticURL":             path.Join(d.server.BaseURL, "/static"),
 		"Signup":                d.settings.Signup,

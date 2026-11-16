@@ -8,6 +8,7 @@ You can customize FileNeko to use your own branding. This includes the following
 
 - **Name**: the name of the instance that shows up on the tab title, login pages, and some other places.
 - **Disable External Links**: disables all external links, except to the documentation.
+- **Hide Version**: hides the software version on every web page, including public shares. The version is also omitted from the page's bootstrap data. Saving a change to this option reloads the current page; other open tabs apply it when refreshed. It does not change the CLI version command.
 - **Disable Used Percentage**: disables the disk usage information on the sidebar.
 - **Branding Folder**: directory which can contain two items:
   - `custom.css`, containing a global stylesheet to apply to all users.
@@ -20,6 +21,9 @@ fileneko config set --branding.name "My Name" \
   --branding.files "/abs/path/to/my/dir" \
   --branding.disableExternal
 ```
+
+Use `fileneko config set --branding.hideVersion` to hide the web version, or
+`fileneko config set --branding.hideVersion=false` to show it again.
 
 > [!NOTE] 
 >
