@@ -52,15 +52,34 @@ editor resources and both modern and legacy browser bundles remain included.
 
 Every branch/tag push and pull request runs the CI checks. You can also start
 **Continuous Integration** manually from the repository's **Actions** page.
-The **Build and Package** job uses the same GoReleaser configuration as releases,
+The **Build Shared Frontend** job compiles the frontend once. **Build and Package**
+then runs a matrix with one independent job per OS/architecture (currently 21),
+sharing that frontend and cached Go modules. Each target has its own compilation
+cache. Targets are derived from `.goreleaser.yml` and the Go toolchain's supported
+ports; ARM v5/v6/v7 remain separate targets. A failed target does not cancel the
+other matrix jobs.
+
+Each job uses the release GoReleaser configuration narrowed to its target,
 in snapshot mode, and uploads the original `linux-amd64-fileneko.tar.gz` /
 `windows-amd64-fileneko.zip` style packages as individual artifacts. Each
 platform archive is listed separately by its filename, alongside the checksum
 file, in the completed workflow run's **Artifacts** section for 30 days. Download
 only the platform you need; the original archives are uploaded directly without
-another ZIP wrapper. Snapshot builds do not publish releases,
-Docker images or Homebrew changes. The other CI checks must also pass before a
-build is considered validated.
+another ZIP wrapper. Each package is checked for its executable, redistribution
+notices, disabled CGO and stripped build flags; Linux packages are also checked
+for dynamic dependencies, and the Linux amd64 executable is run. **Verify Matrix
+Packages** downloads the original archives, requires the complete target set,
+and produces `fileneko_checksums.txt`.
+
+The intermediate `fileneko-frontend.tar` artifact is also retained for 30 days so
+failed matrix jobs can be rerun with the same assets. Reruns replace same-named
+artifacts. Tag releases reuse the frontend too, while keeping the normal
+GoReleaser release and Docker publication flow. Snapshot builds do not publish
+releases, Docker images or Homebrew changes. The other CI checks must also pass
+before a build is considered validated.
+
+To check the matrix helper locally, run `go test ./.github/ci` and
+`go run ./.github/ci matrix` from the repository root.
 
 The embedded frontend is already included in each executable. Extract the
 appropriate archive; Linux packages preserve executable permissions inside the

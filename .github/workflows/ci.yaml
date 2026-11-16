@@ -71,17 +71,38 @@ jobs:
           go-version: "1.26.x"
       - run: go test --race ./...
 
-  build:
-    name: Build and Package
+  prepare-builds:
+    name: Prepare Build Matrix
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+      go-version: ${{ steps.go.outputs.go-version }}
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - uses: actions/setup-go@v6
+        id: go
         with:
-          go-version: '1.26'
+          go-version: "1.26.x"
+          cache: false
+      - name: Cache Go modules
+        uses: actions/cache@v5
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-mod-${{ steps.go.outputs.go-version }}-${{ hashFiles('go.sum') }}
+      - run: go mod download
+      - name: Derive targets from the release configuration
+        id: matrix
+        run: |
+          go test ./.github/ci
+          echo "matrix=$(go run ./.github/ci matrix)" >> "$GITHUB_OUTPUT"
+
+  build-frontend:
+    name: Build Shared Frontend
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
         with:
           package_json_file: "frontend/package.json"
@@ -90,125 +111,107 @@ jobs:
           node-version: "24.x"
           cache: "pnpm"
           cache-dependency-path: "frontend/pnpm-lock.yaml"
-      - name: Install Task
-        uses: go-task/setup-task@v2
-      - run: task build
-      - name: Package test binaries
+      - working-directory: frontend
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run build
+      - name: Prepare shared frontend assets
+        run: |
+          test -s frontend/dist/public/index.html
+          tar -cf "$RUNNER_TEMP/fileneko-frontend.tar" -C frontend/dist .
+      - name: Upload shared frontend
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ runner.temp }}/fileneko-frontend.tar
+          archive: false
+          overwrite: true
+          if-no-files-found: error
+          retention-days: 30
+
+  build:
+    name: Build and Package (${{ matrix.target }})
+    needs: [prepare-builds, build-frontend]
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare-builds.outputs.matrix) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v6
+        id: go
+        with:
+          go-version: ${{ needs.prepare-builds.outputs.go-version }}
+          cache: false
+      - name: Restore shared Go modules
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-mod-${{ steps.go.outputs.go-version }}-${{ hashFiles('go.sum') }}
+      - name: Cache target compilation
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/go-build
+          key: ${{ runner.os }}-go-build-${{ steps.go.outputs.go-version }}-${{ matrix.target }}-${{ hashFiles('go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-build-${{ steps.go.outputs.go-version }}-${{ matrix.target }}-
+      - name: Download shared frontend
+        uses: actions/download-artifact@v8
+        with:
+          name: fileneko-frontend.tar
+          path: ${{ runner.temp }}/frontend
+          skip-decompress: true
+      - name: Restore assets and select target
+        env:
+          CI_TARGET: ${{ matrix.target }}
+        run: |
+          tar -xf "$RUNNER_TEMP/frontend/fileneko-frontend.tar" -C frontend/dist
+          test -s frontend/dist/public/index.html
+          go run ./.github/ci config "$CI_TARGET" "$RUNNER_TEMP/goreleaser.yml"
+      - name: Package target binary
         uses: goreleaser/goreleaser-action@v7
         with:
           version: v2.20.2
-          args: release --snapshot --clean --skip=publish,docker,homebrew
-      - name: Verify binaries and packages
-        working-directory: dist
+          args: release --config ${{ runner.temp }}/goreleaser.yml --snapshot --clean --skip=publish,docker,homebrew
+      - name: Verify binary and package
+        env:
+          CI_ARCHIVE: ${{ matrix.archive }}
         run: |
-          sha256sum --check *checksums.txt
-          mkdir -p "$RUNNER_TEMP/fileneko-ci"
-          tar -xzf linux-amd64-fileneko.tar.gz -C "$RUNNER_TEMP/fileneko-ci" fileneko
-          for ci_binary in ../fileneko "$RUNNER_TEMP/fileneko-ci/fileneko"; do
-            test -x "$ci_binary"
-            "$ci_binary" version
-            file "$ci_binary"
-            if readelf -l "$ci_binary" | grep -q INTERP; then
-              echo "Unexpected dynamic interpreter in Linux binary"
-              exit 1
-            fi
-            if readelf -d "$ci_binary" | grep -q NEEDED; then
-              echo "Unexpected shared library dependency in Linux binary"
-              exit 1
-            fi
-          done
-      - name: Upload linux amd64
+          (cd dist && sha256sum --check *checksums.txt)
+          python3 .github/ci/packages.py verify dist "$CI_ARCHIVE"
+      - name: Upload platform package
         uses: ./.github/actions/upload-package
         with:
-          path: dist/linux-amd64-fileneko.tar.gz
-      - name: Upload linux 386
-        uses: ./.github/actions/upload-package
+          path: dist/${{ matrix.archive }}
+
+  checksums:
+    name: Verify Matrix Packages
+    needs: [prepare-builds, build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download platform packages
+        uses: actions/download-artifact@v8
         with:
-          path: dist/linux-386-fileneko.tar.gz
-      - name: Upload linux armv5
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/linux-armv5-fileneko.tar.gz
-      - name: Upload linux armv6
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/linux-armv6-fileneko.tar.gz
-      - name: Upload linux armv7
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/linux-armv7-fileneko.tar.gz
-      - name: Upload linux arm64
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/linux-arm64-fileneko.tar.gz
-      - name: Upload linux riscv64
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/linux-riscv64-fileneko.tar.gz
-      - name: Upload windows amd64
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/windows-amd64-fileneko.zip
-      - name: Upload windows 386
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/windows-386-fileneko.zip
-      - name: Upload windows arm64
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/windows-arm64-fileneko.zip
-      - name: Upload darwin amd64
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/darwin-amd64-fileneko.tar.gz
-      - name: Upload darwin arm64
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/darwin-arm64-fileneko.tar.gz
-      - name: Upload freebsd amd64
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/freebsd-amd64-fileneko.tar.gz
-      - name: Upload freebsd 386
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/freebsd-386-fileneko.tar.gz
-      - name: Upload freebsd arm64
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/freebsd-arm64-fileneko.tar.gz
-      - name: Upload openbsd amd64
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/openbsd-amd64-fileneko.tar.gz
-      - name: Upload openbsd 386
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/openbsd-386-fileneko.tar.gz
-      - name: Upload openbsd armv5
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/openbsd-armv5-fileneko.tar.gz
-      - name: Upload openbsd armv6
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/openbsd-armv6-fileneko.tar.gz
-      - name: Upload openbsd armv7
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/openbsd-armv7-fileneko.tar.gz
-      - name: Upload openbsd arm64
-        uses: ./.github/actions/upload-package
-        with:
-          path: dist/openbsd-arm64-fileneko.tar.gz
+          pattern: "*-fileneko.*"
+          path: dist
+          merge-multiple: true
+          skip-decompress: true
+      - name: Verify complete target set and calculate checksums
+        env:
+          CI_BUILD_MATRIX: ${{ needs.prepare-builds.outputs.matrix }}
+        run: python3 .github/ci/packages.py checksums dist "$CI_BUILD_MATRIX"
       - name: Upload package checksums
         uses: ./.github/actions/upload-package
         with:
-          path: dist/*checksums.txt
+          path: dist/fileneko_checksums.txt
 
   release:
     name: Release
-    needs: ["lint-frontend", "test-frontend", "lint-backend", "test", "build"]
+    needs: ["lint-frontend", "test-frontend", "lint-backend", "test", "prepare-builds", "build", "checksums"]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
     permissions:
@@ -220,22 +223,19 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-go@v6
         with:
-          go-version: '1.26'
-      - uses: pnpm/action-setup@v6
+          go-version: ${{ needs.prepare-builds.outputs.go-version }}
+      - name: Download shared frontend
+        uses: actions/download-artifact@v8
         with:
-          package_json_file: "frontend/package.json"
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "24.x"
-          cache: "pnpm"
-          cache-dependency-path: "frontend/pnpm-lock.yaml"
+          name: fileneko-frontend.tar
+          path: ${{ runner.temp }}/frontend
+          skip-decompress: true
+      - name: Restore frontend assets
+        run: tar -xf "$RUNNER_TEMP/frontend/fileneko-frontend.tar" -C frontend/dist
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
-      - name: Install Task
-        uses: go-task/setup-task@v2
-      - run: task build:frontend
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v4
         with:
@@ -249,6 +249,3 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-
