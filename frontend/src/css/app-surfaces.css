@@ -662,15 +662,6 @@ button.button:disabled,
   outline: 2px dashed var(--pink-dark);
   outline-offset: 3px;
 }
-#login .project-legal,
-.error-page--standalone > .project-legal {
-  align-items: center;
-  text-align: center;
-}
-.error-page--standalone > .project-legal {
-  margin-top: 24px;
-}
-
 /* Standalone errors have no sidebar; embedded errors stay inside their host. */
 .error-page--standalone {
   box-sizing: border-box;

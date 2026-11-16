@@ -16,14 +16,12 @@
         </router-link>
       </template>
     </status-card>
-    <project-credits v-if="showHeader" />
   </div>
 </template>
 
 <script setup lang="ts">
 import HeaderBar from "@/components/header/HeaderBar.vue";
 import StatusCard from "@/components/StatusCard.vue";
-import ProjectCredits from "@/components/ProjectCredits.vue";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 

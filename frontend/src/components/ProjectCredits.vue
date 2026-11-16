@@ -1,5 +1,5 @@
 <template>
-  <span class="project-legal">
+  <span v-if="showCredits" class="project-legal">
     <span>© 2026 Chocola-X</span>
     <span class="project-legal-links">
       <a :href="sourceURL" target="_blank" rel="noopener noreferrer">{{
@@ -17,8 +17,20 @@
 </template>
 
 <script setup lang="ts">
-import { sourceURL } from "@/utils/constants";
+import { sourceURL, noAuth } from "@/utils/constants";
+import { useAuthStore } from "@/stores/auth";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 
 const { t } = useI18n({});
+const authStore = useAuthStore();
+const route = useRoute();
+
+const showCredits = computed(
+  () =>
+    !noAuth &&
+    authStore.isLoggedIn &&
+    route.matched.some((record) => record.meta.requiresAuth)
+);
 </script>
