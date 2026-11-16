@@ -14,7 +14,15 @@ const plugins = [
     // defaults already drop IE support
     targets: ["defaults"],
   }),
-  compression({ include: /\.js$/, deleteOriginalAssets: false }),
+  // The Go static handler serves .js.gz directly or decompresses it for clients
+  // without gzip support. Embed one copy instead of raw JS + gzip + Brotli.
+  compression({
+    include: /\.js$/,
+    algorithms: ["gzip"],
+    deleteOriginalAssets: true,
+    // The handler requires a gzip file even for tiny modules.
+    skipIfLargerOrEqual: false,
+  }),
 ];
 
 const resolve = {

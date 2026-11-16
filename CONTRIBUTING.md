@@ -40,6 +40,14 @@ configuration paths still work. Update service definitions or scripts that
 refer to the old executable name; you do not need to recreate the database.
 Container images retain `/bin/filebrowser` as a compatibility symlink.
 
+The frontend build stores JavaScript as gzip files only. The Go static handler
+serves those files directly to gzip-capable clients and decompresses them for
+other clients, using the same `.js` URLs in both cases. Uncompressed JavaScript
+and Brotli copies are unnecessary in the embedded filesystem and substantially
+increase executable size. Compression must include even tiny JavaScript modules;
+the handler expects a `.js.gz` counterpart for every JavaScript URL. Local fonts,
+editor resources and both modern and legacy browser bundles remain included.
+
 ## CI builds and downloads
 
 Every branch/tag push and pull request runs the CI checks. You can also start
