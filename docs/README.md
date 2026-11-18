@@ -1,50 +1,23 @@
-<p align="center">
-  <img src="../branding/banner.png" width="550"/>
-</p>
+# FileNeko documentation
 
-> [!WARNING]
->
-> FileNeko is based on File Browser, whose upstream repository was archived on 2026-09-01. See the [local security audit](security-audit-2026-11-15.md) for fixes in this fork and the [README](../README.md#security) for deployment guidance.
+FileNeko is a self-hosted browser-based file manager and an independently maintained personal fork of the archived [File Browser](https://github.com/filebrowser/filebrowser) project. For the project overview and available downloads, see the [repository README](../README.md).
 
-FileNeko provides a file managing interface within a specified directory and it can be used to upload, delete, preview and edit your files. It is a **create-your-own-cloud**-kind of software where you can just install it on your server, direct it to a path and access your files through a nice web interface.
+## User guides
 
-![Preview](static/example.gif)
-
-## Contents
-
-- [Installation](installation.md)
-- [Customization](customization.md)
+- [Installation and first run](installation.md) — binaries, CI artifacts and initial login
+- [Deployment](deployment.md) — access restrictions, reverse proxy and login protection
+- [Customization](customization.md) and [CSS theme API](theme-api.md)
 - [Authentication](authentication.md)
 - [WebDAV](webdav.md)
-- [Command Execution](command-execution.md)
-- [Deployment](deployment.md)
+- [Command execution](command-execution.md) — disabled by default; security considerations
 - [Troubleshooting](troubleshooting.md)
-- [Command Line Usage](cli/fileneko.md)
+- [Command-line reference](cli/fileneko.md)
 
-Project-level documents live in the repository root: [README](../README.md), [Building FileNeko](../CONTRIBUTING.md), [Security Policy](../SECURITY.md), [Code of Conduct](../CODE-OF-CONDUCT.md), [Changelog](../CHANGELOG.md) [License](../LICENSE) and [licensing details](licensing.md).
+## Project information
 
-## Features
+- [Building and contributing](../CONTRIBUTING.md)
+- [Security policy](../SECURITY.md) and [security audit](security-audit-2026-11-15.md)
+- [Licensing and attribution](licensing.md)
+- [Changelog](../CHANGELOG.md)
 
-- **Easy Login System**
-
-  ![Login screen](static/1.jpg)
-
-- **Sleek Interface**
-
-  ![File listing](static/2.jpg)
-
-- **User Management**
-
-  ![User management](static/3.jpg)
-
-- **File Editing**
-
-  ![File editor](static/4.jpg)
-
-- **Custom Commands**
-
-  ![Command runner](static/5.jpg)
-
-- **Customization**
-
-  ![Customization settings](static/6.jpg)
+**Release status:** FileNeko does not currently publish official Docker images. The repository contains inherited Docker-related configuration, but the recommended install paths are FileNeko executable archives and building from source. The upstream File Browser images do not include this fork.

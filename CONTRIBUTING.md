@@ -1,203 +1,91 @@
-# Building FileNeko
+# Building and contributing to FileNeko
 
-FileNeko is a fork of the archived File Browser project. This document describes building and developing FileNeko from source.
+FileNeko is an independently maintained personal fork of the archived File Browser project. Contributions are welcome on a best-effort basis. FileNeko changes are distributed under AGPL-3.0-only, while original copyright and third-party notices are preserved; see [licensing details](docs/licensing.md).
 
-FileNeko is a personal project maintained by Chocola-X. Contributions are made
-under the project's AGPL-3.0-only terms while preserving upstream and third-party
-notices. See [licensing details](docs/licensing.md). Build scripts and source
-needed to reproduce a distributed version are part of its corresponding source.
+## Project and prerequisites
 
-## Project Structure
+The backend is written in Go; the frontend in Vue.js under `frontend/`. Build tools include a suitable Go toolchain, Node.js, pnpm and [Task](https://taskfile.dev/). Check the versions required by `go.mod`, `frontend/package.json` and the current CI before building.
 
-The backend side of the application is written in [Go](https://golang.org/), while the frontend (located on a subdirectory of the same name) is written in [Vue.js](https://vuejs.org/). Due to the tight coupling required by some features, basic knowledge of both Go and Vue.js is recommended.
-
-* Learn Go: [https://github.com/golang/go/wiki/Learn](https://github.com/golang/go/wiki/Learn)
-* Learn Vue.js: [https://vuejs.org/guide/introduction.html](https://vuejs.org/guide/introduction.html)
-
-We encourage you to use git to manage your fork. To clone the main repository, just run:
-
-```bash
-git clone https://github.com/Chocola-X/FileNeko
-```
-
-We use [Taskfile](https://taskfile.dev/) to manage the different processes (building, releasing, etc) automatically.
-
-## Build
-
-You can fully build the project in order to produce a binary by running:
-
-```bash
+```sh
+git clone https://github.com/Chocola-X/FileNeko.git
+cd FileNeko
 task build
 ```
 
-The backend task disables CGO and uses baseline CPU targets (`GOAMD64=v1`,
-`GOARM64=v8.0`). On Linux this produces a static executable without a glibc or
-musl dependency. Running a plain `go build` follows your environment instead.
+`task build` builds the frontend and then the backend. The backend build disables CGO and targets baseline AMD64 (`GOAMD64=v1`) and ARM64 (`GOARM64=v8.0`). Linux binaries produced this way do not depend on glibc or musl, although they still depend on a suitable Linux kernel.
 
-The executable is now `fileneko` (`fileneko.exe` on Windows). Existing flags,
-`FB_` environment variables, `filebrowser.db` databases and `.filebrowser.*`
-configuration paths still work. Update service definitions or scripts that
-refer to the old executable name; you do not need to recreate the database.
-Container images retain `/bin/filebrowser` as a compatibility symlink.
+The executable is named `fileneko` (`fileneko.exe` on Windows). The existing `FB_` environment variables, `filebrowser.db`, `.filebrowser.*` configuration conventions and Go module imports retain upstream identifiers for compatibility. Do not rename these identifiers merely for branding.
 
-The frontend build stores JavaScript as gzip files only. The Go static handler
-serves those files directly to gzip-capable clients and decompresses them for
-other clients, using the same `.js` URLs in both cases. Uncompressed JavaScript
-and Brotli copies are unnecessary in the embedded filesystem and substantially
-increase executable size. Compression must include even tiny JavaScript modules;
-the handler expects a `.js.gz` counterpart for every JavaScript URL. Local fonts,
-editor resources and both modern and legacy browser bundles remain included.
+The frontend build stores compressed JavaScript resources for the Go embedded HTTP handler. Use `task build` for a distributable executable instead of assuming that a plain `go build` will regenerate frontend resources.
 
-## CI builds and downloads
+## CI artifacts and releases
 
-Every branch/tag push and pull request runs the CI checks. You can also start
-**Continuous Integration** manually from the repository's **Actions** page.
-The **Build Shared Frontend** job compiles the frontend once. **Build and Package**
-then runs a matrix with one independent job per OS/architecture (currently 21),
-sharing that frontend and cached Go modules. Each target has its own compilation
-cache. Targets are derived from `.goreleaser.yml` and the Go toolchain's supported
-ports; ARM v5/v6/v7 remain separate targets. A failed target does not cancel the
-other matrix jobs.
+The **Continuous Integration** GitHub Actions workflow builds a shared frontend and packages platform-specific binaries through a multi-platform GoReleaser snapshot matrix (currently 21 targets). The resulting `linux-amd64-fileneko.tar.gz` / `windows-amd64-fileneko.zip` style archives are published under the successful workflow run's **Artifacts** section, with per-platform checksums. Artifacts are retained for a limited time (currently documented as 30 days); GitHub may require sign-in for download.
 
-Each job uses the release GoReleaser configuration narrowed to its target,
-in snapshot mode, and uploads the original `linux-amd64-fileneko.tar.gz` /
-`windows-amd64-fileneko.zip` style packages as individual artifacts. Each
-platform archive is listed separately by its filename, alongside the checksum
-file, in the completed workflow run's **Artifacts** section for 30 days. Download
-only the platform you need; the original archives are uploaded directly without
-another ZIP wrapper. Each package is checked for its executable, redistribution
-notices, disabled CGO and stripped build flags; Linux packages are also checked
-for dynamic dependencies, and the Linux amd64 executable is run. **Verify Matrix
-Packages** downloads the original archives, requires the complete target set,
-and produces `fileneko_checksums.txt`.
+CI snapshot artifacts are **development builds**, not official releases. Binaries contain the frontend and are checked for packaging and static-build requirements. The exact validation status is the status shown by GitHub Actions for the selected commit.
 
-The intermediate `fileneko-frontend.tar` artifact is also retained for 30 days so
-failed matrix jobs can be rerun with the same assets. Reruns replace same-named
-artifacts. Tag releases reuse the frontend too, while keeping the normal
-GoReleaser release and Docker publication flow. Snapshot builds do not publish
-releases, Docker images or Homebrew changes. The other CI checks must also pass
-before a build is considered validated.
+Release configuration also exists for tagged binary archives published through GitHub Releases. Verify that the corresponding GitHub Actions release workflow is enabled and has succeeded before advertising a release as available.
 
-To check the matrix helper locally, run `go test ./.github/ci` and
-`go run ./.github/ci matrix` from the repository root.
+**Docker status:** FileNeko does not currently build or publish official Docker images. Inherited Dockerfiles and Compose configuration are not supported installation instructions. The GoReleaser configuration in the documentation patch disables Docker publication. Upstream File Browser images are not FileNeko.
 
-The embedded frontend is already included in each executable. Extract the
-appropriate archive; Linux packages preserve executable permissions inside the
-tarball. Node.js and Go are needed to build the application, not to run it.
+The project does not publish upstream Homebrew packages, Docker Hub images or other upstream distribution channels.
+
+For the matrix helper itself, run:
+
+```sh
+go test ./.github/ci
+go run ./.github/ci matrix
+```
 
 ### Older operating systems
 
-- **CentOS 7 x86-64:** the static Linux amd64 build avoids its old glibc 2.17.
-  Its standard 3.10 kernel meets Go's Linux runtime minimum (3.2 for these
-  targets). This is a compatibility target, not a claim of testing on a CentOS 7
-  VM; a container still shares its host's kernel.
-- **Windows 7/8:** unsupported by the current build. Go 1.21 and later require
-  Windows 10 / Windows Server 2016 or newer; disabling CGO does not remove the
-  runtime's Windows API requirements. Go 1.20 was the last release supporting
-  Windows 7, but this project and dependencies such as bbolt and `golang.org/x`
-  require Go 1.25, and the source uses newer standard library APIs. A Windows 7
-  port needs a separate source/dependency/runtime compatibility effort, rather
-  than simply changing the CI Go version.
-- **macOS:** the Go 1.26 builds require macOS 12 or newer.
+- **CentOS 7 x86-64:** static Linux AMD64 builds avoid the old glibc requirement; this is not a claim of successful testing on CentOS 7.
+- **Windows 7/8:** unsupported by the current Go toolchain and project dependencies; a separate port would be needed.
+- **macOS:** check the current Go toolchain's minimum OS requirements; the existing Go 1.26 build targets macOS 12 or newer.
 
-References: [Go minimum requirements](https://go.dev/wiki/MinimumRequirements),
-[Go 1.21 Windows requirements](https://go.dev/doc/go1.21#windows), and
-[Go 1.26 ports](https://go.dev/doc/go1.26#ports).
+See the [Go minimum requirements](https://go.dev/wiki/MinimumRequirements) and [Go ports](https://go.dev/doc/go1.26#ports).
 
 ## Development
 
-For development, there are a few things to have in mind.
-
 ### Frontend
 
-We use [Node.js](https://nodejs.org/en/) on the frontend to manage the build process. Prepare the frontend environment:
-
-```bash
-# From the root of the repo, go to frontend/
+```sh
 cd frontend
-
-# Install the dependencies
 pnpm install
+pnpm run build  # prepare production frontend assets
+pnpm run dev    # run the frontend development server
 ```
 
-If you just want to develop the backend, you can create a static build of the frontend:
-
-```bash
-pnpm run build
-```
-
-If you want to develop the frontend, start a development server which watches for changes:
-
-```bash
-pnpm run dev
-```
-
-Please note that you need to access FileNeko's interface through the development server of the frontend.
+For interactive frontend development, access the application through the frontend development server as described by its output.
 
 ### Backend
 
-First prepare the backend environment by downloading all required dependencies:
-
-```bash
+```sh
 go mod download
-```
-
-You can now build or run FileNeko as any other Go project:
-
-```bash
-# Build
 go build -o fileneko .
-
-# Run
 go run .
 ```
 
-## Documentation
+For an end-user binary with freshly built embedded assets, prefer the `task build` sequence from the repository root.
 
-Documentation lives in [`docs`](docs) as plain Markdown and is no longer built into a site. The command line reference in [`docs/cli`](docs/cli) is generated from the commands themselves:
+## Command-line documentation
 
-```bash
+Project documentation is stored as Markdown under [`docs`](docs). The CLI reference under [`docs/cli`](docs/cli) can be regenerated from the application's commands:
+
+```sh
 task docs:cli:generate
 ```
 
-## Release
+## Creating a release
 
-To make a release, just run:
+The `task release` task regenerates CLI documentation and invokes `commit-and-tag-version` through pnpm. It can create a local version commit and tag; **that is not itself proof that a remote GitHub Release has been published**. Check the tag, push behavior, corresponding workflow and published assets separately. Do not advertise a container release.
 
-```bash
-task release
-```
-
-Version tags publish to `Chocola-X/FileNeko` and the container registry
-`ghcr.io/chocola-x/fileneko`, using the repository token. No upstream Docker Hub
-or Homebrew repository is updated. On the first publication, check package
-visibility in GitHub if anonymous container downloads are intended.
-
-Release archives include both project and upstream license notices. The source
-link embedded in a build points to the full Git commit used by that build; keep
-the corresponding source available as described in [licensing](docs/licensing.md).
+Release archives include the project and upstream notices. The source link embedded into built binaries refers to the corresponding FileNeko commit; keep matching source available under the AGPL terms. See [licensing details](docs/licensing.md).
 
 ## Translations
 
-The Transifex integration stopped on 2026-09-01 and translations submitted there no longer reach this repository. Locale files live in [`frontend/src/i18n`](frontend/src/i18n) and can be edited directly.
+The original Transifex integration is no longer an active translation submission channel for FileNeko. To propose translations, edit the locale files in [`frontend/src/i18n`](frontend/src/i18n) and open a pull request.
 
-## Authentication Provider
+## Authentication providers
 
-To build a new authentication provider, you need to implement the [Auther interface](https://github.com/Chocola-X/FileNeko/blob/master/auth/auth.go), whose method will be called on the login page after the user has submitted their login data.
-
-```go
-// Auther is the authentication interface.
-type Auther interface {
-    // Auth is called to authenticate a request.
-    Auth(r *http.Request, s *users.Storage, root string) (*users.User, error)
-}
-```
-
-After implementing the interface you should:
-
-1. Add it to [`auth` directory](https://github.com/Chocola-X/FileNeko/blob/master/auth).
-2. Add it to the [configuration parser](https://github.com/Chocola-X/FileNeko/blob/master/cmd/config.go) for the CLI.
-3. Add it to the [`authBackend.Get`](https://github.com/Chocola-X/FileNeko/blob/master/storage/bolt/auth.go).
-
-If you need to add more flags, please update the function `addConfigFlags`.
-
+New authentication providers implement the [Auther interface](auth/auth.go), integrate with the CLI configuration parser and the storage authentication backend, and should include focused tests. See `auth/`, `cmd/config.go` and `storage/bolt/auth.go` for the actual current interfaces and call sites.

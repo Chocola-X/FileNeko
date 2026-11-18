@@ -1,46 +1,31 @@
-## Self-Registration (Signup)
+# Deploying FileNeko
 
-File Browser allows you to enable user self-registration (signup). This can be enabled via **Settings → Global Settings**, or with `fileneko config set --signup`. Self-registered users inherit the configured **user defaults**, including the scope.
+FileNeko manages files accessible to its server process. Treat it as a sensitive service rather than a public static-file website. It is a personal project with best-effort maintenance, not a security-audited hosting platform.
 
-> [!WARNING]
->
-> By default, the user scope is the server's root, so a self-registered user could read,
-> modify, and delete every file File Browser serves. To prevent this, either:
->
-> a. Enable `createUserDir` so each user gets their own directory; or
-> b. If users are meant to share files, set the default scope to something other than the root.
+## Recommended baseline
 
-## Fail2ban
+- Run `fileneko` as an unprivileged system user, with access only to intended file directories and its database/configuration.
+- Do not expose the application directly to the public internet. Put it behind a reverse proxy with HTTPS and suitable access restrictions or additional authentication.
+- Keep **command execution disabled** unless you need it and accept the risk; see [Command execution](command-execution.md).
+- Back up your file data, database, and settings before upgrades. Avoid publicly exposing the database or sharing sensitive logs.
+- Review [SECURITY.md](../SECURITY.md) and the [security audit](security-audit-2026-11-15.md). The audit is not a guarantee of safety.
 
-File Browser does not natively support protection against brute force attacks. Therefore, we suggest using something like [fail2ban](https://github.com/fail2ban/fail2ban), which takes care of that by tracking the logs of your File Browser instance. For more information on how fail2ban works, please refer to their [wiki](https://github.com/fail2ban/fail2ban/wiki).
+The repository does **not currently publish official FileNeko Docker images**. Use [standalone executables](installation.md) or a source build; upstream File Browser images are not equivalent.
 
-### Filter Configuration
+## Self-registration
 
-An example filter configuration targeted at matching File Browser's logs.
+Self-registration is configurable under **Settings → Global Settings**, or through `fileneko config set --signup`. Newly registered accounts inherit the configured user defaults and scope. **Review these defaults before enabling signup**: otherwise users may be assigned access broader than intended.
 
-```ini
-[INCLUDES]
-before = common.conf
+FileNeko provides the `createUserDir` option to create a per-user directory. Regardless of that option, confirm the effective default scope, user permissions, and filesystem ownership for your installation. Disable signup if you do not need public registration.
 
-[Definition]
-datepattern = `^%%Y\/%%m\/%%d %%H:%%M:%%S`
-failregex   = `\/api\/login: 403 <HOST> *`
-```
+## Login protection and reverse proxies
 
-### Jail Configuration
+Unlike older File Browser documentation, FileNeko has **built-in temporary login blocking** for failed password attempts, covering web login and WebDAV Basic authentication. The documented defaults are five failures in five minutes followed by a five-minute block. These settings can be administered under **Settings → Global Settings → Fail2Ban / Login Protection**. See [WebDAV](webdav.md#防止密码暴力破解).
 
-An example jail configuration. You should fill it with the path of the logs of File Browser, as well as the port where it is running at.
+By default, the application uses the direct connecting IP address. When operating behind a reverse proxy, configure trusted proxy addresses **carefully** and ensure the proxy overwrites client-supplied forwarding headers. Otherwise users behind a proxy may share a block budget, while trusting arbitrary forwarding headers can make IP-based limits ineffective. Refer to [reverse-proxy.md](reverse-proxy.md) for the current Nginx example.
 
-```ini
-[filebrowser]
+The built-in limiter is process-local and does not replace proxy-level protection or appropriate authentication. Multiple application instances do not automatically share the in-memory block list.
 
-enabled = true
-port = [your_port]
-filter = filebrowser
-logpath = [your_log_path]
-maxretry = 10
-bantime = 10m
-findtime = 10m
-banaction = iptables-allports
-banaction_allports = iptables-allports
-```
+### Optional external fail2ban
+
+You can still use an external fail2ban installation for additional host-level filtering, but it is **not a prerequisite** for FileNeko's built-in login protection. If you configure it, verify log formats and source IP handling on your actual deployment rather than copying an older upstream File Browser regular expression untested.
