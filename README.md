@@ -8,6 +8,23 @@
 
 FileNeko is a personal fork of [File Browser](https://github.com/filebrowser/filebrowser), maintained by [Chocola-X](https://github.com/Chocola-X). It combines File Browser's web-based file management with a bright, magical-library-inspired interface, customizable CSS themes, WebDAV support and additional security work.
 
+<img width="1920" height="1080" alt="demo1" src="https://github.com/user-attachments/assets/d1ad0f63-b51f-4d95-a334-b5a7ed721c3c" />
+
+<img width="1920" height="1080" alt="demo2" src="https://github.com/user-attachments/assets/97f91a0b-7d4a-4e50-991f-c74a4fd6fd8c" />
+
+<img width="1920" height="1080" alt="demo3" src="https://github.com/user-attachments/assets/1b2754de-bb32-4032-8c84-920530b297a5" />
+
+<img width="1920" height="1080" alt="demo4" src="https://github.com/user-attachments/assets/4fde99ba-5dfe-4896-96ad-caf65a4aced3" />
+
+<img width="1920" height="1080" alt="demo5" src="https://github.com/user-attachments/assets/957d72b8-b2c7-4d6d-80f5-a99fb2c583d3" />
+
+<img width="1920" height="1080" alt="demo6" src="https://github.com/user-attachments/assets/d27a391a-9845-47ca-8b54-985d2ddef465" />
+
+<img width="1920" height="1080" alt="demo7" src="https://github.com/user-attachments/assets/35741353-cc36-46cd-a25e-be77c73541e6" />
+
+<img width="1920" height="1080" alt="demo8" src="https://github.com/user-attachments/assets/8ec6b2e4-1134-4a8e-9605-a48b444e4c4e" />
+
+
 The upstream File Browser repository was archived on September 1, 2026. FileNeko is independently maintained; upstream binaries and container images **do not** contain FileNeko's changes.
 
 ## Features
