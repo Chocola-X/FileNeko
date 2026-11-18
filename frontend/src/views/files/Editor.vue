@@ -1,5 +1,5 @@
 <template>
-  <div id="editor-container">
+  <div id="editor-container" class="fn-editor">
     <header-bar>
       <action icon="close" :label="t('buttons.close')" @action="close()" />
       <title>{{ fileStore.req?.name ?? "" }}</title>

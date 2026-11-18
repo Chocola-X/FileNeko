@@ -2,9 +2,9 @@
   <div
     v-show="active"
     @click="closeHovers"
-    class="overlay theme-backdrop"
+    class="overlay theme-backdrop fn-backdrop"
   ></div>
-  <nav id="sidebar" :class="{ active }">
+  <nav id="sidebar" class="fn-sidebar" :class="{ active }">
     <div class="sidebar-content">
       <!-- File navigation -->
       <div class="sidebar-badge-banner">
@@ -108,7 +108,10 @@
       </template>
 
       <!-- Bottom Storage Quota Card (Authentic refer2.html student ID style) -->
-      <div class="quota-card" v-if="isFiles && !disableUsedPercentage">
+      <div
+        class="quota-card fn-storage"
+        v-if="isFiles && !disableUsedPercentage"
+      >
         <div class="quota-header">
           <span class="quota-title">
             <i class="material-icons">cloud_queue</i>

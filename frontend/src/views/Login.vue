@@ -1,11 +1,11 @@
 <template>
-  <div id="login" :class="{ recaptcha: recaptcha }">
-    <form @submit="submit">
+  <div id="login" class="fn-page--login" :class="{ recaptcha: recaptcha }">
+    <form class="fn-login-panel" @submit="submit">
       <div class="login-pass-heading" aria-hidden="true">
         <span class="login-pass-tag">{{ t("interface.signIn") }}</span>
         <span>MAGIC LIBRARY <b>✦</b></span>
       </div>
-      <img :src="logoURL" :alt="name" />
+      <img class="fn-logo" :src="logoURL" :alt="name" />
       <h1><brand-name /></h1>
       <p class="login-pass-subtitle">
         {{ t("login.submit") }}

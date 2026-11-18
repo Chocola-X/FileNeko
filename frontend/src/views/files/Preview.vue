@@ -1,6 +1,7 @@
 <template>
   <div
     id="previewer"
+    class="fn-preview"
     @touchmove.prevent.stop
     @wheel.prevent.stop
     @mousemove="toggleNavigation"

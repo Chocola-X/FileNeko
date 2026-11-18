@@ -1,5 +1,8 @@
 <template>
-  <div class="error-page" :class="{ 'error-page--standalone': showHeader }">
+  <div
+    class="error-page fn-error"
+    :class="{ 'error-page--standalone': showHeader }"
+  >
     <header-bar v-if="showHeader" showLogo />
     <status-card
       class="error-card"

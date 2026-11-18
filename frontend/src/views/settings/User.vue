@@ -2,7 +2,7 @@
   <errors v-if="error" :errorCode="error.status" />
   <div class="row" v-else-if="!layoutStore.loading">
     <div class="column">
-      <form @submit="save" class="card">
+      <form @submit="save" class="fn-settings-card card">
         <div class="card-title">
           <settings-card-title v-if="user?.id === 0" icon="person_add">{{
             $t("settings.newUser")

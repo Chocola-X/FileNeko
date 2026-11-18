@@ -1,12 +1,18 @@
 <template>
   <div
     id="modal-background"
-    class="theme-backdrop"
+    class="theme-backdrop fn-backdrop"
     :data-prompt="prompt"
     :data-tone="tone"
     @click="backgroundClick"
   >
-    <div ref="modalContainer" role="dialog" aria-modal="true" tabindex="-1">
+    <div
+      ref="modalContainer"
+      class="fn-dialog"
+      role="dialog"
+      aria-modal="true"
+      tabindex="-1"
+    >
       <slot></slot>
     </div>
   </div>

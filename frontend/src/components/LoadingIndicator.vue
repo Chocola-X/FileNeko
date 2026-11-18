@@ -1,6 +1,6 @@
 <template>
   <div class="loading-state delayed" role="status" aria-live="polite">
-    <div class="neko-loader">
+    <div class="neko-loader fn-loader">
       <div
         class="neko-loader__art"
         aria-hidden="true"

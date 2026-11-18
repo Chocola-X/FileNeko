@@ -1,5 +1,5 @@
-/* Copy this file to branding.files/custom.css and provide the referenced img
-   assets. Relative paths also work when FileNeko uses a base URL. */
+/* FileNeko Theme API v1. Copy to the brand directory as custom.css, alongside
+   the referenced img assets. Relative paths also work with a base URL. */
 @font-face {
   font-family: "PersonalCute";
   src: url("./img/JCuYuan.woff2") format("woff2");
@@ -8,35 +8,35 @@
 :root {
   --font-ui:
     "PersonalCute", "Fredoka", "CuteRound", "Microsoft YaHei", system-ui, sans-serif;
-  --page-background-image: url("./img/background.jpg");
-  --login-background-image: url("./img/login.jpg");
+  --page-background-size: cover;
+  --page-background-position: center;
+  --page-background-repeat: no-repeat;
+  --login-background-size: cover;
+  --login-background-position: center;
+  --login-background-repeat: no-repeat;
   --personal-panel-background: rgb(255 255 255 / 72%);
   --personal-decoration-opacity: 0.35;
   --file-card-background: var(--personal-panel-background);
   --file-card-inner-background: transparent;
   --login-panel-background: var(--personal-panel-background);
   --sidebar-background: var(--personal-panel-background);
+  --dialog-background: var(--personal-panel-background);
+  --settings-card-background: var(--personal-panel-background);
   --login-frame-opacity: var(--personal-decoration-opacity);
   --sidebar-frame-opacity: var(--personal-decoration-opacity);
   --settings-frame-opacity: var(--personal-decoration-opacity);
 }
-body {
-  background: var(--page-background-image) center / cover no-repeat fixed;
+/* Keep relative URLs in declarations in this file so they resolve here. */
+.fn-page-background {
+  background-image: url("./img/background.jpg");
 }
-#login {
-  background: var(--login-background-image) center / cover no-repeat;
+.fn-page--login {
+  background-image: url("./img/login.jpg");
 }
-#modal-background .card.floating,
-.dashboard .card {
-  background: var(--personal-panel-background);
+.fn-file-card {
+  --file-card-frame-color: rgb(78 141 245 / 35%);
 }
-#listing .card-inner-dashed {
-  border-color: color-mix(in srgb, var(--card-main) 35%, transparent);
-}
-#listing .card-corner-slash,
-#listing .cat-postmark-svg,
-#listing .dot-matrix,
-#listing .css-barcode {
-  opacity: var(--personal-decoration-opacity);
+.fn-page--login .fn-logo {
+  border-radius: 20px;
 }
 /* Keep text, images, selection markers and action buttons fully opaque. */

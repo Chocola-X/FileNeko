@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div class="dashboard fn-page--settings">
     <header-bar showMenu showLogo />
 
     <div class="settings-heading">

@@ -1,5 +1,5 @@
 <template>
-  <div class="card-title prompt-header">
+  <div class="card-title prompt-header fn-dialog-title">
     <i class="material-icons prompt-icon" aria-hidden="true">{{ icon }}</i>
     <h2><slot /></h2>
     <button

@@ -66,27 +66,18 @@ branding/
 
 `img/logo.svg` 同时用于登录页和登录后的左上角 Logo。CSS 中使用 `url("./img/background.jpg")` 这样的相对路径，在配置 `/library` 等 base URL 后也能正确加载。自定义字体请放在本地，通过 `@font-face` 引入，并保留 `--font-ui` 的系统字体回落；不要覆盖 Material Icons 的图标字体。旧版主题中依赖组件哈希属性、旧 DOM 结构或固定布局的选择器需要适配，不能直接整份照搬。
 
-优先通过 `:root` 中的变量配置外观，未设置的变量保留默认效果：
-
-| 变量 | 用途 |
-| --- | --- |
-| `--font-ui`、`--font-heading`、`--font-mono`、`--font-signature` | 界面、标题、代码、英文后缀装饰字体 |
-| `--page-background-color`、`--page-background-image`、`--page-background-size` | 文件管理界面的页面背景 |
-| `--login-background-image`、`--login-background-size` | 登录页背景 |
-| `--login-panel-background`、`--sidebar-background` | 登录卡片、侧边栏背景，支持半透明颜色 |
-| `--file-card-background`、`--file-card-inner-background` | 文件卡片外层和内层背景 |
-| `--file-card-frame-color` | 文件卡片内层装饰边框颜色 |
-| `--login-frame-opacity`、`--sidebar-frame-opacity`、`--settings-frame-opacity` | 登录、侧边栏、设置卡片装饰框透明度 |
+优先使用 [CSS 主题接口 v1](theme-api.md) 中的变量和固定类名。未设置的变量
+保留默认效果。主题接口列出了受兼容承诺保护的名称；普通内部选择器仍可按需覆盖。
 
 卡片有外层背景和内层装饰面，设置透明效果时需要同时调整两层。不要对整张卡片设置 `opacity`，否则文字、图片和按钮也会变透明。文件卡片的 `--card-main` 等配色变量在各卡片上定义；引用这些变量的 `color-mix()` 应写在卡片规则中，避免在 `:root` 提前解析。
 
-更细的调整可以在 `custom.css` 中使用普通选择器。它在内置样式之后加载，同等优先级时自定义规则生效；遇到更具体的默认选择器时，使用对应选择器或上述变量即可。示例也演示了设置卡片、弹窗和卡片装饰的普通样式覆盖。数字输入组件的适配规则以 `#app` 为作用域，覆盖它时也需要保留此作用域。
+更细的调整可以在 `custom.css` 中使用普通选择器。它在内置样式之后加载，同等优先级时自定义规则生效；遇到更具体的默认选择器时，优先使用主题变量。数字输入组件的适配规则以 `#app` 为作用域，其库内部类名不属于主题接口。
 
 修改品牌资源不需要重新编译程序；浏览器可能缓存资源一天，调试时禁用缓存或强制刷新。首次设置或变更品牌资源目录后，重新加载页面；通过 CLI 修改数据库配置前请先停止使用该数据库的服务。
 
 ### 内置样式维护与验证
 
-样式层顺序为 `vendor → base → components`，在 HTML 的最前部声明，避免 Vite 的组件 CSS 输出顺序改变层顺序。库样式放在 `vendor`，旧布局与基础控件放在 `base`，Vue 组件样式放在 `components`。三个主题文件保持未分层的普通规则，用于适配运行时插入的第三方样式；品牌 `custom.css` 最后加载，也应使用未分层的普通规则。
+样式层顺序为 `vendor → base → components`，在 HTML 的最前部声明，避免 Vite 的组件 CSS 输出顺序改变层顺序。库样式放在 `vendor`，旧布局与基础控件放在 `base`，Vue 组件样式放在 `components`。主题文件保持未分层的普通规则，用于适配运行时插入的第三方样式；品牌 `custom.css` 最后加载，也应使用未分层的普通规则。
 
 新增样式应修改负责该元素的规则或主题变量，不要追加 `!important`。文件列表列宽由 CSS Grid 决定，不再由 JavaScript 修改样式表。`pnpm run test` 会检查项目自有 CSS、Vue 组件和内联样式中没有强制优先级，并验证 HTML 中的层声明位置。第三方依赖的内部样式不在清理范围。
 

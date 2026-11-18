@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="column">
-      <form class="card" @submit="updateSettings">
+      <form class="fn-settings-card card" @submit="updateSettings">
         <div class="card-title">
           <settings-card-title icon="tune">{{
             t("settings.profileSettings")
@@ -56,7 +56,7 @@
 
     <div v-if="!noAuth" class="column">
       <form
-        class="card"
+        class="fn-settings-card card"
         v-if="!authStore.user?.lockPassword"
         @submit="updatePassword"
       >

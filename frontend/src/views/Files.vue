@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="fn-page--files">
     <header-bar
       v-if="error || fileStore.req?.type === undefined"
       showMenu

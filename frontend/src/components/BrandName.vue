@@ -1,6 +1,6 @@
 <template>
   <span
-    class="brand-wordmark"
+    class="brand-wordmark fn-wordmark"
     :class="{ 'brand-wordmark--default': name === 'FileNeko' }"
   >
     <template v-if="name === 'FileNeko'"

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="item fb-sticker-item"
+    class="item fb-sticker-item fn-file-card"
     role="button"
     tabindex="0"
     :draggable="isDraggable"
@@ -35,7 +35,7 @@
     </div>
 
     <!-- Inner Dashed Frame (Exact Student ID / Polaroid Sticker Card Layout) -->
-    <div class="card-inner-dashed">
+    <div class="card-inner-dashed fn-file-card__surface">
       <!-- Image Preview Banner (when image in mosaic/gallery) -->
       <div
         v-if="
@@ -204,7 +204,9 @@
       <!-- Barcode + Signature Row -->
       <div class="card-barcode-row">
         <div class="css-barcode"></div>
-        <span class="font-signature" lang="en">{{ signatureText }}</span>
+        <span class="font-signature fn-file-card__suffix" lang="en">{{
+          signatureText
+        }}</span>
       </div>
     </div>
   </div>

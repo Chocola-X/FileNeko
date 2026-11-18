@@ -1,5 +1,5 @@
 <template>
-  <header @keydown.esc.stop="layoutStore.closeHovers">
+  <header class="fn-header" @keydown.esc.stop="layoutStore.closeHovers">
     <div
       v-if="showLogo"
       class="header-brand-wrap"
@@ -7,7 +7,7 @@
       role="button"
       tabindex="0"
     >
-      <img :src="logoURL" :alt="name" class="header-logo-img" />
+      <img :src="logoURL" :alt="name" class="header-logo-img fn-logo" />
       <div class="header-brand-text">
         <div class="header-brand-main">
           <span class="header-brand-title"><brand-name /></span>
@@ -50,7 +50,7 @@
     />
 
     <div
-      class="overlay theme-backdrop"
+      class="overlay theme-backdrop fn-backdrop"
       v-show="layoutStore.currentPromptName == 'more'"
       @click="layoutStore.closeHovers"
     />

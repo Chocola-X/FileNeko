@@ -11,6 +11,10 @@
 body {
   font-family: var(--font-ui);
   color: var(--ink-navy);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+body:where(.fn-page-background) {
   background-color: var(--page-background-color, #dff2ff);
   /* Anime Sky & Halftone Dot Background from refer/refer2.html */
   background-image: var(
@@ -20,13 +24,9 @@ body {
     linear-gradient(165deg, #aedbff 0%, #dff1ff 38%, #f6e6ff 74%, #fff9e6 100%)
   );
   background-size: var(--page-background-size, 28px 28px, 28px 28px, 100% 100%);
-  background-position:
-    0 0,
-    14px 14px,
-    0 0;
+  background-position: var(--page-background-position, 0 0, 14px 14px, 0 0);
+  background-repeat: var(--page-background-repeat, repeat);
   background-attachment: fixed;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
 }
 
 /* Candy-colored bottom accent ribbon inspired by refer/refer2.html */
@@ -80,7 +80,7 @@ input[type="radio"] {
    2. HEADER BAR & STICKER NAVIGATION CONTROLS
    ---------------------------------------------------------------------------- */
 header {
-  background: #ffffff;
+  background: var(--header-background, #ffffff);
   border-bottom: 3.5px solid var(--cobalt-dark);
   box-shadow: 0 4px 0px var(--cobalt-light);
   padding: 0 1.2em;
@@ -1398,6 +1398,9 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10000;
+}
+.fn-page--login {
   /* Anime Sky Full Background */
   background: var(
     --login-background-image,
@@ -1411,11 +1414,8 @@ main {
     32px 32px,
     100% 100%
   );
-  background-position:
-    0 0,
-    16px 16px,
-    0 0;
-  z-index: 10000;
+  background-position: var(--login-background-position, 0 0, 16px 16px, 0 0);
+  background-repeat: var(--login-background-repeat, repeat);
 }
 
 #login form {
@@ -2272,6 +2272,9 @@ header .action:focus-visible {
 }
 .dashboard .column {
   min-width: 0;
+}
+.fn-settings-card {
+  background: var(--settings-card-background, #ffffff);
 }
 .dashboard .card {
   --panel-main: var(--cobalt-main);

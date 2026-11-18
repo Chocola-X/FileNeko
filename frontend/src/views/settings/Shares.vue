@@ -5,7 +5,7 @@
     v-else-if="!layoutStore.loading"
   >
     <div class="column">
-      <div class="card share-manager management-card">
+      <div class="fn-settings-card card share-manager management-card">
         <div class="card-title">
           <settings-card-title icon="share">{{
             t("settings.shareManagement")

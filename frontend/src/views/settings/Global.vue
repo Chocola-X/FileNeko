@@ -2,7 +2,7 @@
   <errors v-if="error" :errorCode="error.status" />
   <div class="row" v-else-if="!layoutStore.loading && settings !== null">
     <div class="column">
-      <form class="card" @submit.prevent="save">
+      <form class="fn-settings-card card" @submit.prevent="save">
         <div class="card-title">
           <settings-card-title icon="settings">{{
             t("settings.globalSettings")
@@ -255,7 +255,7 @@
     </div>
 
     <div class="column">
-      <form class="card" @submit.prevent="save">
+      <form class="fn-settings-card card" @submit.prevent="save">
         <div class="card-title">
           <settings-card-title icon="assignment_ind">{{
             t("settings.userDefaults")
@@ -283,7 +283,11 @@
     </div>
 
     <div class="column">
-      <form v-if="enableExec" class="card" @submit.prevent="save">
+      <form
+        v-if="enableExec"
+        class="fn-settings-card card"
+        @submit.prevent="save"
+      >
         <div class="card-title">
           <settings-card-title icon="terminal">{{
             t("settings.commandRunner")

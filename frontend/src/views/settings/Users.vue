@@ -2,7 +2,7 @@
   <errors v-if="error" :errorCode="error.status" />
   <div class="row management-page" v-else-if="!layoutStore.loading">
     <div class="column">
-      <div class="card management-card users-manager">
+      <div class="fn-settings-card card management-card users-manager">
         <div class="card-title">
           <settings-card-title icon="groups">{{
             t("settings.users")

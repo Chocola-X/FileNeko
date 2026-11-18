@@ -1,6 +1,6 @@
 <template>
   <div
-    class="file-listing public-share"
+    class="file-listing public-share fn-page--share"
     :style="{
       '--selection-dock-space': dockHeight ? `${dockHeight + 32}px` : '0px',
     }"
@@ -41,7 +41,7 @@
       <form
         v-if="error.status === 401"
         id="password"
-        class="public-share-card share-password"
+        class="public-share-card fn-share-card share-password"
         data-tone="purple"
         @submit.prevent="fetchData"
       >
@@ -84,7 +84,7 @@
       </div>
       <div class="public-share-layout" :class="{ 'is-single': !req.isDir }">
         <section
-          class="public-share-card share-summary"
+          class="public-share-card fn-share-card share-summary"
           :data-tone="req.isDir ? 'cobalt' : 'purple'"
         >
           <div class="public-share-title">
@@ -214,7 +214,7 @@
         <section
           v-if="req.isDir"
           id="shareList"
-          class="public-share-card share-files"
+          class="public-share-card fn-share-card share-files"
           data-tone="cobalt"
         >
           <div class="public-share-title">

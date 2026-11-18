@@ -147,7 +147,7 @@ header .action[data-icon="file_upload"] {
 /* Reference-style colored title strips, dashed stationery edges and hard shadows. */
 #modal-background .card.floating {
   border-color: var(--accent-dark);
-  background: white;
+  background: var(--dialog-background, white);
 }
 #modal-background .card-title {
   position: relative;

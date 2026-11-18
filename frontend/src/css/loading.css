@@ -7,6 +7,10 @@
   place-items: center;
   box-sizing: border-box;
   padding: 24px;
+  transition: opacity 0.15s ease;
+}
+
+.fn-page-background:where(#loading) {
   background-color: var(--page-background-color, #dff2ff);
   background-image: var(
     --page-background-image,
@@ -15,11 +19,8 @@
     linear-gradient(165deg, #aedbff, #dff1ff 38%, #f6e6ff 74%, #fff9e6)
   );
   background-size: var(--page-background-size, 28px 28px, 28px 28px, 100% 100%);
-  background-position:
-    0 0,
-    14px 14px,
-    0 0;
-  transition: opacity 0.15s ease;
+  background-position: var(--page-background-position, 0 0, 14px 14px, 0 0);
+  background-repeat: var(--page-background-repeat, repeat);
 }
 
 #loading.done {
