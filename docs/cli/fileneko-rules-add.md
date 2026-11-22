@@ -1,5 +1,7 @@
 # fileneko rules add
 
+**English** | [简体中文](fileneko-rules-add_CN.md)
+
 Add a global rule or user rule
 
 ## Synopsis

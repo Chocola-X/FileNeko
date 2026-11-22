@@ -6,6 +6,10 @@
 
 <p align="center">A lightweight, self-hosted file manager with an anime-inspired interface.</p>
 
+<p align="center">
+  <strong>English</strong> | <a href="README_CN.md">简体中文</a>
+</p>
+
 FileNeko is a personal fork of [File Browser](https://github.com/filebrowser/filebrowser), maintained by [Chocola-X](https://github.com/Chocola-X). It combines File Browser's web-based file management with a bright, magical-library-inspired interface, customizable CSS themes, WebDAV support and additional security work.
 
 <img width="1920" height="1080" alt="demo1" src="https://github.com/user-attachments/assets/d1ad0f63-b51f-4d95-a334-b5a7ed721c3c" />

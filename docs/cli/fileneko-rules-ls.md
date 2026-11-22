@@ -1,5 +1,7 @@
 # fileneko rules ls
 
+**English** | [简体中文](fileneko-rules-ls_CN.md)
+
 List global rules or user specific rules
 
 ## Synopsis

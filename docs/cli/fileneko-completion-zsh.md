@@ -1,5 +1,7 @@
 # fileneko completion zsh
 
+**English** | [简体中文](fileneko-completion-zsh_CN.md)
+
 Generate the autocompletion script for zsh
 
 ## Synopsis

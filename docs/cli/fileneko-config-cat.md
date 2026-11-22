@@ -1,5 +1,7 @@
 # fileneko config cat
 
+**English** | [简体中文](fileneko-config-cat_CN.md)
+
 Prints the configuration
 
 ## Synopsis

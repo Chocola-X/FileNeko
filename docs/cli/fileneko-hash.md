@@ -1,5 +1,7 @@
 # fileneko hash
 
+**English** | [简体中文](fileneko-hash_CN.md)
+
 Hashes a password
 
 ## Synopsis

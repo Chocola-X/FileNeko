@@ -1,5 +1,7 @@
 # fileneko config set
 
+**English** | [简体中文](fileneko-config-set_CN.md)
+
 Updates the configuration
 
 ## Synopsis

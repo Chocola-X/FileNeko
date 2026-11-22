@@ -1,5 +1,7 @@
 # fileneko version
 
+**English** | [简体中文](fileneko-version_CN.md)
+
 Print the version number
 
 ```

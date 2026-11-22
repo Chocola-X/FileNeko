@@ -1,5 +1,7 @@
 # fileneko completion
 
+**English** | [简体中文](fileneko-completion_CN.md)
+
 Generate the autocompletion script for the specified shell
 
 ## Synopsis

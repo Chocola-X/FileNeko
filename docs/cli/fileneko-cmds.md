@@ -1,5 +1,7 @@
 # fileneko cmds
 
+**English** | [简体中文](fileneko-cmds_CN.md)
+
 Command runner management utility
 
 ## Synopsis

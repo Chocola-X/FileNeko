@@ -1,5 +1,7 @@
 # fileneko config init
 
+**English** | [简体中文](fileneko-config-init_CN.md)
+
 Initialize a new database
 
 ## Synopsis

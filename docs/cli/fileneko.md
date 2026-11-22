@@ -1,5 +1,7 @@
 # fileneko
 
+**English** | [简体中文](fileneko_CN.md)
+
 FileNeko: a stylish web-based file manager
 
 ## Synopsis

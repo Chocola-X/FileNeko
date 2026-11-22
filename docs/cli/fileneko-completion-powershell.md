@@ -1,5 +1,7 @@
 # fileneko completion powershell
 
+**English** | [简体中文](fileneko-completion-powershell_CN.md)
+
 Generate the autocompletion script for powershell
 
 ## Synopsis

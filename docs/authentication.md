@@ -1,5 +1,7 @@
 # Authentication
 
+**English** | [简体中文](authentication_CN.md)
+
 There are three possible authentication methods. Each one of them has its own capabilities and specification. Adding another authentication method is described in [Building FileNeko](../CONTRIBUTING.md#authentication-provider).
 
 ## JSON Auth (default)

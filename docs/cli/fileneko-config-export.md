@@ -1,5 +1,7 @@
 # fileneko config export
 
+**English** | [简体中文](fileneko-config-export_CN.md)
+
 Export the configuration to a file
 
 ## Synopsis

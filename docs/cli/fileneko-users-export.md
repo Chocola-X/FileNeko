@@ -1,5 +1,7 @@
 # fileneko users export
 
+**English** | [简体中文](fileneko-users-export_CN.md)
+
 Export all users to a file.
 
 ## Synopsis

@@ -1,5 +1,7 @@
 # fileneko users
 
+**English** | [简体中文](fileneko-users_CN.md)
+
 Users management utility
 
 ## Synopsis

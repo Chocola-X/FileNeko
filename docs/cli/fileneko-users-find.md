@@ -1,5 +1,7 @@
 # fileneko users find
 
+**English** | [简体中文](fileneko-users-find_CN.md)
+
 Find a user by username or id
 
 ## Synopsis

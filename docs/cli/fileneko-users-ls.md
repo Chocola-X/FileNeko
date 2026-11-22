@@ -1,5 +1,7 @@
 # fileneko users ls
 
+**English** | [简体中文](fileneko-users-ls_CN.md)
+
 List all users.
 
 ```

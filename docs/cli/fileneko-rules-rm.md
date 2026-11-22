@@ -1,5 +1,7 @@
 # fileneko rules rm
 
+**English** | [简体中文](fileneko-rules-rm_CN.md)
+
 Remove a global rule or user rule
 
 ## Synopsis

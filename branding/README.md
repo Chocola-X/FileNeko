@@ -1,5 +1,7 @@
 # FileNeko branding
 
+**English** | [简体中文](README_CN.md)
+
 The mascot is shared by the application icons and the horizontal banner. The
 banner pairs it with a blue `File` and pink `Neko` wordmark in the bundled Fredoka
 Bold font, with a white outline and solid shadow matching the application theme.

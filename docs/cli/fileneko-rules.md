@@ -1,5 +1,7 @@
 # fileneko rules
 
+**English** | [简体中文](fileneko-rules_CN.md)
+
 Rules management utility
 
 ## Synopsis

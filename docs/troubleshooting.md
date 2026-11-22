@@ -1,5 +1,7 @@
 # Troubleshooting
 
+**English** | [简体中文](troubleshooting_CN.md)
+
 ## Session Timeout
 
 By default, user sessions expire after **2 hours**. If you're uploading large files over slower connections, you may need to increase this timeout to prevent sessions from expiring mid-upload. You can configure the session timeout using the `tokenExpirationTime` setting.

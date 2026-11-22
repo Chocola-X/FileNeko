@@ -1,5 +1,7 @@
 # fileneko cmds rm
 
+**English** | [简体中文](fileneko-cmds-rm_CN.md)
+
 Removes a command from an event hooker
 
 ## Synopsis

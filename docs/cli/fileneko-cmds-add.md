@@ -1,5 +1,7 @@
 # fileneko cmds add
 
+**English** | [简体中文](fileneko-cmds-add_CN.md)
+
 Add a command to run on a specific event
 
 ## Synopsis

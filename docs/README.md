@@ -1,5 +1,7 @@
 # FileNeko documentation
 
+**English** | [简体中文](README_CN.md)
+
 FileNeko is a self-hosted browser-based file manager and an independently maintained personal fork of the archived [File Browser](https://github.com/filebrowser/filebrowser) project. For the project overview and available downloads, see the [repository README](../README.md).
 
 ## User guides
@@ -10,6 +12,8 @@ FileNeko is a self-hosted browser-based file manager and an independently mainta
 - [Authentication](authentication.md)
 - [WebDAV](webdav.md)
 - [Command execution](command-execution.md) — disabled by default; security considerations
+- [Folder statistics](folder-statistics.md) — streaming recursive size and file counts
+- [Reverse proxy setup](reverse-proxy.md) — Nginx real IP and trusted proxy configuration
 - [Troubleshooting](troubleshooting.md)
 - [Command-line reference](cli/fileneko.md)
 

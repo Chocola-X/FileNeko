@@ -1,5 +1,7 @@
 # fileneko users rm
 
+**English** | [简体中文](fileneko-users-rm_CN.md)
+
 Delete a user by username or id
 
 ## Synopsis

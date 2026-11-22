@@ -1,5 +1,7 @@
 # fileneko config
 
+**English** | [简体中文](fileneko-config_CN.md)
+
 Configuration management utility
 
 ## Synopsis

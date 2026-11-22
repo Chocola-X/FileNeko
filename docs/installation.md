@@ -1,5 +1,7 @@
 # Installing FileNeko
 
+**English** | [简体中文](installation_CN.md)
+
 FileNeko is maintained independently of the archived File Browser project. Download it from [Chocola-X/FileNeko](https://github.com/Chocola-X/FileNeko), **not** from File Browser's upstream install scripts, Homebrew formulae or container images.
 
 ## Executables

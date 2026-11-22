@@ -1,5 +1,7 @@
 # fileneko users update
 
+**English** | [简体中文](fileneko-users-update_CN.md)
+
 Updates an existing user
 
 ## Synopsis

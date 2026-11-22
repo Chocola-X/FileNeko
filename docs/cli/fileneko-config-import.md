@@ -1,5 +1,7 @@
 # fileneko config import
 
+**English** | [简体中文](fileneko-config-import_CN.md)
+
 Import a configuration file
 
 ## Synopsis

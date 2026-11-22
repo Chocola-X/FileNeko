@@ -1,5 +1,7 @@
 # FileNeko Security Policy
 
+**English** | [简体中文](SECURITY_CN.md)
+
 FileNeko is a personal project maintained by
 [Chocola-X](https://github.com/Chocola-X), based on the archived File Browser
 project. The upstream archive status does not describe FileNeko's maintenance.

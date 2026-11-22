@@ -1,5 +1,7 @@
 # fileneko completion fish
 
+**English** | [简体中文](fileneko-completion-fish_CN.md)
+
 Generate the autocompletion script for fish
 
 ## Synopsis

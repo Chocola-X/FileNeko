@@ -1,5 +1,7 @@
 # Command Execution
 
+**English** | [简体中文](command-execution_CN.md)
+
 > [!CAUTION]
 >
 > The **hook runner** and **interactive shell** functionalities have been disabled for all existent and new installations by default from version v2.33.8 and onwards, due to continuous and known security vulnerabilities. You should only use this feature if you are aware of all of the security risks involved. For more up to date information, consult issue [#5199](https://github.com/filebrowser/filebrowser/issues/5199).

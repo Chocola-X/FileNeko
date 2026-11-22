@@ -1,5 +1,7 @@
 # fileneko users import
 
+**English** | [简体中文](fileneko-users-import_CN.md)
+
 Import users from a file
 
 ## Synopsis

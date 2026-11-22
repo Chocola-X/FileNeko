@@ -1,5 +1,7 @@
 # fileneko users add
 
+**English** | [简体中文](fileneko-users-add_CN.md)
+
 Create a new user
 
 ## Synopsis

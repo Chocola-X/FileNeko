@@ -1,5 +1,7 @@
 # Deploying FileNeko
 
+**English** | [简体中文](deployment_CN.md)
+
 FileNeko manages files accessible to its server process. Treat it as a sensitive service rather than a public static-file website. It is a personal project with best-effort maintenance, not a security-audited hosting platform.
 
 ## Recommended baseline
@@ -20,7 +22,7 @@ FileNeko provides the `createUserDir` option to create a per-user directory. Reg
 
 ## Login protection and reverse proxies
 
-Unlike older File Browser documentation, FileNeko has **built-in temporary login blocking** for failed password attempts, covering web login and WebDAV Basic authentication. The documented defaults are five failures in five minutes followed by a five-minute block. These settings can be administered under **Settings → Global Settings → Fail2Ban / Login Protection**. See [WebDAV](webdav.md#防止密码暴力破解).
+Unlike older File Browser documentation, FileNeko has **built-in temporary login blocking** for failed password attempts, covering web login and WebDAV Basic authentication. The documented defaults are five failures in five minutes followed by a five-minute block. These settings can be administered under **Settings → Global Settings → Fail2Ban / Login Protection**. See [WebDAV](webdav.md#preventing-password-brute-force).
 
 By default, the application uses the direct connecting IP address. When operating behind a reverse proxy, configure trusted proxy addresses **carefully** and ensure the proxy overwrites client-supplied forwarding headers. Otherwise users behind a proxy may share a block budget, while trusting arbitrary forwarding headers can make IP-based limits ineffective. Refer to [reverse-proxy.md](reverse-proxy.md) for the current Nginx example.
 

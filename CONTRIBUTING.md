@@ -1,5 +1,7 @@
 # Building and contributing to FileNeko
 
+**English** | [简体中文](CONTRIBUTING_CN.md)
+
 FileNeko is an independently maintained personal fork of the archived File Browser project. Contributions are welcome on a best-effort basis. FileNeko changes are distributed under AGPL-3.0-only, while original copyright and third-party notices are preserved; see [licensing details](docs/licensing.md).
 
 ## Project and prerequisites

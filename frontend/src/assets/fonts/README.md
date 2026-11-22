@@ -1,26 +1,28 @@
-# 本地主题字体
+# Local Theme Fonts
 
-应用的字体全部随前端构建发布，无需访问 Google Fonts。开发入口和生产入口都不引入字体外链；Vite 为字体生成带内容哈希的静态资源地址，沿用 FileNeko 的 `StaticURL` 配置和 CSS 相对路径，支持子路径部署。
+**English** | [简体中文](README_CN.md)
 
-| 用途                                 | 本地字体                             | 实际字重                                  |
-| ------------------------------------ | ------------------------------------ | ----------------------------------------- |
-| 英文及拉丁文字                       | Fredoka                              | 可变字体 300–700                          |
-| 简体中文                             | 原有 CuteRound（迷你简粗圆）         | 单一 400 字重，其他字重由浏览器匹配或合成 |
-| 日文、假名及部分汉字回落             | M PLUS Rounded 1c                    | 独立的 400、700 字重                      |
-| 代码、终端及数字装饰                 | JetBrains Mono                       | 可变字体 100–800                          |
-| 文件卡片英文签名                     | 原有 FileSignature（Dancing Script） | 可变字体 400–700                          |
-| 其他拉丁、西里尔、希腊及越南文字回落 | 原有 Roboto 分区字体                 | 400、500、700                             |
+All application fonts are bundled and distributed with the frontend build, requiring no requests to Google Fonts. Neither development nor production builds link to external font services; Vite generates content-hashed static asset URLs that respect FileNeko's `StaticURL` configuration and CSS relative paths, supporting subpath deployments out of the box.
 
-统一字体栈位于 `src/css/_variables.css`。界面与标题优先使用圆润字体；缺少字形时，依次使用其他本地字体、操作系统中日韩字体和通用无衬线字体。代码与终端使用单独的等宽字体栈；文件夹的 `Folder` 与文件后缀使用独立手写字体栈，不随界面语言切换。Material Icons 继续由 npm 依赖提供本地图标字体。
+| Purpose | Local Font | Actual Weight |
+| --- | --- | --- |
+| English and Latin characters | Fredoka | Variable font 300–700 |
+| Simplified Chinese | CuteRound (Mini Jian Cu Yuan) | Single 400 weight; other weights matched or synthesized by browser |
+| Japanese, Kana, and CJK fallback | M PLUS Rounded 1c | Independent 400 and 700 weights |
+| Code, terminal, and numeric accents | JetBrains Mono | Variable font 100–800 |
+| File card English signature | FileSignature (Dancing Script) | Variable font 400–700 |
+| Fallbacks for Latin, Cyrillic, Greek, and Vietnamese | Roboto subset fonts | 400, 500, 700 |
 
-所有文字字体使用 `font-display: swap`：字体下载完成前先显示回落字体，字体不可用时仍能阅读和操作。只声明字体文件真实提供的字重，不把静态字体声明为可变字体。未打包的罕见汉字或其他文字由系统字体补全；具体外观取决于设备安装的字体。
+The unified font stack is defined in `src/css/_variables.css`. UI and headings prioritize rounded typography; when glyphs are missing, fallback proceeds sequentially through other local fonts, operating system CJK fonts, and generic sans-serif fonts. Code and terminal views use a dedicated monospace font stack; folder `Folder` badges and file suffixes use an independent handwritten font stack that does not change with UI locale. Material Icons continues to be provided locally by npm dependencies.
 
-新增字体取自 [Google Fonts 官方源码仓库](https://github.com/google/fonts)，于 2026-11-15 下载，用 `woff2_compress` 转为完整 WOFF2，保留字形覆盖范围：
+All text fonts use `font-display: swap`: fallback fonts render immediately until font downloads finish, ensuring the application remains readable and functional even if fonts fail to load. Declarations reflect the actual weights provided by font files; static weights are not misrepresented as variable fonts. Unbundled rare Chinese characters or other scripts are rendered using system fonts; exact rendering depends on the fonts installed on the user's device.
 
-- [Fredoka](https://github.com/google/fonts/tree/main/ofl/fredoka)：`Fredoka[wdth,wght].ttf`，附 `fredoka-OFL.txt`。
-- [JetBrains Mono](https://github.com/google/fonts/tree/main/ofl/jetbrainsmono)：`JetBrainsMono[wght].ttf`，附 `jetbrains-mono-OFL.txt`。
-- [M PLUS Rounded 1c](https://github.com/google/fonts/tree/main/ofl/mplusrounded1c)：`MPLUSRounded1c-Regular.ttf`、`MPLUSRounded1c-Bold.ttf`。字体内部声明 SIL Open Font License 1.1；`mplus-rounded-OFL.txt` 保留其版权声明及该许可证全文。
+New fonts were sourced from the [official Google Fonts repository](https://github.com/google/fonts) on 2026-11-15 and compressed to full WOFF2 files using `woff2_compress`, preserving complete glyph coverage:
 
-原有 Dancing Script 的许可证为 `dancing-script-OFL.txt`。本次保留已有 CuteRound、Dancing Script 和 Roboto 文件；新增的圆体和等宽字体不需要在安装或构建时联网下载。
+- [Fredoka](https://github.com/google/fonts/tree/main/ofl/fredoka): `Fredoka[wdth,wght].ttf`, accompanied by `fredoka-OFL.txt`.
+- [JetBrains Mono](https://github.com/google/fonts/tree/main/ofl/jetbrainsmono): `JetBrainsMono[wght].ttf`, accompanied by `jetbrains-mono-OFL.txt`.
+- [M PLUS Rounded 1c](https://github.com/google/fonts/tree/main/ofl/mplusrounded1c): `MPLUSRounded1c-Regular.ttf`, `MPLUSRounded1c-Bold.ttf`. Internal font metadata declares SIL Open Font License 1.1; `mplus-rounded-OFL.txt` preserves copyright notices and the full license text.
 
-编辑器的 Ace 模式、主题、补全片段和校验 Worker 也由 `src/utils/editor-assets.ts` 从已安装的 `ace-builds` 打包为本地静态资源，按需加载，不再请求 CDN。可选验证码服务及用户主动访问的外部链接不属于字体或编辑器资源。
+Dancing Script's license is preserved in `dancing-script-OFL.txt`. Pre-existing CuteRound, Dancing Script, and Roboto files are retained; newly added rounded and monospace fonts do not require network downloads during installation or building.
+
+Ace editor modes, themes, snippets, and validation workers are similarly bundled as local static assets from installed `ace-builds` by `src/utils/editor-assets.ts`, loading on demand without CDN requests. Optional captcha services and external links followed intentionally by users are separate from font and editor assets.

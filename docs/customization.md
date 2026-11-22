@@ -1,5 +1,7 @@
 # Customization
 
+**English** | [简体中文](customization_CN.md)
+
 You can customize the styles, branding and icons of your FileNeko instance in order to give it a personal touch.
 
 ## Custom Branding
@@ -48,11 +50,11 @@ Note that there are different versions of the same favicon in multiple sizes. To
 >
 > The icons are cached by the browser, so you may not see your changes immediately. You can address this by clearing your browser's cache.
 
-## 此分支的主题定制
+## Theme Customization in This Fork
 
-自带主题使用正常的 CSS 优先级，不再使用 `!important`。外观保持原来的亮色主题；管理员仍可通过品牌资源目录中的独立 `custom.css` 定制所有用户的外观，无需修改前端源码。
+The built-in theme relies on standard CSS specificity and no longer uses `!important`. The overall appearance retains the original light theme styling, while administrators can customize the look and feel for all users via a standalone `custom.css` file within the branding directory, without modifying the frontend source code.
 
-可以从 [custom.css 示例](personalized-examples/custom.css) 开始，按需删除不需要的规则。完整的壁纸、Logo、字体及 90% 白色卡片配置见 [个性化示例](personalized-examples/README.md)。资源目录示例：
+You can start from the [custom.css example](personalized-examples/custom.css) and remove unnecessary rules as needed. For a complete configuration featuring custom wallpapers, logos, fonts, and 90% translucent white cards, see the [Personalized Example](personalized-examples/README.md). Example directory structure:
 
 ```text
 branding/
@@ -65,24 +67,23 @@ branding/
       XiaolaiMono-Regular.woff2
 ```
 
-`img/logo.svg` 同时用于登录页和登录后的左上角 Logo。CSS 中使用 `url("./img/background.webp")` 这样的相对路径，在配置 `/library` 等 base URL 后也能正确加载。自定义字体请放在本地，通过 `@font-face` 引入，并保留 `--font-ui` 的系统字体回落；不要覆盖 Material Icons 的图标字体。旧版主题中依赖组件哈希属性、旧 DOM 结构或固定布局的选择器需要适配，不能直接整份照搬。
+`img/logo.svg` is used for both the login page and the top-left application logo after authentication. Using relative paths like `url("./img/background.webp")` in CSS ensures assets load correctly even when a subpath base URL such as `/library` is configured. Custom fonts should be hosted locally and defined using `@font-face`, while preserving system font fallbacks in `--font-ui`; never override the Material Icons icon font. Legacy themes relying on component hash attributes, outdated DOM hierarchies, or rigid layouts must be adapted and cannot simply be copied verbatim.
 
-优先使用 [CSS 主题接口 v1](theme-api.md) 中的变量和固定类名。未设置的变量
-保留默认效果。主题接口列出了受兼容承诺保护的名称；普通内部选择器仍可按需覆盖。
+Prefer using the variables and stable classes documented in the [CSS Theme API v1](theme-api.md). Unset variables retain their default styling. The Theme API enumerates the names covered by stability and compatibility commitments; standard internal selectors can still be overridden when necessary.
 
-卡片有外层背景和内层装饰面，设置透明效果时需要同时调整两层。不要对整张卡片设置 `opacity`，否则文字、图片和按钮也会变透明。文件卡片的 `--card-main` 等配色变量在各卡片上定义；引用这些变量的 `color-mix()` 应写在卡片规则中，避免在 `:root` 提前解析。
+Cards have an outer background and an inner decorative surface; when configuring transparency effects, adjust both layers together. Do not apply `opacity` to the entire card container, as that will make text, images, and buttons translucent as well. Palette variables such as `--card-main` are scoped to individual file cards; any `color-mix()` referencing these variables should be placed in card-level rules rather than evaluated globally on `:root`.
 
-更细的调整可以在 `custom.css` 中使用普通选择器。它在内置样式之后加载，同等优先级时自定义规则生效；遇到更具体的默认选择器时，优先使用主题变量。数字输入组件的适配规则以 `#app` 为作用域，其库内部类名不属于主题接口。
+Finer adjustments can be made using standard selectors in `custom.css`. Because it is loaded after the built-in stylesheets, custom rules take precedence at equal specificity; if encountering more specific default selectors, prefer adjusting the designated theme variables. Numeric input adaptation rules are scoped to `#app`, and internal library class names are not part of the public Theme API.
 
-修改品牌资源不需要重新编译程序；浏览器可能缓存资源一天，调试时禁用缓存或强制刷新。首次设置或变更品牌资源目录后，重新加载页面；通过 CLI 修改数据库配置前请先停止使用该数据库的服务。
+Modifying branding assets does not require recompiling the application. However, browsers may cache assets for up to a day, so disable the cache or hard-refresh during testing. After initially configuring or changing the branding directory, reload the page. Before modifying database configurations via the CLI, ensure that any running service using that database has been stopped.
 
-### 内置样式维护与验证
+### Built-in Style Maintenance and Verification
 
-样式层顺序为 `vendor → base → components`，在 HTML 的最前部声明，避免 Vite 的组件 CSS 输出顺序改变层顺序。库样式放在 `vendor`，旧布局与基础控件放在 `base`，Vue 组件样式放在 `components`。主题文件保持未分层的普通规则，用于适配运行时插入的第三方样式；品牌 `custom.css` 最后加载，也应使用未分层的普通规则。
+CSS cascade layers are ordered as `vendor → base → components` and declared at the very beginning of the HTML document to prevent Vite's component CSS output from disrupting layer precedence. Third-party library styles reside in `vendor`, legacy layouts and base widgets in `base`, and Vue component styles in `components`. Built-in theme rules remain unlayered to correctly override runtime-injected third-party styles; the branding `custom.css` is loaded last and should likewise remain unlayered.
 
-新增样式应修改负责该元素的规则或主题变量，不要追加 `!important`。文件列表列宽由 CSS Grid 决定，不再由 JavaScript 修改样式表。`pnpm run test` 会检查项目自有 CSS、Vue 组件和内联样式中没有强制优先级，并验证 HTML 中的层声明位置。第三方依赖的内部样式不在清理范围。
+When adding new styles, modify the specific rule or theme variable responsible for the element rather than appending `!important`. The file list column widths are governed by CSS Grid rather than JavaScript stylesheet manipulation. `pnpm run test` verifies that no forced specificity (`!important`) exists in the project's own CSS, Vue components, or inline styles, and checks the placement of cascade layer declarations in HTML. Internal styles within third-party dependencies are outside this scope.
 
-视觉回归脚本使用临时数据库和文件，不连接现有部署。需要 Chromium、FFmpeg，以及 Python 的 `websocket-client` 和 `Pillow`：
+The visual regression scripts use temporary databases and files without connecting to existing deployments. They require Chromium, FFmpeg, and Python's `websocket-client` and `Pillow`:
 
 ```sh
 python3 frontend/scripts/theme-regression.py /absolute/path/to/old-filebrowser /tmp/theme-before
@@ -90,4 +91,4 @@ python3 frontend/scripts/theme-regression.py /absolute/path/to/new-filebrowser /
 python3 frontend/scripts/compare-theme.py /tmp/theme-before /tmp/theme-after
 ```
 
-脚本覆盖桌面、手机端的登录、设置、数字控件、六类弹窗、搜索结果、三种文件视图、多选操作、侧边栏、图片、音频、视频、PDF、EPUB 和 CSV 预览、文本编辑及 Markdown 预览。截图前固定时间、容量文本与进度条，清除鼠标悬浮状态和内容随临时分享地址变化的二维码画布；仍保留二维码的尺寸与外框供比较。比较结果包含截图像素差异与元素计算样式差异，不替代对新增交互的人工检查。
+The regression suite covers desktop and mobile views for login, settings, numeric controls, six types of modal dialogs, search results, three file listing views, multi-selection operations, the sidebar, image/audio/video/PDF/EPUB/CSV previews, text editing, and Markdown preview. Prior to capturing screenshots, timestamps, capacity labels, and progress bars are frozen, hover states are cleared, and QR code canvases whose contents change with ephemeral share links are cleared (while preserving QR canvas dimensions and bounding boxes for layout comparison). The comparison report includes pixel diffs and computed style deltas; it complements but does not replace manual verification of newly added interactions.

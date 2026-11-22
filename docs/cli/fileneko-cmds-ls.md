@@ -1,5 +1,7 @@
 # fileneko cmds ls
 
+**English** | [简体中文](fileneko-cmds-ls_CN.md)
+
 List all commands for each event
 
 ## Synopsis
