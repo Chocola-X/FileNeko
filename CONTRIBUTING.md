@@ -22,11 +22,11 @@ The frontend build stores compressed JavaScript resources for the Go embedded HT
 
 ## CI artifacts and releases
 
-The **Continuous Integration** GitHub Actions workflow builds a shared frontend and packages platform-specific binaries through a multi-platform GoReleaser snapshot matrix (currently 21 targets). The resulting `linux-amd64-fileneko.tar.gz` / `windows-amd64-fileneko.zip` style archives are published under the successful workflow run's **Artifacts** section, with per-platform checksums. Artifacts are retained for a limited time (currently documented as 30 days); GitHub may require sign-in for download.
+The **Continuous Integration** GitHub Actions workflow builds a shared frontend and packages platform-specific binaries through a multi-platform GoReleaser matrix (currently 21 targets). The resulting `linux-amd64-fileneko.tar.gz` / `windows-amd64-fileneko.zip` style archives are published under the successful workflow run's **Artifacts** section, with per-platform checksums. Artifacts are retained for a limited time (currently documented as 30 days); GitHub may require sign-in for download.
 
 CI snapshot artifacts are **development builds**, not official releases. Binaries contain the frontend and are checked for packaging and static-build requirements. The exact validation status is the status shown by GitHub Actions for the selected commit.
 
-Release configuration also exists for tagged binary archives published through GitHub Releases. Verify that the corresponding GitHub Actions release workflow is enabled and has succeeded before advertising a release as available.
+Pushing a version tag such as `v0.9.2` makes each matrix job build with that version. After the checks pass, the release job verifies and uploads the same archives and checksum file to GitHub Releases.
 
 **Docker status:** FileNeko does not currently build or publish official Docker images. Inherited Dockerfiles and Compose configuration are not supported installation instructions. The GoReleaser configuration in the documentation patch disables Docker publication. Upstream File Browser images are not FileNeko.
 

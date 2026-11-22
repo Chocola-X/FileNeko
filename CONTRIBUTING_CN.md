@@ -22,11 +22,11 @@ task build
 
 ## CI 构件与发布
 
-GitHub Actions 的 **Continuous Integration** 工作流会先编译共享的前端产物，然后通过多平台 GoReleaser 快照矩阵（目前覆盖 21 个目标平台）打包各平台的二进制文件。生成的 `linux-amd64-fileneko.tar.gz` / `windows-amd64-fileneko.zip` 风格归档包会发布在成功运行的工作流 **Artifacts** 区域，并附带各平台的校验和。这些构件保留期有限（目前记录为 30 天）；GitHub 可能需要登录才能下载。
+GitHub Actions 的 **Continuous Integration** 工作流会先编译共享的前端产物，然后通过多平台 GoReleaser 矩阵（目前覆盖 21 个目标平台）打包各平台的二进制文件。生成的 `linux-amd64-fileneko.tar.gz` / `windows-amd64-fileneko.zip` 风格归档包会发布在成功运行的工作流 **Artifacts** 区域，并附带各平台的校验和。这些构件保留期有限（目前记录为 30 天）；GitHub 可能需要登录才能下载。
 
 CI 快照构件属于**开发构建**，并非正式发布版。其二进制文件已包含前端资源，并已通过打包与静态编译检查。具体的验证状态以对应提交在 GitHub Actions 中显示的结果为准。
 
-仓库中同样包含针对 GitHub Releases 发布标记版本归档包的配置。在宣传发布版本可用之前，请确认对应的 GitHub Actions 发布工作流已启用且已成功执行。
+推送 `v0.9.2` 等版本标签后，各矩阵任务按标签版本构建。检查通过后，发布任务校验同一批归档包，并将它们和校验和文件上传到 GitHub Releases。
 
 **Docker 现状：** FileNeko 目前既不编译也不发布官方 Docker 镜像。仓库中保留的 Dockerfile 和 Compose 配置并不构成受支持的安装说明。文档补丁中的 GoReleaser 配置已禁用了 Docker 构建发布。上游 File Browser 的镜像并不包含 FileNeko。
 
