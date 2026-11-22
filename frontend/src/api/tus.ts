@@ -35,10 +35,8 @@ export async function upload(
       retryDelays: computeRetryDelays(tusSettings),
       parallelUploads: 1,
       storeFingerprintForResuming: false,
-      headers: {
-        "X-Auth": authStore.jwt,
-      },
       onBeforeRequest: function (request) {
+        // XHR appends repeated header values. Set the current token only here.
         request.setHeader("X-Auth", authStore.jwt);
       },
       onAfterResponse: async function (request, response) {
