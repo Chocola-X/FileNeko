@@ -52,19 +52,20 @@ Note that there are different versions of the same favicon in multiple sizes. To
 
 自带主题使用正常的 CSS 优先级，不再使用 `!important`。外观保持原来的亮色主题；管理员仍可通过品牌资源目录中的独立 `custom.css` 定制所有用户的外观，无需修改前端源码。
 
-可以从 [custom.css 示例](examples/custom.css) 开始，按需删除不需要的规则。资源目录示例：
+可以从 [custom.css 示例](personalized-examples/custom.css) 开始，按需删除不需要的规则。完整的壁纸、Logo、字体及 90% 白色卡片配置见 [个性化示例](personalized-examples/README.md)。资源目录示例：
 
 ```text
 branding/
   custom.css
   img/
     logo.svg
-    background.jpg
-    login.jpg
-    JCuYuan.woff2
+    background.webp
+    login.webp
+    fonts/
+      XiaolaiMono-Regular.woff2
 ```
 
-`img/logo.svg` 同时用于登录页和登录后的左上角 Logo。CSS 中使用 `url("./img/background.jpg")` 这样的相对路径，在配置 `/library` 等 base URL 后也能正确加载。自定义字体请放在本地，通过 `@font-face` 引入，并保留 `--font-ui` 的系统字体回落；不要覆盖 Material Icons 的图标字体。旧版主题中依赖组件哈希属性、旧 DOM 结构或固定布局的选择器需要适配，不能直接整份照搬。
+`img/logo.svg` 同时用于登录页和登录后的左上角 Logo。CSS 中使用 `url("./img/background.webp")` 这样的相对路径，在配置 `/library` 等 base URL 后也能正确加载。自定义字体请放在本地，通过 `@font-face` 引入，并保留 `--font-ui` 的系统字体回落；不要覆盖 Material Icons 的图标字体。旧版主题中依赖组件哈希属性、旧 DOM 结构或固定布局的选择器需要适配，不能直接整份照搬。
 
 优先使用 [CSS 主题接口 v1](theme-api.md) 中的变量和固定类名。未设置的变量
 保留默认效果。主题接口列出了受兼容承诺保护的名称；普通内部选择器仍可按需覆盖。

@@ -1,25 +1,31 @@
 /* FileNeko Theme API v1. Copy to the brand directory as custom.css, alongside
    the referenced img assets. Relative paths also work with a base URL. */
 @font-face {
-  font-family: "PersonalCute";
-  src: url("./img/JCuYuan.woff2") format("woff2");
+  font-family: "Xiaolai Mono";
+  src: url("./img/fonts/XiaolaiMono-Regular.woff2") format("woff2");
   font-display: swap;
 }
 :root {
   --font-ui:
-    "PersonalCute", "Fredoka", "CuteRound", "Microsoft YaHei", system-ui, sans-serif;
+    "Xiaolai Mono", "Fredoka", "CuteRound", "Microsoft YaHei", system-ui, sans-serif;
+  --font-heading: var(--font-ui);
+  --font-mono: "Xiaolai Mono", monospace;
+  --font-signature: var(--font-ui);
   --page-background-size: cover;
   --page-background-position: center;
   --page-background-repeat: no-repeat;
   --login-background-size: cover;
   --login-background-position: center;
   --login-background-repeat: no-repeat;
-  --personal-panel-background: rgb(255 255 255 / 72%);
+  --personal-panel-background: rgb(255 255 255 / 90%);
   --personal-decoration-opacity: 0.35;
   --file-card-background: var(--personal-panel-background);
   --file-card-inner-background: transparent;
   --login-panel-background: var(--personal-panel-background);
   --sidebar-background: var(--personal-panel-background);
+  --header-background: var(--personal-panel-background);
+  --card-background: var(--personal-panel-background);
+  --loading-card-background: var(--personal-panel-background);
   --dialog-background: var(--personal-panel-background);
   --settings-card-background: var(--personal-panel-background);
   --login-frame-opacity: var(--personal-decoration-opacity);
@@ -28,10 +34,13 @@
 }
 /* Keep relative URLs in declarations in this file so they resolve here. */
 .fn-page-background {
-  background-image: url("./img/background.jpg");
+  /* White veil: 70% opacity, leaving 30% of the wallpaper visible. */
+  background-image:
+    linear-gradient(rgb(255 255 255 / 70%), rgb(255 255 255 / 70%)),
+    url("./img/background.webp");
 }
 .fn-page--login {
-  background-image: url("./img/login.jpg");
+  background-image: url("./img/login.webp");
 }
 .fn-file-card {
   --file-card-frame-color: rgb(78 141 245 / 35%);

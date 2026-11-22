@@ -3,7 +3,7 @@
 在 **全局设置 → 品牌 → 品牌资源目录路径** 设置目录，把主题样式保存为目录下的
 `custom.css`。图片、Logo 和字体放在 `img/`，在 CSS 中用
 `url("./img/文件名")` 引用。根路径和子路径部署都支持这种写法。
-可复制 [示例主题](examples/custom.css) 开始修改。配置和缓存说明见
+可复制 [示例主题](personalized-examples/custom.css) 开始修改。配置和缓存说明见
 [自定义外观](customization.md)。
 
 ## 公开变量
