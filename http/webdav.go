@@ -5,8 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	fberrors "github.com/filebrowser/filebrowser/v2/errors"
 	"io"
+	"log"
 	"mime"
 	"net/http"
 	"net/url"
@@ -17,6 +17,7 @@ import (
 	"time"
 
 	fbAuth "github.com/filebrowser/filebrowser/v2/auth"
+	fberrors "github.com/filebrowser/filebrowser/v2/errors"
 	"github.com/filebrowser/filebrowser/v2/files"
 	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/spf13/afero"
@@ -103,7 +104,16 @@ func newWebDAVHandler(cache FileCache) handleFunc {
 			// COPY reads its source and only locks the destination.
 			lockSource = ""
 		}
-		h := webdav.Handler{Prefix: prefix, FileSystem: &davFS{d: d, cache: cache}, LockSystem: davLocks{locks: locks, d: d, source: &lockSource}}
+		h := webdav.Handler{
+			Prefix:     prefix,
+			FileSystem: &davFS{d: d, cache: cache},
+			LockSystem: davLocks{locks: locks, d: d, source: &lockSource},
+			Logger: func(req *http.Request, err error) {
+				if err != nil {
+					log.Printf("WebDAV %s %q: %v", req.Method, req.URL.Path, err)
+				}
+			},
+		}
 		h.ServeHTTP(w, r)
 		return 0, nil
 	}

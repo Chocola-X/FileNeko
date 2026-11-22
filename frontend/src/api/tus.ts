@@ -2,6 +2,7 @@ import * as tus from "tus-js-client";
 import { baseURL, tusEndpoint, tusSettings, origin } from "@/utils/constants";
 import { useAuthStore } from "@/stores/auth";
 import { removePrefix } from "@/api/utils";
+import { renew } from "@/utils/auth";
 
 const RETRY_BASE_DELAY = 1000;
 const RETRY_MAX_DELAY = 20000;
@@ -40,6 +41,21 @@ export async function upload(
       onBeforeRequest: function (request) {
         request.setHeader("X-Auth", authStore.jwt);
       },
+      onAfterResponse: async function (request, response) {
+        const token = request.getHeader("X-Auth");
+        if (
+          token &&
+          token === authStore.jwt &&
+          response.getHeader("X-Renew-Token") === "true"
+        ) {
+          try {
+            await renew(token);
+          } catch (error) {
+            // Keep the successful upload response, including its offset.
+            console.warn("Could not renew the upload session", error);
+          }
+        }
+      },
       onShouldRetry: function (err) {
         const status = err.originalResponse
           ? err.originalResponse.getStatus()
@@ -48,6 +64,12 @@ export async function upload(
         // Do not retry for file conflict.
         if (status === 409) {
           return false;
+        }
+        if (status === 401) {
+          return (
+            !!authStore.jwt &&
+            err.originalRequest?.getHeader("X-Auth") !== authStore.jwt
+          );
         }
 
         return true;
