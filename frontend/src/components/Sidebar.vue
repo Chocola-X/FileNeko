@@ -144,19 +144,19 @@
         </div>
         <div class="quota-barcode-row">
           <div class="css-barcode"></div>
-          <span class="quota-id">{{ name }}</span>
+          <span class="quota-id">FileNeko</span>
         </div>
       </div>
 
       <p class="credits">
         <span>
-          <span v-if="disableExternal">{{ name }}</span>
+          <span v-if="disableExternal">FileNeko</span>
           <a
             v-else
             rel="noopener noreferrer"
             target="_blank"
             href="https://github.com/Chocola-X/FileNeko"
-            >{{ name }}</a
+            >FileNeko</a
           >
           <span v-if="version"> {{ " " }} {{ version }}</span>
         </span>
@@ -180,7 +180,6 @@ import * as auth from "@/utils/auth";
 import ProjectCredits from "@/components/ProjectCredits.vue";
 import {
   version,
-  name,
   signup,
   hideLoginButton,
   disableExternal,
@@ -212,7 +211,6 @@ export default {
     signup: () => signup,
     hideLoginButton: () => hideLoginButton,
     version: () => version,
-    name: () => name,
     disableExternal: () => disableExternal,
     disableUsedPercentage: () => disableUsedPercentage,
     canLogout: () => !noAuth && (loginPage || logoutPage !== "/login"),
