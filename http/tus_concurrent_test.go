@@ -1,6 +1,8 @@
 package fbhttp
 
 import (
+	"fmt"
+	"hash/fnv"
 	"io"
 	"net/http/httptest"
 	"os"
@@ -39,17 +41,38 @@ func TestTusConcurrentPatchCannotExceedLength(t *testing.T) {
 	cache := newMemoryUploadCache()
 	defer cache.Close()
 	token := signToken(t, perm, key, st)
-	post := httptest.NewRequest("POST", "/race.bin", nil)
-	post.Header.Set("X-Auth", token)
-	post.Header.Set("Upload-Length", "5")
-	rec := httptest.NewRecorder()
-	handle(tusPostHandler(cache), "", st, &settings.Server{}).ServeHTTP(rec, post)
-	if rec.Code != 201 {
-		t.Fatalf("create: %d %s", rec.Code, rec.Body)
+
+	// Choose two different paths that would share a lock in the old handler.
+	resolvedRoot, err := filepath.EvalSymlinks(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var buckets [256]string
+	var firstPath, otherPath string
+	for i := 0; i <= len(buckets); i++ {
+		name := fmt.Sprintf("upload-%d.bin", i)
+		hash := fnv.New32a()
+		_, _ = hash.Write([]byte(filepath.Join(resolvedRoot, name)))
+		bucket := hash.Sum32() % uint32(len(buckets))
+		if buckets[bucket] != "" {
+			firstPath, otherPath = "/"+buckets[bucket], "/"+name
+			break
+		}
+		buckets[bucket] = name
+	}
+	for _, path := range []string{firstPath, otherPath} {
+		post := httptest.NewRequest("POST", path, nil)
+		post.Header.Set("X-Auth", token)
+		post.Header.Set("Upload-Length", "5")
+		rec := httptest.NewRecorder()
+		handle(tusPostHandler(cache), "", st, &settings.Server{}).ServeHTTP(rec, post)
+		if rec.Code != 201 {
+			t.Fatalf("create %s: %d %s", path, rec.Code, rec.Body)
+		}
 	}
 	patch := handle(tusPatchHandler(cache), "", st, &settings.Server{})
-	request := func(body io.Reader) *httptest.ResponseRecorder {
-		req := httptest.NewRequest("PATCH", "/race.bin", body)
+	request := func(path string, body io.Reader) *httptest.ResponseRecorder {
+		req := httptest.NewRequest("PATCH", path, body)
 		req.Header.Set("X-Auth", token)
 		req.Header.Set("Upload-Offset", "0")
 		req.Header.Set("Content-Type", "application/offset+octet-stream")
@@ -59,21 +82,24 @@ func TestTusConcurrentPatchCannotExceedLength(t *testing.T) {
 	}
 	body := &pausedUpload{started: make(chan struct{}), release: make(chan struct{}), reader: strings.NewReader("hello")}
 	done := make(chan *httptest.ResponseRecorder, 1)
-	go func() { done <- request(body) }()
+	go func() { done <- request(firstPath, body) }()
 	select {
 	case <-body.started:
 	case <-time.After(5 * time.Second):
 		close(body.release)
 		t.Fatal("PATCH never reached body")
 	}
-	second := request(strings.NewReader("other"))
+	second := request(firstPath, strings.NewReader("other"))
+	independent := request(otherPath, strings.NewReader("world"))
 	close(body.release)
 	first := <-done
-	if first.Code != 204 || second.Code != 409 {
-		t.Fatalf("PATCH statuses: %d, %d", first.Code, second.Code)
+	if first.Code != 204 || second.Code != 409 || independent.Code != 204 {
+		t.Fatalf("PATCH statuses: first=%d same file=%d different file=%d", first.Code, second.Code, independent.Code)
 	}
-	content, err := os.ReadFile(filepath.Join(root, "race.bin"))
-	if err != nil || string(content) != "hello" {
-		t.Fatalf("stored upload: %q %v", content, err)
+	for path, expected := range map[string]string{firstPath: "hello", otherPath: "world"} {
+		content, err := os.ReadFile(filepath.Join(root, filepath.Base(path)))
+		if err != nil || string(content) != expected {
+			t.Fatalf("stored upload %s: %q %v", path, content, err)
+		}
 	}
 }

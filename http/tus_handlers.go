@@ -3,7 +3,6 @@ package fbhttp
 import (
 	"errors"
 	"fmt"
-	"hash/fnv"
 	"io"
 	"net/http"
 	"os"
@@ -191,7 +190,9 @@ func tusPatchHandler(cache UploadCache) handleFunc {
 	})
 }
 
-var uploadLocks [256]sync.Mutex
+// Only active PATCH requests occupy the map. The key is the resolved path
+// so unrelated files can be uploaded concurrently.
+var activeUploadPatches sync.Map
 
 func tusPatchUpload(w http.ResponseWriter, r *http.Request, d *data, cache UploadCache) (int, error) {
 	if !d.user.Perm.Create || !d.Check(r.URL.Path) {
@@ -205,13 +206,10 @@ func tusPatchUpload(w http.ResponseWriter, r *http.Request, d *data, cache Uploa
 	if err != nil {
 		return errToStatus(err), err
 	}
-	hash := fnv.New32a()
-	_, _ = hash.Write([]byte(target))
-	lock := &uploadLocks[hash.Sum32()%uint32(len(uploadLocks))]
-	if !lock.TryLock() {
-		return http.StatusConflict, nil
+	if _, busy := activeUploadPatches.LoadOrStore(target, struct{}{}); busy {
+		return http.StatusConflict, fmt.Errorf("another chunk is writing to the same file")
 	}
-	defer lock.Unlock()
+	defer activeUploadPatches.Delete(target)
 	uploadOffset, err := getUploadOffset(r)
 	if err != nil {
 		return http.StatusBadRequest, fmt.Errorf("invalid upload offset")
