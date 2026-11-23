@@ -43,6 +43,9 @@ curl --user admin -X PROPFIND -H 'Depth: 1' https://your-domain/dav/
 ```
 
 Supported HTTP methods include `OPTIONS`, `PROPFIND`, `GET`, `HEAD`, `PUT`, `MKCOL`, `COPY`, `MOVE`, `DELETE`, `LOCK`, and `UNLOCK`.
+
+Clients can send `X-OC-Mtime` with a Unix timestamp in seconds when uploading a file with `PUT` or creating a directory with `MKCOL`. The server returns `X-OC-Mtime: accepted` when it saves the requested timestamp.
+Uploading children updates the parent directory's modification time. After uploading the children, clients can restore the directory timestamp by setting `DAV:lastmodified` to the original Unix timestamp with `PROPPATCH`. This requires Modify permission and respects WebDAV locks.
 The mounted root corresponds to the user account's scope, reusing the user's filesystem isolation, external symlink policy, global rules, user rules, and hidden dotfile settings.
 
 | Operation | Required Permission |
@@ -60,7 +63,7 @@ Deleting, moving, or copying directories pre-checks descendant path rules to pre
 Deleting or moving the root directory is prohibited, as is copying or moving between directories that are ancestors of one another.
 
 Current limitations: Locks are stored in process memory and reset upon restart; they cannot be shared across multiple server instances. A maximum of 4,096 concurrent locks are maintained (including transient locks held during requests); expired locks are reclaimed upon subsequent access.
-Custom WebDAV properties (`PROPPATCH`) are not persisted, and file operations do not currently trigger Command Runner before/after hooks.
+`PROPPATCH` can update the filesystem modification time. Custom properties are not persisted. File operations do not currently trigger Command Runner before/after hooks.
 Compatibility with operating system native clients such as Windows Explorer and macOS Finder has not been exhaustively validated.
 
 ## Independent audit records (2026-11-15)

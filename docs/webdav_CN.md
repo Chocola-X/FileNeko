@@ -45,6 +45,9 @@ curl --user admin -X PROPFIND -H 'Depth: 1' https://你的域名/dav/
 支持 OPTIONS、PROPFIND、GET、HEAD、PUT、MKCOL、COPY、MOVE、DELETE、LOCK 和 UNLOCK。
 挂载后的根目录是该账号的 scope；复用用户的文件系统隔离、外部符号链接策略、全局规则、用户规则和隐藏文件设置。
 
+支持在 `PUT` 上传文件或 `MKCOL` 创建目录时发送 `X-OC-Mtime`，值为 Unix 时间戳（秒）。服务端成功保存该时间时返回 `X-OC-Mtime: accepted`。
+上传子项会更新父目录的修改时间。客户端可以在上传完成后向目录发送 `PROPPATCH`，将 `DAV:lastmodified` 设置为原始 Unix 时间戳。此操作需要 Modify 权限，并遵循 WebDAV 锁。
+
 | 操作 | 所需权限 |
 | --- | --- |
 | 列目录、读取元数据 | 通过路径规则 |
@@ -60,7 +63,7 @@ curl --user admin -X PROPFIND -H 'Depth: 1' https://你的域名/dav/
 禁止删除、移动根目录，以及在互为祖先的目录间执行复制或移动。
 
 当前限制：锁保存在当前进程内存中，重启后失效，不适用于多实例共享锁；最多同时保留 4096 个锁（含请求期间的临时锁），已到期的锁按访问回收。
-不持久化自定义 WebDAV 属性（PROPPATCH），文件操作暂不触发 Command Runner 的 before/after hooks。
+支持通过 PROPPATCH 更新实际修改时间，自定义属性不会持久化。文件操作暂不触发 Command Runner 的 before/after hooks。
 尚未逐一验证 Windows Explorer、macOS Finder 等系统客户端的兼容性。
 
 ## 本轮独立核查（2026-11-15）

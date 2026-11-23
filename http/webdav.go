@@ -104,9 +104,29 @@ func newWebDAVHandler(cache FileCache) handleFunc {
 			// COPY reads its source and only locks the destination.
 			lockSource = ""
 		}
+		fs := &davFS{d: d, cache: cache, method: r.Method}
+		if value := r.Header.Get(davMtimeHeader); value != "" && (r.Method == "PUT" || r.Method == "MKCOL") {
+			mtime, err := parseDAVMtime(value)
+			if err != nil {
+				return http.StatusBadRequest, err
+			}
+			response := &davMtimeResponse{ResponseWriter: w}
+			w = response
+			fs.onWrite = func(name string) {
+				if err := fs.setMtime(name, mtime); err != nil {
+					log.Printf("WebDAV %s %q: %v", r.Method, r.URL.Path, err)
+					return
+				}
+				response.accepted = true
+			}
+			if r.Method == "PUT" {
+				// Let the destination's ReadFrom observe a successful copy.
+				r.Body = struct{ io.ReadCloser }{r.Body}
+			}
+		}
 		h := webdav.Handler{
 			Prefix:     prefix,
-			FileSystem: &davFS{d: d, cache: cache},
+			FileSystem: fs,
 			LockSystem: davLocks{locks: locks, d: d, source: &lockSource},
 			Logger: func(req *http.Request, err error) {
 				if err != nil {
@@ -156,8 +176,10 @@ func newWebDAVHandler(cache FileCache) handleFunc {
 // davFS retains the scoped, symlink-aware filesystem and applies rules to every
 // operation, including the recursive calls made by the WebDAV implementation.
 type davFS struct {
-	d     *data
-	cache FileCache
+	d       *data
+	cache   FileCache
+	method  string
+	onWrite func(name string)
 }
 
 // Preview keys include modification times with second precision. Invalidate
@@ -210,7 +232,13 @@ func (f *davFS) Mkdir(_ context.Context, name string, _ os.FileMode) error {
 	if mode == 0 {
 		mode = settings.DefaultDirMode
 	}
-	return f.d.user.Fs.Mkdir(name, mode)
+	if err := f.d.user.Fs.Mkdir(name, mode); err != nil {
+		return err
+	}
+	if f.onWrite != nil {
+		f.onWrite(name)
+	}
+	return nil
 }
 
 func (f *davFS) OpenFile(ctx context.Context, name string, flag int, _ os.FileMode) (webdav.File, error) {
@@ -220,6 +248,21 @@ func (f *davFS) OpenFile(ctx context.Context, name string, flag int, _ os.FileMo
 	info, err := f.Stat(ctx, name)
 	if err != nil && !os.IsNotExist(err) {
 		return nil, err
+	}
+	if f.method == "PROPPATCH" {
+		if err != nil {
+			return nil, err
+		}
+		file, err := f.d.user.Fs.Open(name)
+		if err != nil {
+			return nil, err
+		}
+		return &davMtimePatchFile{File: file, set: func(mtime time.Time) error {
+			if err := f.invalidate(ctx, name, false); err != nil {
+				return err
+			}
+			return f.setMtime(name, mtime)
+		}}, nil
 	}
 	if flag&(os.O_WRONLY|os.O_RDWR|os.O_CREATE|os.O_TRUNC) != 0 {
 		if err == nil && info.IsDir() {
@@ -245,7 +288,11 @@ func (f *davFS) OpenFile(ctx context.Context, name string, flag int, _ os.FileMo
 	if err != nil {
 		return nil, err
 	}
-	return &davFile{File: file, fs: f, name: name}, nil
+	dav := &davFile{File: file, fs: f, name: name}
+	if f.onWrite != nil {
+		return &davMtimeUploadFile{davFile: dav, written: f.onWrite}, nil
+	}
+	return dav, nil
 }
 
 func (f *davFS) RemoveAll(ctx context.Context, name string) error {
