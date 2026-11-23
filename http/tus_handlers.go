@@ -128,13 +128,19 @@ func tusPostHandler(cache UploadCache) handleFunc {
 			return http.StatusBadRequest, fmt.Errorf("invalid upload length: %w", err)
 		}
 
-		// Enables the user to utilize the PATCH endpoint for uploading file data.
-		// The removal callback deletes an abandoned upload through the user's
-		// scoped filesystem, so eviction cannot follow a symlink out of scope.
-		uploadPath := r.URL.Path
-		cache.Register(file.RealPath(), uploadLength, func() error {
-			return d.user.Fs.Remove(uploadPath)
-		})
+		if uploadLength == 0 {
+			// An empty upload is complete at creation. Clear any pending
+			// upload for the same path that this request overwrote.
+			cache.Complete(file.RealPath())
+			_ = d.RunHook(func() error { return nil }, "upload", r.URL.Path, "", d.user)
+		} else {
+			// Delete abandoned uploads through the user's scoped filesystem
+			// so eviction cannot follow a symlink out of scope.
+			uploadPath := r.URL.Path
+			cache.Register(file.RealPath(), uploadLength, func() error {
+				return d.user.Fs.Remove(uploadPath)
+			})
+		}
 
 		basePath := "/" + strings.Trim(strings.TrimSpace(d.server.BaseURL), "/")
 		if basePath == "/" {

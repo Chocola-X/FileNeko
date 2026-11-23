@@ -7,10 +7,86 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"testing/synctest"
+	"time"
 
 	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/filebrowser/filebrowser/v2/users"
 )
+
+func TestTusEmptyUploadSurvivesCacheExpiry(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		checkTusEmptyUploadSurvivesCacheExpiry(t, func() {
+			time.Sleep(uploadCacheTTL + time.Second)
+			synctest.Wait()
+		})
+	})
+}
+
+func checkTusEmptyUploadSurvivesCacheExpiry(t *testing.T, waitForExpiry func()) {
+	t.Helper()
+	scope := t.TempDir()
+	key := []byte("test-signing-key")
+	perm := users.Permissions{Create: true, Modify: true, Download: true}
+	st := scopedUserStorage(t, scope, perm, key)
+	token := signToken(t, perm, key, st)
+
+	cache := newMemoryUploadCache()
+	t.Cleanup(cache.Close)
+	handler, err := NewHandler(nil, nil, cache, st, &settings.Server{
+		Root: scope, EnableWebDAV: true,
+	}, os.DirFS(scope))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	request := func(method, path, length string) *httptest.ResponseRecorder {
+		req := httptest.NewRequest(method, path, nil)
+		req.Header.Set("X-Auth", token)
+		if method == http.MethodPost {
+			req.Header.Set("Upload-Length", length)
+		}
+		if method == "PROPFIND" {
+			req.Header.Set("Depth", "1")
+		}
+		rec := httptest.NewRecorder()
+		handler.ServeHTTP(rec, req)
+		return rec
+	}
+	post := func(path, length, location string) {
+		t.Helper()
+		res := request(http.MethodPost, path, length)
+		if res.Code != http.StatusCreated || res.Header().Get("Location") != location {
+			t.Fatalf("POST %s: got status %d, Location %q, body %q", path, res.Code, res.Header().Get("Location"), res.Body.String())
+		}
+	}
+
+	post("/api/tus/abandoned.txt", "5", "/api/tus/abandoned.txt")
+	post("/api/tus/overwrite.txt", "5", "/api/tus/overwrite.txt")
+	post("/api/tus/overwrite.txt?override=true", "0", "/api/tus/overwrite.txt")
+	post("/api/tus/empty.txt", "0", "/api/tus/empty.txt")
+
+	waitForExpiry()
+	if _, err := os.Stat(filepath.Join(scope, "abandoned.txt")); !os.IsNotExist(err) {
+		t.Errorf("abandoned upload should be removed after expiry, got %v", err)
+	}
+	api := request(http.MethodGet, "/api/resources/", "")
+	dav := request("PROPFIND", "/dav/", "")
+	for _, name := range []string{"empty.txt", "overwrite.txt"} {
+		info, err := os.Stat(filepath.Join(scope, name))
+		if err != nil {
+			t.Errorf("stat %s after expiry: %v", name, err)
+		} else if info.Size() != 0 {
+			t.Errorf("%s size after expiry = %d, want 0", name, info.Size())
+		}
+		if api.Code != http.StatusOK || !strings.Contains(api.Body.String(), `"name":"`+name+`"`) {
+			t.Errorf("API listing should include %s, got %d: %s", name, api.Code, api.Body.String())
+		}
+		if dav.Code != http.StatusMultiStatus || !strings.Contains(dav.Body.String(), "/dav/"+name+"</") {
+			t.Errorf("WebDAV listing should include %s, got %d: %s", name, dav.Code, dav.Body.String())
+		}
+	}
+}
 
 // A TUS PATCH must not write more than the declared Upload-Length. A client that
 // declares a small length and then streams a large body must be rejected without
