@@ -8,6 +8,7 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
+	"os"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -291,6 +292,23 @@ func TestService_Resize(t *testing.T) {
 			test.matcher(t, buf)
 		})
 	}
+}
+
+func TestLowQualityResizeHonorsJPEGOrientationWithEmbeddedThumbnail(t *testing.T) {
+	photo, err := os.ReadFile("testdata/20130612_142406.jpg")
+	require.NoError(t, err)
+	// Change only the original JPEG's IFD0 orientation from normal to 90°
+	// clockwise. The camera's embedded landscape thumbnail stays intact.
+	tag := []byte{0x12, 0x01, 0x03, 0, 1, 0, 0, 0, 1, 0, 0, 0}
+	offset := bytes.Index(photo, tag)
+	require.GreaterOrEqual(t, offset, 0)
+	photo[offset+8] = 6
+
+	var resized bytes.Buffer
+	err = New(1).Resize(t.Context(), bytes.NewReader(photo), 100, 100,
+		&resized, WithQuality(QualityLow), WithMode(ResizeModeFit))
+	require.NoError(t, err)
+	sizeMatcher(75, 100)(t, &resized)
 }
 
 func sizeMatcher(width, height int) func(t *testing.T, reader io.Reader) {

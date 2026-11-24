@@ -160,5 +160,9 @@ func createPreview(imgSvc ImgService, fileCache FileCache,
 }
 
 func previewCacheKey(f *files.FileInfo, previewSize PreviewSize) string {
+	if previewSize == PreviewSizeThumb {
+		// Discard cached thumbnails created before EXIF orientation checks.
+		return fmt.Sprintf("v2-%x%x%x", f.RealPath(), f.ModTime.Unix(), previewSize)
+	}
 	return fmt.Sprintf("%x%x%x", f.RealPath(), f.ModTime.Unix(), previewSize)
 }

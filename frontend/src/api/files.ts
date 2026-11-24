@@ -222,6 +222,7 @@ export function getPreviewURL(file: ResourceItem, size: string) {
   const params = {
     inline: "true",
     key: Date.parse(file.modified),
+    ...(size === "thumb" && { v: "2" }),
   };
 
   return createURL("api/preview/" + size + file.path, params);

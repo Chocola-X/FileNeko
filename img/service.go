@@ -249,6 +249,18 @@ func getEmbeddedThumbnail(in io.Reader) ([]byte, io.Reader, error) {
 		return nil, wrappedReader, err
 	}
 
+	// Embedded JPEGs are returned verbatim and bypass AutoOrientation. Use
+	// them only when the original explicitly declares normal orientation.
+	tags, err := index.RootIfd.FindTagWithId(0x0112) // EXIF Orientation
+	if err != nil || len(tags) != 1 {
+		return nil, wrappedReader, exif.ErrNoThumbnail
+	}
+	value, err := tags[0].Value()
+	orientation, ok := value.([]uint16)
+	if err != nil || !ok || len(orientation) != 1 || orientation[0] != 1 {
+		return nil, wrappedReader, exif.ErrNoThumbnail
+	}
+
 	ifd := index.RootIfd.NextIfd()
 	if ifd == nil {
 		return nil, wrappedReader, exif.ErrNoThumbnail
