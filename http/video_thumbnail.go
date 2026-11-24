@@ -79,7 +79,7 @@ func (ffmpeg thumbnailFFmpeg) frame(ctx context.Context, file *files.FileInfo) (
 	// Give FFmpeg the already scoped file, never a user-provided path or URL.
 	// A seekable stdin supports MP4 files whose metadata sits after the video.
 	input, protocol := "pipe:0", "pipe"
-	var stdin afero.File = opened
+	stdin := opened
 	for {
 		wrapped, ok := stdin.(*afero.BasePathFile)
 		if !ok {
