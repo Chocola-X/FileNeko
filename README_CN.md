@@ -58,6 +58,12 @@ Windows 下的可执行文件为 `fileneko.exe`。初次启动时，请在终端
 
 ## 项目文档
 
+大图标和图库视图可显示视频的抽帧缩略图，播放器也会用它作为封面。
+在服务器安装 `ffmpeg`，确保 FileNeko 服务的 `PATH` 能找到它，
+重启服务并保持缩略图开启。支持 `fd` 输入协议的 FFmpeg 可以读取元数据位于
+文件末尾的 MP4。通过 `--cacheDir` 可以缓存生成的缩略图。无法抽帧时
+仍显示默认视频图标。
+
 请从[文档首页](docs/README_CN.md)开始阅读，包括[安装指南](docs/installation_CN.md)、[部署与安全](docs/deployment_CN.md)、[外观定制](docs/customization_CN.md)以及 [WebDAV 说明](docs/webdav_CN.md)。
 
 原有的 File Browser `FB_` 环境变量、`filebrowser.db` 数据库以及部分 `.filebrowser.*` 配置文件名称继续保留以保证兼容性。可执行程序本身命名为 `fileneko` / `fileneko.exe`。

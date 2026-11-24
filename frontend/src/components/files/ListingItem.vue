@@ -36,23 +36,14 @@
 
     <!-- Inner Dashed Frame (Exact Student ID / Polaroid Sticker Card Layout) -->
     <div class="card-inner-dashed fn-file-card__surface">
-      <!-- Image Preview Banner (when image in mosaic/gallery) -->
-      <div
-        v-if="
-          !isDir &&
-          !readOnly &&
-          type === 'image' &&
-          isThumbsEnabled &&
-          isWebImage
-        "
-        class="card-media-banner"
-      >
+      <div v-if="showThumbnail" class="card-media-banner">
         <img
           :src="thumbnailUrl"
           :alt="name"
           class="card-thumb-img"
           loading="lazy"
           decoding="async"
+          @error="failedThumbnail = thumbnailUrl"
         />
         <div class="card-media-overlay">
           <div class="dot-matrix"></div>
@@ -218,7 +209,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useFileStore } from "@/stores/file";
 import { useLayoutStore } from "@/stores/layout";
 
-import { enableThumbs } from "@/utils/constants";
+import { enableThumbs, enableVideoThumbs } from "@/utils/constants";
 import { filesize } from "@/utils";
 import dayjs from "dayjs";
 import { files as api } from "@/api";
@@ -329,18 +320,34 @@ const thumbnailUrl = computed(() => {
     modified: props.modified,
   };
 
-  const size = authStore.user?.viewMode === "mosaic gallery" ? "big" : "thumb";
+  const size =
+    props.type !== "video" && authStore.user?.viewMode === "mosaic gallery"
+      ? "big"
+      : "thumb";
   return api.getPreviewURL(file as Resource, size);
-});
-
-const isThumbsEnabled = computed(() => {
-  return enableThumbs;
 });
 
 const isWebImage = computed(() => {
   const ext = getExtension(props.name).toLowerCase();
   return [".png", ".jpg", ".jpeg", ".svg", ".gif", ".webp"].includes(ext);
 });
+
+const failedThumbnail = ref("");
+const showThumbnail = computed(
+  () =>
+    !props.isDir &&
+    !props.readOnly &&
+    enableThumbs &&
+    !!authStore.user?.perm.download &&
+    (props.type === "image"
+      ? isWebImage.value
+      : props.type === "video" &&
+        enableVideoThumbs &&
+        ["mosaic", "mosaic gallery"].includes(
+          authStore.user?.viewMode ?? ""
+        )) &&
+    failedThumbnail.value !== thumbnailUrl.value
+);
 
 const humanSize = () => {
   return props.type == "invalid_link" ? "invalid link" : filesize(props.size);

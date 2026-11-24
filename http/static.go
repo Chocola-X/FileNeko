@@ -53,6 +53,7 @@ func handleWithStaticData(w http.ResponseWriter, _ *http.Request, d *data, fSys 
 		"ReCaptcha":             false,
 		"Theme":                 d.settings.Branding.Theme,
 		"EnableThumbs":          d.server.EnableThumbnails,
+		"EnableVideoThumbs":     d.server.EnableThumbnails && videoThumbnailFFmpeg().path != "",
 		"ResizePreview":         d.server.ResizePreview,
 		"EnableExec":            d.server.EnableExec,
 		"TusSettings":           d.settings.Tus,

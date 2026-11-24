@@ -17,6 +17,8 @@ const logoutPage: string = window.FileBrowser.LogoutPage;
 const loginPage: boolean = window.FileBrowser.LoginPage;
 const theme: UserTheme = window.FileBrowser.Theme;
 const enableThumbs: boolean = window.FileBrowser.EnableThumbs;
+const enableVideoThumbs: boolean =
+  window.FileBrowser.EnableVideoThumbs ?? false;
 const resizePreview: boolean = window.FileBrowser.ResizePreview;
 const enableExec: boolean = window.FileBrowser.EnableExec;
 const tusSettings = window.FileBrowser.TusSettings;
@@ -42,6 +44,7 @@ export {
   loginPage,
   theme,
   enableThumbs,
+  enableVideoThumbs,
   resizePreview,
   enableExec,
   tusSettings,

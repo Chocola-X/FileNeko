@@ -58,6 +58,13 @@ The Windows executable is `fileneko.exe`. On first launch, check the terminal ou
 
 ## Documentation
 
+Install `ffmpeg` on the server to enable video thumbnails in the icon and
+gallery views and posters in the player. Keep thumbnails enabled, make FFmpeg
+available on the FileNeko service's `PATH`, and restart the service. An FFmpeg
+build with the `fd` input protocol supports MP4 files whose metadata is at the
+end. Use `--cacheDir` to reuse generated thumbnails. Videos keep their default
+icon if a frame cannot be extracted.
+
 Start with the [documentation index](docs/README.md), including [installation](docs/installation.md), [deployment and security](docs/deployment.md), [customization](docs/customization.md) and [WebDAV](docs/webdav.md).
 
 Existing File Browser `FB_` environment variables, `filebrowser.db` databases and some `.filebrowser.*` configuration names are preserved for compatibility. The executable itself is named `fileneko` / `fileneko.exe`.

@@ -189,7 +189,7 @@ import { useLayoutStore } from "@/stores/layout";
 
 import { files as api } from "@/api";
 import { createURL } from "@/api/utils";
-import { resizePreview } from "@/utils/constants";
+import { enableVideoThumbs, resizePreview } from "@/utils/constants";
 import url from "@/utils/url";
 import { throttle } from "lodash-es";
 import HeaderBar from "@/components/header/HeaderBar.vue";
@@ -319,7 +319,16 @@ const subtitles = computed(() => {
 });
 
 const videoOptions = computed(() => {
-  return { autoplay: autoPlay.value };
+  const file = fileStore.req;
+  return {
+    autoplay: autoPlay.value,
+    poster:
+      enableVideoThumbs &&
+      authStore.user?.perm.download &&
+      file?.type === "video"
+        ? api.getPreviewURL(file, "thumb")
+        : undefined,
+  };
 });
 
 watch(route, () => {

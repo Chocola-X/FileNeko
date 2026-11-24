@@ -65,6 +65,11 @@ func previewHandler(imgSvc ImgService, fileCache FileCache, enableThumbnails, re
 		switch file.Type {
 		case "image":
 			return handleImagePreview(w, r, imgSvc, fileCache, file, previewSize, enableThumbnails, resizePreview)
+		case "video":
+			if !enableThumbnails {
+				return http.StatusNoContent, nil
+			}
+			return handleVideoThumbnail(w, r, fileCache, file)
 		default:
 			return http.StatusNotImplemented, fmt.Errorf("can't create preview for %s type", file.Type)
 		}
