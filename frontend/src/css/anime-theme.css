@@ -1691,8 +1691,12 @@ select:focus {
   z-index: 10002;
 }
 
-.context-menu[style*="display: none"] {
-  display: none;
+.context-menu {
+  position: fixed;
+  width: max-content;
+  min-width: min(180px, var(--context-menu-available-width, 180px));
+  max-width: min(220px, var(--context-menu-available-width, 220px));
+  overflow: auto;
 }
 
 .context-menu .action,
